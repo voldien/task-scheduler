@@ -1,0 +1,71 @@
+CMAKE_MINIMUM_REQUIRED(VERSION 2.8.12)
+PROJECT(schScheduler)
+
+#	build shared/dynamic library option
+OPTION(BUILD_SHARED_LIBS "Build package with shared libraries." ON)
+IF(NOT BUILD_SHARED_LIBS)
+    set(CMAKE_EXE_LINKER_FLAGS "-static")
+    set(LINK_SEARCH_START_STATIC TRUE)
+ENDIF()
+
+# Version setup.
+SET(SCH_VERSION_MAJOR 0)
+SET(SCH_VERSION_MINOR 1)
+SET(SCH_VERSION_REVISION 0)
+SET(SCH_VERSION_STATE a)
+SET(SCH_VERSION ${SCH_VERSION_MAJOR}.${SCH_VERSION_MINOR}${SCH_VERSION_STATE}${SCH_VERSION_REVISION} )
+ADD_DEFINITIONS(-DSPB_VERSION="${SCH_VERSION}")
+
+# GCC compiler flags
+IF((CMAKE_COMPILER_IS_GNUCC OR CMAKE_COMPILER_IS_GNUCXX) AND NOT CMAKE_COMPILER_IS_MINGW)
+    IF (BUILD_SHARED_LIBS AND CMAKE_SIZEOF_VOID_P EQUAL 8) # -fPIC is only required
+        SET(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fPIC")
+    ENDIF()
+
+    ADD_DEFINITIONS( -Wall -w -fpermissive -Wfatal-errors)
+
+
+    IF (CMAKE_BUILD_TYPE STREQUAL "Release")
+        MESSAGE(STATUS "Compile for release.")
+        ADD_DEFINITIONS( -DNDEBUG )
+        ADD_DEFINITIONS( -O2 )
+        SET(CMAKE_RELEASE TRUE)
+    ELSE()
+        MESSAGE(STATUS "Compile for debug.")
+        ADD_DEFINITIONS( -D_DEBUG )
+        ADD_DEFINITIONS( -g3 -O0 )
+        SET(CMAKE_DEBUG TRUE)
+    ENDIF()
+ENDIF()
+
+# Source files.
+INCLUDE_DIRECTORIES(${CMAKE_CURRENT_SOURCE_DIR}/include)
+FILE(GLOB src ${CMAKE_CURRENT_SOURCE_DIR}/src/*.c)
+FILE(GLOB headers ${CMAKE_CURRENT_SOURCE_DIR}/include/*.h)
+IF( UNIX )
+    FILE(GLOB platform ${CMAKE_CURRENT_SOURCE_DIR}/src/unix/*.c)
+ELSEIF(WIN32)
+    FILE(GLOB platform ${CMAKE_CURRENT_SOURCE_DIR}/src/windows/*.c)
+ENDIF()
+
+# Create executable target.
+ADD_LIBRARY(taskSch ${src} ${platform})
+
+# Install the target.
+INSTALL(TARGETS taskSch DESTINATION lib)
+INSTALL (FILES ${headers} DESTINATION include)
+
+# Unit testing
+ADD_SUBDIRECTORY(${CMAKE_CURRENT_SOURCE_DIR}/test)
+
+IF( UNIX )
+
+    # Create distribution tarball.
+    SET( TARGETDIR "${PROJECT_NAME}-${SCH_VERSION}")
+    ADD_CUSTOM_TARGET(	distribution
+            COMMAND mkdir -p ${TARGETDIR}
+            COMMAND cp -r ${CMAKE_CURRENT_SOURCE_DIR}/src ${CMAKE_CURRENT_SOURCE_DIR}/test ${CMAKE_CURRENT_SOURCE_DIR}/include ${CMAKE_CURRENT_SOURCE_DIR}/CMakeLists.txt ${CMAKE_CURRENT_SOURCE_DIR}/LICENSE ${TARGETDIR}
+            COMMAND tar cf - ${TARGETDIR} | gzip -c > ${TARGETDIR}.tar.gz
+            COMMAND rm -r ${TARGETDIR} )
+
+ENDIF()
