@@ -224,6 +224,9 @@ int schSubmitTask(schTaskSch *sch, schTaskPackage *package, schTaskPool *pPool) 
 
 	schTaskPool *pool;
 
+	if((sch->flag & SCH_FLAG_RUNNING) == 0)
+		return SCH_ERROR_INVALID_STATE;
+
 	/*  Validate argument.  */
 	if(package == NULL || package->callback == NULL)
 		return SCH_ERROR_INVALID_ARG;
@@ -246,7 +249,7 @@ int schSubmitTask(schTaskSch *sch, schTaskPackage *package, schTaskPool *pPool) 
 
 	/*  If pool is finished.    */
 	if (pool->size <= 1 && pool->flag & SCH_POOL_SLEEP) {
-		if(!schRaiseThreadSignal(pool->thread, SCH_SIGNAL_CONTINUE))
+		if (!schRaiseThreadSignal(pool->thread, SCH_SIGNAL_CONTINUE))
 			return SCH_ERROR_INTERNAL;
 	}
 	return SCH_OK;

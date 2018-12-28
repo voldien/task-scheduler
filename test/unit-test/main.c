@@ -69,18 +69,45 @@ START_TEST(create){
 }
 END_TEST
 
+START_TEST(submit){
+	schTaskSch taskSch;
+	schTaskSch* sch = &taskSch;
+
+	const size_t numPackages = 28;
+
+	schTaskSch* psch = schCreateTaskPool(sch, -1, 0, numPackages);
+	ck_assert_ptr_eq(sch, psch);
+	ck_assert_int_eq(sch->num, schGetNumCPUCores());
+
+	ck_assert_int_eq(schRunTaskSch(sch), SCH_OK);
+
+	schTaskPackage package = {NULL};
+	package.callback = perform_task;
+	for(int i = 0; i < numPackages; i++){
+		int status = schSubmitTask(sch, &package, NULL);
+		ck_assert_int_eq(status, SCH_OK);
+	}
+
+	ck_assert_int_eq(schWaitTask(sch), SCH_OK);
+
+	ck_assert(schReleaseTaskSch(sch) == SCH_OK);
+}
+END_TEST
 
 Suite* schCreateSuite(void){
 
 	/*	Create suite and test cases.	*/
 	Suite* suite = suite_create("task-scheduler");
 	TCase* testCreate = tcase_create("create");
+	TCase* testSubmit = tcase_create("submit");
 
 	/*	Link test cases with functions.	*/
 	tcase_add_test(testCreate, create);
+	tcase_add_test(testSubmit, submit);
 
 	/*	Add test cases to test suite.	*/
 	suite_add_tcase(suite, testCreate);
+	suite_add_tcase(suite, testSubmit);
 
 	return suite;
 }
