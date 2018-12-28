@@ -64,6 +64,7 @@ int schReleaseTaskSch(schTaskSch *sch){
 
 	int x;
 
+	/*  */
 	schTerminateTaskSch(sch);
 
 	/*  Iterate through each pool.  */
@@ -180,14 +181,14 @@ int schTerminateTaskSch(schTaskSch *sch) {
 	int x;
 
 	/*  Non-initialized scheduler.  */
-	if(sch->flag & SCH_FLAG_INIT == 0)
+	if (sch->flag & SCH_FLAG_INIT == 0)
 		return SCH_ERROR_INVALID_SCH;
 
 	/*  Not running.    */
-	if(sch->flag & SCH_FLAG_RUNNING == 0)
+	if ((sch->flag & SCH_FLAG_RUNNING) == 0)
 		return SCH_ERROR_INVALID_STATE;
 
-	/*  */
+	/*  Wait in till scheduler is finished. */
 	schWaitTask(sch);
 
 	/*  Iterate through each pool.  */
@@ -212,10 +213,9 @@ int schTerminateTaskSch(schTaskSch *sch) {
 
 			pool->mutex = NULL;
 			pool->set = NULL;
+
 		}
 	}
-
-
 	return SCH_OK;
 }
 
@@ -254,6 +254,11 @@ int schSubmitTask(schTaskSch *sch, schTaskPackage *package, schTaskPool *pPool) 
 
 int schWaitTask(schTaskSch *sch) {
 	int i;
+
+	/*  */
+	if ((sch->flag & SCH_FLAG_RUNNING) == 0)
+		return SCH_ERROR_INVALID_STATE;
+
 	/*  Iterate through each pool.  */
 	for (i = 0; i < sch->num; i++) {
 		if(sch->pool[i].flag & SCH_POOL_SLEEP && sch->pool[i].size <= 0)

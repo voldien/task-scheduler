@@ -25,7 +25,8 @@ START_TEST(create){
 	int i;
 	const size_t numPackages = 2048;
 
-	schCreateTaskPool(sch, -1, 0, numPackages);
+	schTaskSch* psch = schCreateTaskPool(sch, -1, 0, numPackages);
+	ck_assert_ptr_eq(sch, psch);
 	ck_assert_int_eq(sch->num, schGetNumCPUCores());
 
 	for(i = 0; i < sch->num; i++){
@@ -46,14 +47,13 @@ START_TEST(create){
 		ck_assert_int_eq(sch->pool[i].deinit, NULL);
 		ck_assert_int_eq(sch->pool[i].userdata, NULL);
 
-
-
 	}
 
 	schSetInitCallBack(sch, init);
 	schSetDeInitCallBack(sch, deinit);
 	schSetSchUserData(sch, init);
 
+	/*  Check each pool.    */
 	for(i = 0; i < sch->num; i++){
 		ck_assert_ptr_eq(sch->pool[i].init, init);
 		ck_assert_ptr_eq(sch->pool[i].deinit, deinit);
@@ -62,8 +62,9 @@ START_TEST(create){
 
 	/*  */
 	ck_assert_int_eq(sch->flag & SCH_FLAG_RUNNING, 0);
-	ck_assert_int_eq(sch->flag & SCH_FLAG_INIT, SCH_FLAG_INIT);
+	ck_assert_int_eq(sch->flag,  SCH_FLAG_INIT);
 
+	/*  */
 	ck_assert(schReleaseTaskSch(sch) == SCH_OK);
 }
 END_TEST
@@ -131,7 +132,7 @@ int main(int argc, const char **argv) {
 	for(int i = 0; i < numPackages; i++)
 		schSubmitTask(&sch, &package, NULL);
 
-	schTerminateTaskSch(&sch);
+	schReleaseTaskSch(&sch);
 	t = schGetTime() - t;
 	printf("time: %f seconds for %d tasks.\n", (float)t / (float)schTimeResolution(), numPackages);
 
