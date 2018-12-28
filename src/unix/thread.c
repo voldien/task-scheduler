@@ -11,7 +11,6 @@
 #include<pthread.h>
 #include<signal.h>
 #include<unistd.h>
-#include <bits/siginfo.h>
 
 void *schCreateThread(int affinity, void *pfunc, void *userData) {
 
@@ -110,7 +109,7 @@ void *schCreateSignal(void) {
 }
 
 int schBaseSignal(void) {
-	return SIGUNUSED;
+	return SIGUSR1;
 }
 
 int schSignalWait(void *sig) {

@@ -126,13 +126,13 @@ int schRunTaskSch(schTaskSch *sch) {
 
 	/*  Must have been initialized before can start running.    */
 	if ((sch->flag & SCH_FLAG_INIT) == 0)
-		return SCH_ERROR_INVALID_SCH;
+		return SCH_ERROR_INVALID_STATE;
 
 	/*  Initialize schedular signal mask.   */
 	const int mask[] = {SCH_SIGNAL_CONTINUE, SCH_SIGNAL_DONE, SCH_SIGNAL_RUNNING};
 	const int nrMask = sizeof(mask) / sizeof(mask[0]);
 	if(schSetSignalThreadMask(sch->set, nrMask, mask) <= 0) {
-
+		return SCH_ERROR_INTERNAL;
 	}
 
 	/*  Iterate through each pool.  */
@@ -167,7 +167,8 @@ int schRunTaskSch(schTaskSch *sch) {
 
 	/*  Iterate through each pool and start.    */
 	for (i = 0; i < sch->num; i++) {
-		schRaiseThreadSignal(sch->pool[i].thread, SCH_SIGNAL_CONTINUE);
+		if(schRaiseThreadSignal(sch->pool[i].thread, SCH_SIGNAL_CONTINUE) <= 0)
+			return SCH_ERROR_INTERNAL;
 	}
 
 	/*  Update scheduler flag state.    */
@@ -245,7 +246,8 @@ int schSubmitTask(schTaskSch *sch, schTaskPackage *package, schTaskPool *pPool) 
 
 	/*  If pool is finished.    */
 	if (pool->size <= 1 && pool->flag & SCH_POOL_SLEEP) {
-		schRaiseThreadSignal(pool->thread, SCH_SIGNAL_CONTINUE);
+		if(!schRaiseThreadSignal(pool->thread, SCH_SIGNAL_CONTINUE))
+			return SCH_ERROR_INTERNAL;
 	}
 	return SCH_OK;
 }
@@ -378,13 +380,13 @@ void *schPoolExecutor(void *handle) {
 
 const char* schErrorMsg(int errMsg){
 	static const char* msg[] = {
-			"no error.",
-			"unknown error",
-			"invalid argument",
-			"invalid schedular object",
-			"schedular/pool bad state",
-			"internal error",
-			"pool queue is full"
+			"no error.",                /*  SCH_OK */
+			"unknown error",            /*  SCH_ERROR_UNKNOWN  */
+			"invalid argument",         /*  SCH_ERROR_INVALID_ARG   */
+			"invalid schedular object", /*  SCH_ERROR_INVALID_SCH   */
+			"schedular/pool bad state", /*  SCH_ERROR_INVALID_STATE */
+			"internal error",           /*  SCH_ERROR_INTERNAL  */
+			"pool queue is full"        /*  SCH_ERROR_POOL_FULL */
 	};
 	if(errMsg > 0)
 		return "Invalid error msg";
