@@ -113,11 +113,12 @@ int main(int argc, const char **argv) {
 
 	schTaskSch sch;
 
-	const size_t numPackages = 48;
+	const size_t numPackages = 250;
 
 	schCreateTaskPool(&sch, -1, 0, numPackages);
 
-	schRunTaskSch(&sch);
+	if(schRunTaskSch(&sch) != SCH_OK)
+		return EXIT_FAILURE;
 	long int t = schGetTime();
 
 	schTaskPackage package = {NULL};
@@ -126,6 +127,10 @@ int main(int argc, const char **argv) {
 		schSubmitTask(&sch, &package, NULL);
 
 	schWaitTask(&sch);
+
+	for(int i = 0; i < numPackages; i++)
+		schSubmitTask(&sch, &package, NULL);
+
 	schTerminateTaskSch(&sch);
 	t = schGetTime() - t;
 	printf("time: %f seconds for %d tasks.\n", (float)t / (float)schTimeResolution(), numPackages);
