@@ -82,7 +82,7 @@ typedef struct sch_task_pool_t {
 	void *thread;               /*  Thread associated with the pool.    */
 	void* schThread;            /*  Schedular thread.   */
 
-	/*  */
+	/*  Thread race condition variables.    */
 	void* mutex;                /*	Mutex.	*/
 	void* set;                  /*	Thread signal.  */
 
@@ -93,7 +93,7 @@ typedef struct sch_task_pool_t {
 	unsigned int reserved;      /*  Number of allocate task packages.   */
 	schTaskPackage *package;    /*  */
 
-	/*  */
+	/*  User and init and release functions callbacks.  */
 	void *userdata;             /*  */
 	schUserCallBack init;       /*  */
 	schUserCallBack deinit;     /*  */
@@ -102,7 +102,7 @@ typedef struct sch_task_pool_t {
 	int avergeDeque;            /*  Average package dequeue per time unit.  */
 	long int dheapPriority;     /*  */
 
-	/*  */
+	/*  State and scheduler.    */
 	void *sch;                  /*  Scheduler associated with.  */
 	unsigned int index;         /*  Affinity index. */
 	unsigned int flag;          /*  Pool status flag.   */
@@ -134,7 +134,7 @@ extern schTaskSch *schCreateTaskPool(schTaskSch *sch, int cores, unsigned int fl
  * Release all resources associated with
  * the scheduler object.
  * @param sch scheduler object.
- * @return
+ * @return non-negative if successfully releasing.
  */
 extern int schReleaseTaskSch(schTaskSch *sch);
 
