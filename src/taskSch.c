@@ -48,6 +48,7 @@ schTaskSch *schCreateTaskPool(schTaskSch *sch, int cores, unsigned int flag, uns
 		/*  Initialize and deinitialize function pointer.   */
 		sch->pool[i].init = NULL;
 		sch->pool[i].deinit = NULL;
+		sch->pool[i].userdata = NULL;
 
 		/*  Thread attributes.  */
 		sch->pool[i].thread = NULL;
