@@ -306,6 +306,12 @@ extern int schRaiseThreadSignal(void* thread, int signal);
 extern void* schCreateSignal(void);
 
 /**
+ * Release signal resources.
+ * @param signal valid signal pointer.
+ */
+extern void schDeleteSignal(void* signal);
+
+/**
  * Get the base signal number that
  * are valid for sending signal between threads and
  * that will not conflicts with the kernel specified
@@ -349,9 +355,10 @@ extern int schSetSignalThreadMask(void* set, int nr, const int* signals);
 extern int schCreateMutex(void **mutex);
 
 /**
- * 
- * @param spinlock
- * @return
+ * Create spinlock synchronize primitive
+ * object.
+ * @param spinlock valid pointer.
+ * @return non-negative if successfully.
  */
 extern int schCreateSpinLock(void** spinlock);
 
@@ -363,23 +370,23 @@ extern int schCreateSpinLock(void** spinlock);
 extern int schDeleteMutex(void *mutex);
 
 /**
- *
- * @param spinlock
- * @return
+ * Release spinlock resources.
+ * @param spinlock valid spinlock pointer.
+ * @return non-negative if successfully.
  */
 extern int schDeleteSpinLock(void* spinlock);
 
 /**
- * 
- * @param spinlock
- * @return
+ * Lock spinlock.
+ * @param spinlock valid spinlock pointer.
+ * @return non-negative if successfully.
  */
 extern int schSpinLock(void* spinlock);
 
 /**
- *
- * @param spinlock
- * @return
+ * Unlock spinlock.
+ * @param spinlock valid spinlock pointer.
+ * @return non-negative if successfully.
  */
 extern int schSpinUnlock(void* spinlock);
 
