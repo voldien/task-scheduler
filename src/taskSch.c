@@ -53,6 +53,7 @@ schTaskSch *schCreateTaskPool(schTaskSch *sch, int cores, unsigned int flag, uns
 		sch->pool[i].mutex = NULL;
 
 		sch->pool[i].schThread = schCurrentThread();
+		sch->pool[i].sch = sch;
 	}
 
 	sch->flag |= SCH_FLAG_INIT;
