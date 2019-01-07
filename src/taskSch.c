@@ -8,18 +8,18 @@ schTaskSch *schCreateTaskPool(schTaskSch *sch, int cores, unsigned int flag, uns
 	unsigned int i;
 
 	/*  */
-	if(cores > schGetNumCPUCores())
+	if (cores > schGetNumCPUCores())
 		return NULL;
 
 	if (cores == -1)
 		cores = schGetNumCPUCores();
-	sch->num = (unsigned int)cores;
+	sch->num = (unsigned int) cores;
 	sch->flag = flag;
 
 	/*  Allocate pools. */
 	sch->pool = malloc(sizeof(schTaskPool) * sch->num);
 	assert(sch->pool);
-	sch->dheap = malloc(sizeof(schTaskPool*) * sch->num);
+	sch->dheap = malloc(sizeof(schTaskPool *) * sch->num);
 
 	sch->set = schCreateSignal();
 
@@ -63,7 +63,7 @@ schTaskSch *schCreateTaskPool(schTaskSch *sch, int cores, unsigned int flag, uns
 }
 
 
-int schReleaseTaskSch(schTaskSch *sch){
+int schReleaseTaskSch(schTaskSch *sch) {
 
 	int x;
 
@@ -72,7 +72,7 @@ int schReleaseTaskSch(schTaskSch *sch){
 
 	/*  Iterate through each pool.  */
 	for (x = 0; x < sch->num; x++) {
-		schTaskPool* pool = &sch->pool[x];
+		schTaskPool *pool = &sch->pool[x];
 
 		/*  Empty pool size.    */
 		free(pool->package);
