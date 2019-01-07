@@ -129,6 +129,10 @@ void *schCreateSignal(void) {
 	return sig;
 }
 
+void schDeleteSignal(void* signal){
+	free(signal);
+}
+
 int schBaseSignal(void) {
 	return SIGUSR1;
 }

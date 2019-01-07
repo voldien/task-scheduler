@@ -117,7 +117,7 @@ typedef struct sch_task_schedular_t {
 	schTaskPool *pool;      /*  Pools.  */
 	unsigned int flag;      /*  State/Status Flags. */
 	schTaskPool **dheap;    /*  Priority queue. */
-	void* spinlock;
+	void* spinlock;         /*  */
 	void* set;              /*  Signal listening mask.  */
 } schTaskSch;
 

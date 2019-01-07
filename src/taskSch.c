@@ -63,7 +63,6 @@ schTaskSch *schCreateTaskPool(schTaskSch *sch, int cores, unsigned int flag, uns
 	return sch;
 }
 
-
 int schReleaseTaskSch(schTaskSch *sch) {
 
 	int x;
@@ -81,12 +80,13 @@ int schReleaseTaskSch(schTaskSch *sch) {
 		pool->flag = 0;
 	}
 
+	/*  */
 	schDeleteSpinLock(sch->spinlock);
+	schDeleteSignal(sch->set);
 
 	/*  Release pool and heap.  */
 	free(sch->pool);
 	free(sch->dheap);
-	free(sch->set);
 
 	/*  */
 	sch->dheap = NULL;
