@@ -23,6 +23,8 @@ schTaskSch *schCreateTaskPool(schTaskSch *sch, int cores, unsigned int flag, uns
 
 	sch->set = schCreateSignal();
 
+	schCreateSpinLock(&sch->spinlock);
+
 	/*  Iterate through each pool.  */
 	for (i = 0; i < sch->num; i++) {
 
@@ -77,6 +79,8 @@ int schReleaseTaskSch(schTaskSch *sch){
 		pool->package = NULL;
 		pool->flag = 0;
 	}
+
+	schDeleteSpinLock(sch->spinlock);
 
 	/*  Release pool and heap.  */
 	free(sch->pool);
@@ -279,7 +283,8 @@ int schWaitTask(schTaskSch *sch) {
 void* schQueueMutexEnDeQueue(schTaskPool *taskPool, int dequeue, void *enqueue){
 	schTaskPackage* package = enqueue;
 
-	schPoolLock(taskPool);
+	schTaskSch* sch = taskPool->sch;
+	schSpinLock(sch->spinlock);
 	if(dequeue){
 		taskPool->size--;
 		package = &taskPool->package[taskPool->head];
@@ -289,7 +294,8 @@ void* schQueueMutexEnDeQueue(schTaskPool *taskPool, int dequeue, void *enqueue){
 		taskPool->tail = (taskPool->tail + 1) % taskPool->reserved;
 		taskPool->size++;
 	}
-	schPoolUnLock(taskPool);
+	schSpinUnlock(sch->spinlock);
+
 	return package;
 }
 

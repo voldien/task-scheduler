@@ -72,9 +72,30 @@ int schCreateMutex(void **mutex) {
 	return pthread_mutex_init((pthread_mutex_t *) *mutex, NULL) == 0;
 }
 
+int schCreateSpinLock(void** spinlock){
+	*spinlock = malloc(sizeof(pthread_spinlock_t));
+	assert(*spinlock);
+
+	return pthread_spin_init(*spinlock, 0);
+}
+
 int schDeleteMutex(void *mutex) {
 	pthread_mutex_destroy((pthread_mutex_t *) mutex);
 	free(mutex);
+}
+
+int schDeleteSpinLock(void* spinlock){
+	pthread_spin_destroy(spinlock);
+	free(spinlock);
+}
+
+
+int schSpinLock(void* spinlock){
+	return pthread_spin_lock(spinlock);
+}
+
+int schSpinUnlock(void* spinlock){
+	return pthread_spin_unlock(spinlock);
 }
 
 int schGetNumCPUCores(void) {
@@ -154,6 +175,7 @@ int schSetSignalThreadMask(void *set, int nr, const int *signals) {
 		return -1;
 	}
 	return 1;
+
 }
 
 void schPoolLock(schTaskPool *pool) {

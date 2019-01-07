@@ -117,6 +117,7 @@ typedef struct sch_task_schedular_t {
 	schTaskPool *pool;      /*  Pools.  */
 	unsigned int flag;      /*  State/Status Flags. */
 	schTaskPool **dheap;    /*  Priority queue. */
+	void* spinlock;
 	void* set;              /*  Signal listening mask.  */
 } schTaskSch;
 
@@ -348,11 +349,39 @@ extern int schSetSignalThreadMask(void* set, int nr, const int* signals);
 extern int schCreateMutex(void **mutex);
 
 /**
+ * 
+ * @param spinlock
+ * @return
+ */
+extern int schCreateSpinLock(void** spinlock);
+
+/**
  * Release resources associated with the mutex object.
  * @param mutex valid mutex object pointer.
  * @return non-negative if successfully.
  */
 extern int schDeleteMutex(void *mutex);
+
+/**
+ *
+ * @param spinlock
+ * @return
+ */
+extern int schDeleteSpinLock(void* spinlock);
+
+/**
+ * 
+ * @param spinlock
+ * @return
+ */
+extern int schSpinLock(void* spinlock);
+
+/**
+ *
+ * @param spinlock
+ * @return
+ */
+extern int schSpinUnlock(void* spinlock);
 
 /**
  * Pool thread execution environment.
