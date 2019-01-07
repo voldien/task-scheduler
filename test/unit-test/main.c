@@ -28,6 +28,7 @@ START_TEST(create){
 	schTaskSch* psch = schCreateTaskPool(sch, -1, 0, numPackages);
 	ck_assert_ptr_eq(sch, psch);
 	ck_assert_int_eq(sch->num, schGetNumCPUCores());
+	ck_assert_ptr_ne(sch->pool, NULL);
 
 	for(i = 0; i < sch->num; i++){
 		ck_assert_int_eq(sch->pool[i].reserved, numPackages);
@@ -47,6 +48,8 @@ START_TEST(create){
 		ck_assert_int_eq(sch->pool[i].deinit, NULL);
 		ck_assert_int_eq(sch->pool[i].userdata, NULL);
 
+		ck_assert_int_eq(sch->pool[i].sch, psch);
+
 	}
 
 	schSetInitCallBack(sch, init);
@@ -63,6 +66,9 @@ START_TEST(create){
 	/*  */
 	ck_assert_int_eq(sch->flag & SCH_FLAG_RUNNING, 0);
 	ck_assert_int_eq(sch->flag,  SCH_FLAG_INIT);
+	ck_assert_ptr_ne(sch->spinlock, NULL);
+	ck_assert_int_ne(sch->set, NULL);
+	ck_assert_int_ne(sch->dheap, NULL);
 
 	/*  */
 	ck_assert(schReleaseTaskSch(sch) == SCH_OK);
