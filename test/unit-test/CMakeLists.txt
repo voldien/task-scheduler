@@ -35,3 +35,9 @@ ADD_EXECUTABLE(sch-task-cunit ${unitsrc})
 TARGET_LINK_LIBRARIES(sch-task-cunit -lm -lcheck -lpthread -lrt -lsubunit taskSch)
 
 INSTALL(TARGETS sch-task-cunit DESTINATION bin)
+
+
+ADD_TEST(
+        NAME assertPerformance
+        COMMAND sch-task-cunit )
+SET_TESTS_PROPERTIES(assertPerformance PROPERTIES DEPENDS taskSch)
