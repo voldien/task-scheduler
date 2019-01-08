@@ -26,8 +26,13 @@ extern "C"{
 /**
  * Task scheduler flags.
  */
-#define SCH_FLAG_INIT       (unsigned int)0x1   /*  Schedular has been initialized.    */
-#define SCH_FLAG_RUNNING    (unsigned int)0x2   /*  Schedular is in running mode.   */
+#define SCH_FLAG_NO_AFM     (unsigned int)0x80000000    /*  Disable affinity mapping.    */
+
+/**
+ * Task scheduler internal flags.
+ */
+#define SCH_FLAG_INIT       (unsigned int)0x1           /*  Scheduler has been initialized.    */
+#define SCH_FLAG_RUNNING    (unsigned int)0x2           /*  Scheduler is in running mode.   */
 
 /**
  * Pool status flags.
