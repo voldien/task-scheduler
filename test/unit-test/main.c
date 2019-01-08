@@ -96,6 +96,16 @@ START_TEST(submit){
 
 	ck_assert_int_eq(schWaitTask(sch), SCH_OK);
 
+	/*  Perform second task submitting. */
+	package.callback = perform_task;
+	for(int i = 0; i < numPackages; i++){
+		int status = schSubmitTask(sch, &package, NULL);
+		ck_assert_int_eq(status, SCH_OK);
+	}
+
+	/*  Terminate first then release.   */
+	ck_assert_int_eq(schTerminateTaskSch(sch),  SCH_OK);
+
 	ck_assert(schReleaseTaskSch(sch) == SCH_OK);
 }
 END_TEST
