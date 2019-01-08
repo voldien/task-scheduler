@@ -62,11 +62,13 @@ extern "C"{
  */
 typedef int (*schCallback)(struct sch_task_package_t *package);
 typedef struct sch_task_package_t {
-	unsigned int size;          /*  Size parameter. */
-	unsigned int offset;        /*  Offset. */
-	schCallback callback;       /*  Function callback.  */
+	/*  Package data.   */
 	unsigned int flag;          /*  Package flag.   */
 	unsigned int index;         /*  Pool index. */
+	/*  User data.  */
+	schCallback callback;       /*  Function callback.  */
+	unsigned int size;          /*  Size parameter. */
+	unsigned int offset;        /*  Offset. */
 	void *begin;                /*  Start pointer.  */
 	void *end;                  /*  End pointer.    */
 	void* puser;                /*  User data.  */
@@ -174,6 +176,14 @@ extern void schSetPoolUserData(schTaskSch *sch, int index, void *user);
  * @return non-null pointer if user pointer exists, NULL otherwise.
  */
 extern void *schGetPoolUserData(schTaskSch *sch, int index);
+
+/**
+ * Get schedular pool by index.
+ * @param sch
+ * @param index
+ * @return
+ */
+extern schTaskPool* schGetPool(schTaskSch* sch, int index);
 
 /**
  * Start running task scheduler.
