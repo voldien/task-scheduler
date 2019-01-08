@@ -344,7 +344,7 @@ extern int schSignalWait(void* sig);
  * @param time in nano seconds for the timeout.
  * @return received.
  */
-extern int schSignalWaitTimeOut(void* sig, long int time);
+extern int schSignalWaitTimeOut(void* sig, long int nano);
 
 /**
  * Set thread signal mask. Mask what signal

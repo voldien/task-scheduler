@@ -143,12 +143,12 @@ int schSignalWait(void *sig) {
 	return signal;
 }
 
-int schSignalWaitTimeOut(void *sig, long int time) {
+int schSignalWaitTimeOut(void *sig, long int nano) {
 	siginfo_t info;
 	struct timespec spec;
 
-	spec.tv_sec = 0;
-	spec.tv_nsec = time;
+	spec.tv_sec = nano / 1000000000;
+	spec.tv_nsec = nano % 1000000000;
 
 	sigtimedwait(sig, &info, &spec);
 	return info.si_signo;
