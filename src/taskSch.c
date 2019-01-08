@@ -14,13 +14,14 @@ schTaskSch *schCreateTaskPool(schTaskSch *sch, int cores, unsigned int flag, uns
 	if (cores == -1)
 		cores = schGetNumCPUCores();
 	sch->num = (unsigned int) cores;
-	sch->flag = flag;
+	sch->flag = flag & ~(SCH_FLAG_INIT | SCH_FLAG_RUNNING);
 
 	/*  Allocate pools. */
 	sch->pool = malloc(sizeof(schTaskPool) * sch->num);
 	assert(sch->pool);
 	sch->dheap = malloc(sizeof(schTaskPool *) * sch->num);
 
+	/*  Create signal object.   */
 	sch->set = schCreateSignal();
 
 	schCreateSpinLock(&sch->spinlock);
@@ -55,6 +56,7 @@ schTaskSch *schCreateTaskPool(schTaskSch *sch, int cores, unsigned int flag, uns
 		sch->pool[i].set = NULL;
 		sch->pool[i].mutex = NULL;
 
+		/*  */
 		sch->pool[i].schThread = schCurrentThread();
 		sch->pool[i].sch = sch;
 	}
@@ -88,10 +90,13 @@ int schReleaseTaskSch(schTaskSch *sch) {
 	free(sch->pool);
 	free(sch->dheap);
 
-	/*  */
+	/*  Reset attribute values. */
 	sch->dheap = NULL;
 	sch->pool = NULL;
+	sch->spinlock = NULL;
 	sch->set = NULL;
+	sch->num = 0;
+	sch->flag = 0;
 
 	return SCH_OK;
 }
@@ -148,6 +153,7 @@ int schRunTaskSch(schTaskSch *sch) {
 
 	/*  Iterate through each pool.  */
 	for (i = 0; i < sch->num; i++) {
+		int ncoreIndex = i;
 
 		/*  Create mutex and signal.    */
 		if (!schCreateMutex(&sch->pool[i].mutex)) {
@@ -156,8 +162,12 @@ int schRunTaskSch(schTaskSch *sch) {
 		}
 		sch->pool[i].set = schCreateSignal();
 
+		/*  Set affinity core mapping.  */
+		if(sch->flag & SCH_FLAG_NO_AFM)
+			ncoreIndex = -1;
+
 		/*  Create thread.  */
-		sch->pool[i].thread = schCreateThread(i, schPoolExecutor, &sch->pool[i]);
+		sch->pool[i].thread = schCreateThread(ncoreIndex, schPoolExecutor, &sch->pool[i]);
 		assert(sch->pool[i].thread);
 
 		/*  Check if thread were create successfully.    */
@@ -188,6 +198,7 @@ int schRunTaskSch(schTaskSch *sch) {
 
 int schTerminateTaskSch(schTaskSch *sch) {
 	int x;
+	int status = 0;
 
 	/*  Non-initialized scheduler.  */
 	if (sch->flag & SCH_FLAG_INIT == 0)
