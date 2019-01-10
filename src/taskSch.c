@@ -2,14 +2,17 @@
 #include<malloc.h>
 #include<assert.h>
 #include<string.h>
-#include <errno.h>
+#include<errno.h>
 
-schTaskSch *schCreateTaskPool(schTaskSch *sch, int cores, unsigned int flag, unsigned int maxPackagesPool) {
+int schCreateTaskPool(schTaskSch *sch, int cores, unsigned int flag, unsigned int maxPackagesPool) {
 	unsigned int i;
 
-	/*  */
+	if(sch == NULL)
+		return SCH_ERROR_INVALID_SCH;
+
+	/*  Invalid argument.   */
 	if (cores > schGetNumCPUCores())
-		return NULL;
+		return SCH_ERROR_INVALID_ARG;
 
 	if (cores == -1)
 		cores = schGetNumCPUCores();
@@ -24,7 +27,12 @@ schTaskSch *schCreateTaskPool(schTaskSch *sch, int cores, unsigned int flag, uns
 	/*  Create signal object.   */
 	sch->set = schCreateSignal();
 
-	schCreateSpinLock(&sch->spinlock);
+	/*  Create internal spinlock.   */
+	if(schCreateSpinLock(&sch->spinlock) < 0){
+		free(sch->pool);
+		free(sch->dheap);
+		return SCH_ERROR_SYNC_OBJECT;
+	}
 
 	/*  Iterate through each pool.  */
 	for (i = 0; i < sch->num; i++) {
@@ -83,8 +91,8 @@ int schReleaseTaskSch(schTaskSch *sch) {
 	}
 
 	/*  */
-	schDeleteSpinLock(sch->spinlock);
-	schDeleteSignal(sch->set);
+	status |= schDeleteSpinLock(sch->spinlock);
+	status |= schDeleteSignal(sch->set);
 
 	/*  Release pool and heap.  */
 	free(sch->pool);
@@ -213,23 +221,23 @@ int schTerminateTaskSch(schTaskSch *sch) {
 
 	/*  Iterate through each pool.  */
 	for (x = 0; x < sch->num; x++) {
-		schTaskPool* pool = &sch->pool[x];
+		schTaskPool *pool = &sch->pool[x];
 
 		/*  If thread has been created. */
-		if(pool->thread){
-			schRaiseThreadSignal(pool->thread, SCH_SIGNAL_QUIT);
+		if (pool->thread) {
+			status |= schRaiseThreadSignal(pool->thread, SCH_SIGNAL_QUIT);
 
-			/*  */
-			schWaitThread(pool->thread);
-			schDeleteThread(pool->thread);
+			/*  Wait in till thread has terminated. */
+			status |= schWaitThread(pool->thread);
+			status |= schDeleteThread(pool->thread);
 			pool->thread = NULL;
 			pool->schThread = NULL;
 
 			/*  */
-			if(pool->mutex)
-				schDeleteMutex(pool->mutex);
-			if(pool->set)
-				schDeleteSignal(pool->set);
+			if (pool->mutex)
+				status |= schDeleteMutex(pool->mutex);
+			if (pool->set)
+				status |= schDeleteSignal(pool->set);
 
 
 			pool->mutex = NULL;
@@ -238,8 +246,11 @@ int schTerminateTaskSch(schTaskSch *sch) {
 		}
 	}
 
+	/*  Update scheduler state. */
 	sch->flag &= ~(sch->flag & SCH_FLAG_RUNNING);
-	return SCH_OK;
+
+	/*  */
+	return status ? SCH_ERROR_UNKNOWN : SCH_OK;
 }
 
 
@@ -247,7 +258,7 @@ int schSubmitTask(schTaskSch *sch, schTaskPackage *package, schTaskPool *pPool) 
 
 	schTaskPool *pool;
 
-	if((sch->flag & SCH_FLAG_RUNNING) == 0)
+	if((sch->flag & SCH_FLAG_RUNNING) == 0 || (sch->flag & SCH_FLAG_INIT) == 0)
 		return SCH_ERROR_INVALID_STATE;
 
 	/*  Validate argument.  */
@@ -276,7 +287,7 @@ int schSubmitTask(schTaskSch *sch, schTaskPackage *package, schTaskPool *pPool) 
 	/*  If pool is finished.    */
 	if (pool->size <= 1 && pool->flag & SCH_POOL_SLEEP) {
 		if (!schRaiseThreadSignal(pool->thread, SCH_SIGNAL_CONTINUE))
-			return SCH_ERROR_INTERNAL;
+			return SCH_ERROR_SIGNAL;
 	}
 	return SCH_OK;
 }
@@ -284,15 +295,15 @@ int schSubmitTask(schTaskSch *sch, schTaskPackage *package, schTaskPool *pPool) 
 int schWaitTask(schTaskSch *sch) {
 	int i;
 
-	/*  */
+	/*  Check if valid scheduler.   */
 	if ((sch->flag & SCH_FLAG_RUNNING) == 0)
 		return SCH_ERROR_INVALID_STATE;
 
 	/*  Iterate through each pool.  */
 	for (i = 0; i < sch->num; i++) {
-		if(sch->pool[i].flag & SCH_POOL_SLEEP && sch->pool[i].size <= 0)
+		if (sch->pool[i].flag & SCH_POOL_SLEEP && sch->pool[i].size <= 0)
 			continue;
-		else{
+		else {
 			/*  Wait and check every milliseconds reset. */
 			schSignalWaitTimeOut(sch->set, (long int)1E7L);
 			i = -1;
@@ -426,7 +437,9 @@ const char *schErrorMsg(int errMsg) {
 			"invalid schedular object", /*  SCH_ERROR_INVALID_SCH   */
 			"schedular/pool bad state", /*  SCH_ERROR_INVALID_STATE */
 			"internal error",           /*  SCH_ERROR_INTERNAL  */
-			"pool queue is full"        /*  SCH_ERROR_POOL_FULL */
+			"pool queue is full",       /*  SCH_ERROR_POOL_FULL */
+			"internal signal error",    /*  SCH_ERROR_SIGNAL    */
+			"Synchronization error",    /*  SCH_ERROR_SYNC_OBJECT    */
 	};
 	if (errMsg > 0)
 		return "Invalid error msg";

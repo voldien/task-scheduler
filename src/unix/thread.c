@@ -25,7 +25,7 @@ void *schCreateThread(int affinity, void *pfunc, void *userData) {
 
 	pthread_attr_init(&attr);
 
-	/*  */
+	/*  Create affinity mapping.    */
 	if (affinity >= 0) {
 		/*  Set CPU affinity thread attribute.  */
 		if (pthread_attr_setaffinity_np(&attr, sizeof(cpus), &cpus) != 0) {
@@ -40,7 +40,7 @@ void *schCreateThread(int affinity, void *pfunc, void *userData) {
 		return NULL;
 	}
 
-	/*  */
+	/*  Release attribute object.   */
 	pthread_attr_destroy(&attr);
 	return (void *) t0;
 }
@@ -80,15 +80,16 @@ int schCreateSpinLock(void** spinlock){
 }
 
 int schDeleteMutex(void *mutex) {
-	pthread_mutex_destroy((pthread_mutex_t *) mutex);
+	int status = pthread_mutex_destroy((pthread_mutex_t *) mutex);
 	free(mutex);
+	return status;
 }
 
 int schDeleteSpinLock(void* spinlock){
-	pthread_spin_destroy(spinlock);
+	int status = pthread_spin_destroy(spinlock);
 	free(spinlock);
+	return status;
 }
-
 
 int schSpinLock(void* spinlock){
 	return pthread_spin_lock(spinlock);
@@ -129,8 +130,9 @@ void *schCreateSignal(void) {
 	return sig;
 }
 
-void schDeleteSignal(void* signal){
+int schDeleteSignal(void* signal){
 	free(signal);
+	return 0;
 }
 
 int schBaseSignal(void) {
@@ -179,7 +181,6 @@ int schSetSignalThreadMask(void *set, int nr, const int *signals) {
 		return -1;
 	}
 	return 1;
-
 }
 
 void schPoolLock(schTaskPool *pool) {

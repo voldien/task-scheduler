@@ -56,10 +56,12 @@ extern "C"{
 #define SCH_OK                  (int)1      /*  No error.   */
 #define SCH_ERROR_UNKNOWN       (int)0      /*  Error unknown.   */
 #define SCH_ERROR_INVALID_ARG   (int)-1     /*  Invalid argument.   */
-#define SCH_ERROR_INVALID_SCH   (int)-2     /*  Invalid schedular object.   */
-#define SCH_ERROR_INVALID_STATE (int)-3     /*  Schedular/Pool in bad state.    */
+#define SCH_ERROR_INVALID_SCH   (int)-2     /*  Invalid scheduler object.   */
+#define SCH_ERROR_INVALID_STATE (int)-3     /*  Scheduler/Pool in bad state.    */
 #define SCH_ERROR_INTERNAL      (int)-4     /*  Internal error. */
 #define SCH_ERROR_POOL_FULL     (int)-5     /*  Pool queue is full. */
+#define SCH_ERROR_SIGNAL        (int)-6     /*  Signal failed.  */
+#define SCH_ERROR_SYNC_OBJECT   (int)-7     /*  Synchronization object failed.   */
 
 
 /**
@@ -87,7 +89,7 @@ typedef struct sch_task_pool_t {
 
 	/*  Threading.  */
 	void *thread;               /*  Thread associated with the pool.    */
-	void* schThread;            /*  Schedular thread.   */
+	void* schThread;            /*  Scheduler thread.   */
 
 	/*  Thread race condition variables.    */
 	void* mutex;                /*	Mutex.	*/
@@ -95,8 +97,8 @@ typedef struct sch_task_pool_t {
 
 	/*  Task Queue.  */
 	unsigned int size;          /*  */
-	unsigned int head;          /*  */
 	unsigned int tail;          /*  */
+	unsigned int head;          /*  */
 	unsigned int reserved;      /*  Number of allocate task packages.   */
 	schTaskPackage *package;    /*  */
 
@@ -131,12 +133,13 @@ typedef struct sch_task_schedular_t {
 /**
  * Create scheduler.
  * @param sch object reference.
- * @param cores number of cores allocated.
- * @param flag
+ * @param cores number of cores allocated. -1 will select
+ * all cores.
+ * @param flag properties.
  * @param maxPackagesPool number of task on each pool.
- * @return non-null reference of sch object if successfully.
+ * @return non-negative if successfully releasing.
  */
-extern schTaskSch *schCreateTaskPool(schTaskSch *sch, int cores, unsigned int flag, unsigned int maxPackagesPool);
+extern int schCreateTaskPool(schTaskSch *sch, int cores, unsigned int flag, unsigned int maxPackagesPool);
 
 /**
  * Release all resources associated with
@@ -323,8 +326,9 @@ extern void* schCreateSignal(void);
 /**
  * Release signal resources.
  * @param signal valid signal pointer.
+ * @return
  */
-extern void schDeleteSignal(void* signal);
+extern int schDeleteSignal(void* signal);
 
 /**
  * Get the base signal number that
