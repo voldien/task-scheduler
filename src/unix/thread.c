@@ -141,8 +141,10 @@ int schBaseSignal(void) {
 
 int schSignalWait(void *sig) {
 	int signal;
-	sigwait(sig, &signal);
-	return signal;
+	if(sigwait(sig, &signal) == 0)
+		return signal;
+	else
+		return -1;
 }
 
 int schSignalWaitTimeOut(void *sig, long int nano) {
