@@ -76,27 +76,27 @@ int schCreateSpinLock(void** spinlock){
 	*spinlock = malloc(sizeof(pthread_spinlock_t));
 	assert(*spinlock);
 
-	return pthread_spin_init(*spinlock, 0);
+	return pthread_spin_init(*spinlock, 0) == 0;
 }
 
 int schDeleteMutex(void *mutex) {
 	int status = pthread_mutex_destroy((pthread_mutex_t *) mutex);
 	free(mutex);
-	return status;
+	return status == 0;
 }
 
 int schDeleteSpinLock(void* spinlock){
 	int status = pthread_spin_destroy(spinlock);
 	free(spinlock);
-	return status;
+	return status == 0;
 }
 
 int schSpinLock(void* spinlock){
-	return pthread_spin_lock(spinlock);
+	return pthread_spin_lock(spinlock) == 0;
 }
 
 int schSpinUnlock(void* spinlock){
-	return pthread_spin_unlock(spinlock);
+	return pthread_spin_unlock(spinlock) == 0;
 }
 
 int schGetNumCPUCores(void) {
@@ -132,7 +132,7 @@ void *schCreateSignal(void) {
 
 int schDeleteSignal(void* signal){
 	free(signal);
-	return 0;
+	return 1;
 }
 
 int schBaseSignal(void) {
@@ -180,13 +180,13 @@ int schSetSignalThreadMask(void *set, int nr, const int *signals) {
 		fprintf(stderr, "failed mapping thread: %s\n", strerror(err));
 		return -1;
 	}
-	return 1;
+	return err == 0;
 }
 
-void schPoolLock(schTaskPool *pool) {
-	pthread_mutex_lock(pool->mutex);
+int schPoolLock(schTaskPool *pool) {
+	return pthread_mutex_lock(pool->mutex) == 0;
 }
 
-void schPoolUnLock(schTaskPool *pool) {
-	pthread_mutex_unlock(pool->mutex);
+int schPoolUnLock(schTaskPool *pool) {
+	return pthread_mutex_unlock(pool->mutex) == 0;
 }
