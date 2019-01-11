@@ -25,8 +25,8 @@ START_TEST(create){
 	int i;
 	const size_t numPackages = 2048;
 
-	schTaskSch* psch = schCreateTaskPool(sch, -1, 0, numPackages);
-	ck_assert_ptr_eq(sch, psch);
+	int status = schCreateTaskPool(sch, -1, 0, numPackages);
+	ck_assert_int_eq(status, SCH_OK);
 	ck_assert_int_eq(sch->num, schGetNumCPUCores());
 	ck_assert_ptr_ne(sch->pool, NULL);
 
@@ -47,8 +47,6 @@ START_TEST(create){
 		ck_assert_int_eq(sch->pool[i].init, NULL);
 		ck_assert_int_eq(sch->pool[i].deinit, NULL);
 		ck_assert_int_eq(sch->pool[i].userdata, NULL);
-
-		ck_assert_int_eq(sch->pool[i].sch, psch);
 
 	}
 
@@ -71,7 +69,7 @@ START_TEST(create){
 	ck_assert_int_ne(sch->dheap, NULL);
 
 	/*  */
-	ck_assert(schReleaseTaskSch(sch) == SCH_OK);
+	ck_assert_int_eq(schReleaseTaskSch(sch), SCH_OK);
 }
 END_TEST
 
@@ -81,8 +79,8 @@ START_TEST(submit){
 
 	const size_t numPackages = 28;
 
-	schTaskSch* psch = schCreateTaskPool(sch, -1, 0, numPackages);
-	ck_assert_ptr_eq(sch, psch);
+	int status = schCreateTaskPool(sch, -1, 0, numPackages);
+	ck_assert_int_eq(status, SCH_OK);
 	ck_assert_int_eq(sch->num, schGetNumCPUCores());
 
 	ck_assert_int_eq(schRunTaskSch(sch), SCH_OK);
@@ -104,9 +102,9 @@ START_TEST(submit){
 	}
 
 	/*  Terminate first then release.   */
-	ck_assert_int_eq(schTerminateTaskSch(sch),  SCH_OK);
+	ck_assert_int_eq(schTerminateTaskSch(sch), SCH_OK);
 
-	ck_assert(schReleaseTaskSch(sch) == SCH_OK);
+	ck_assert_int_eq(schReleaseTaskSch(sch), SCH_OK);
 }
 END_TEST
 
