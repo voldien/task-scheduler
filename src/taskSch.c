@@ -28,7 +28,7 @@ int schCreateTaskPool(schTaskSch *sch, int cores, unsigned int flag, unsigned in
 	sch->set = schCreateSignal();
 
 	/*  Create internal spinlock.   */
-	if(schCreateSpinLock(&sch->spinlock) < 0){
+	if(!schCreateSpinLock(&sch->spinlock)){
 		free(sch->pool);
 		free(sch->dheap);
 		return SCH_ERROR_SYNC_OBJECT;
@@ -70,15 +70,18 @@ int schCreateTaskPool(schTaskSch *sch, int cores, unsigned int flag, unsigned in
 	}
 
 	sch->flag |= SCH_FLAG_INIT;
-	return sch;
+	return SCH_OK;
 }
 
 int schReleaseTaskSch(schTaskSch *sch) {
 
 	int x;
+	int status = 1;
 
 	/*  */
-	schTerminateTaskSch(sch);
+	status = schTerminateTaskSch(sch);
+	if (status != SCH_OK)
+		return status;
 
 	/*  Iterate through each pool.  */
 	for (x = 0; x < sch->num; x++) {
@@ -91,8 +94,8 @@ int schReleaseTaskSch(schTaskSch *sch) {
 	}
 
 	/*  */
-	status |= schDeleteSpinLock(sch->spinlock);
-	status |= schDeleteSignal(sch->set);
+	status &= schDeleteSpinLock(sch->spinlock);
+	status &= schDeleteSignal(sch->set);
 
 	/*  Release pool and heap.  */
 	free(sch->pool);
@@ -106,7 +109,7 @@ int schReleaseTaskSch(schTaskSch *sch) {
 	sch->num = 0;
 	sch->flag = 0;
 
-	return SCH_OK;
+	return status ? SCH_OK : SCH_ERROR_UNKNOWN;
 }
 
 void schSetInitCallBack(schTaskSch *sch, schUserCallBack callback) {
@@ -155,7 +158,7 @@ int schRunTaskSch(schTaskSch *sch) {
 	/*  Initialize scheduler signal mask.   */
 	const int mask[] = {SCH_SIGNAL_CONTINUE, SCH_SIGNAL_DONE, SCH_SIGNAL_RUNNING};
 	const int nrMask = sizeof(mask) / sizeof(mask[0]);
-	if (schSetSignalThreadMask(sch->set, nrMask, mask) <= 0) {
+	if (!schSetSignalThreadMask(sch->set, nrMask, mask)) {
 		return SCH_ERROR_INTERNAL;
 	}
 
@@ -195,7 +198,7 @@ int schRunTaskSch(schTaskSch *sch) {
 
 	/*  Iterate through each pool and start.    */
 	for (i = 0; i < sch->num; i++) {
-		if (schRaiseThreadSignal(sch->pool[i].thread, SCH_SIGNAL_CONTINUE) <= 0)
+		if (!schRaiseThreadSignal(sch->pool[i].thread, SCH_SIGNAL_CONTINUE))
 			return SCH_ERROR_INTERNAL;
 	}
 
@@ -206,7 +209,7 @@ int schRunTaskSch(schTaskSch *sch) {
 
 int schTerminateTaskSch(schTaskSch *sch) {
 	int x;
-	int status = 0;
+	int status = 1;
 
 	/*  Non-initialized scheduler.  */
 	if (sch->flag & SCH_FLAG_INIT == 0)
@@ -225,21 +228,21 @@ int schTerminateTaskSch(schTaskSch *sch) {
 
 		/*  If thread has been created. */
 		if (pool->thread) {
-			status |= schRaiseThreadSignal(pool->thread, SCH_SIGNAL_QUIT);
+			status &= schRaiseThreadSignal(pool->thread, SCH_SIGNAL_QUIT);
 
 			/*  Wait in till thread has terminated. */
-			status |= schWaitThread(pool->thread);
-			status |= schDeleteThread(pool->thread);
+			status &= schWaitThread(pool->thread);
+			status &= schDeleteThread(pool->thread);
 			pool->thread = NULL;
 			pool->schThread = NULL;
 
 			/*  */
 			if (pool->mutex)
-				status |= schDeleteMutex(pool->mutex);
+				status &= schDeleteMutex(pool->mutex);
 			if (pool->set)
-				status |= schDeleteSignal(pool->set);
+				status &= schDeleteSignal(pool->set);
 
-
+			/*  */
 			pool->mutex = NULL;
 			pool->set = NULL;
 
@@ -250,7 +253,7 @@ int schTerminateTaskSch(schTaskSch *sch) {
 	sch->flag &= ~(sch->flag & SCH_FLAG_RUNNING);
 
 	/*  */
-	return status ? SCH_ERROR_UNKNOWN : SCH_OK;
+	return status ? SCH_OK : SCH_ERROR_UNKNOWN;
 }
 
 
@@ -305,7 +308,8 @@ int schWaitTask(schTaskSch *sch) {
 			continue;
 		else {
 			/*  Wait and check every milliseconds reset. */
-			schSignalWaitTimeOut(sch->set, (long int)1E7L);
+			if (schSignalWaitTimeOut(sch->set, (long int) 1E7L) < 0)
+				fprintf(stderr, "signal wait failed: %s", errno);
 			i = -1;
 		}
 	}

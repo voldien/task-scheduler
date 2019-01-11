@@ -24,7 +24,7 @@ extern "C"{
 #endif
 
 /**
- * Task scheduler flags.
+ * Task scheduler option flags.
  */
 #define SCH_FLAG_NO_AFM     (unsigned int)0x80000000    /*  Disable affinity mapping.    */
 
@@ -126,7 +126,7 @@ typedef struct sch_task_schedular_t {
 	schTaskPool *pool;      /*  Pools.  */
 	unsigned int flag;      /*  State/Status Flags. */
 	schTaskPool **dheap;    /*  Priority queue. */
-	void* spinlock;         /*  */
+	void* spinlock;         /*  Spin lock.  */
 	void* set;              /*  Signal listening mask.  */
 } schTaskSch;
 
@@ -239,13 +239,13 @@ extern void* schQueueMutexEnDeQueue(schTaskPool *taskPool, int dequeue, void *en
  * Lock current task pool in current function
  * @param pool valid pool object.
  */
-extern void schPoolLock(schTaskPool *pool);
+extern int schPoolLock(schTaskPool *pool);
 
 /**
  * Unlock current task pool in current function
  * @param pool valid pool object.
  */
-extern void schPoolUnLock(schTaskPool *pool);
+extern int schPoolUnLock(schTaskPool *pool);
 
 /**
  * Perform priority queue on the pool
