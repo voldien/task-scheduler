@@ -58,7 +58,7 @@ int schWaitThread(void *thread) {
 		fprintf(stderr, strerror(errno));
 		return 0;
 	}
-	return 1;
+	return SCH_OK;
 }
 
 void *schCurrentThread() {
@@ -76,27 +76,27 @@ int schCreateSpinLock(void** spinlock){
 	*spinlock = malloc(sizeof(pthread_spinlock_t));
 	assert(*spinlock);
 
-	return pthread_spin_init(*spinlock, 0) == 0;
+	return pthread_spin_init(*spinlock, 0) == 0 ? SCH_OK : SCH_ERROR_UNKNOWN;;
 }
 
 int schDeleteMutex(void *mutex) {
 	int status = pthread_mutex_destroy((pthread_mutex_t *) mutex);
 	free(mutex);
-	return status == 0;
+	return status == 0 ? SCH_OK : SCH_ERROR_UNKNOWN;;
 }
 
 int schDeleteSpinLock(void* spinlock){
 	int status = pthread_spin_destroy(spinlock);
 	free(spinlock);
-	return status == 0;
+	return status == 0 ? SCH_OK : SCH_ERROR_UNKNOWN;;
 }
 
 int schSpinLock(void* spinlock){
-	return pthread_spin_lock(spinlock) == 0;
+	return pthread_spin_lock(spinlock) == 0 ? SCH_OK : SCH_ERROR_UNKNOWN;;
 }
 
 int schSpinUnlock(void* spinlock){
-	return pthread_spin_unlock(spinlock) == 0;
+	return pthread_spin_unlock(spinlock) == 0 ? SCH_OK : SCH_ERROR_UNKNOWN;;
 }
 
 int schGetNumCPUCores(void) {
@@ -117,11 +117,11 @@ int schGetNumCPUCores(void) {
 
 int schSetThreadName(void *thread, const char *threadName) {
 	int status = pthread_getname_np((pthread_t) thread, threadName, MAX_THREAD_NAME);
-	return status == 0;
+	return status == 0 ? SCH_OK : SCH_ERROR_UNKNOWN;;
 }
 
 int schRaiseThreadSignal(void *thread, int signal) {
-	return pthread_kill(thread, signal) == 0;
+	return pthread_kill(thread, signal) == 0 ? SCH_OK : SCH_ERROR_UNKNOWN;
 }
 
 void *schCreateSignal(void) {
@@ -132,7 +132,7 @@ void *schCreateSignal(void) {
 
 int schDeleteSignal(void* signal){
 	free(signal);
-	return 1;
+	return SCH_OK;
 }
 
 int schBaseSignal(void) {
@@ -154,7 +154,7 @@ int schSignalWaitTimeOut(void *sig, long int nano) {
 	spec.tv_sec = nano / 1000000000;
 	spec.tv_nsec = nano % 1000000000;
 
-	sigtimedwait(sig, &info, &spec);
+	int status = sigtimedwait(sig, &info, &spec);
 	return info.si_signo;
 }
 
@@ -182,13 +182,13 @@ int schSetSignalThreadMask(void *set, int nr, const int *signals) {
 		fprintf(stderr, "failed mapping thread: %s\n", strerror(err));
 		return -1;
 	}
-	return err == 0;
+	return err == 0 ? SCH_OK : SCH_ERROR_UNKNOWN;
 }
 
 int schPoolLock(schTaskPool *pool) {
-	return pthread_mutex_lock(pool->mutex) == 0;
+	return pthread_mutex_lock(pool->mutex) == 0 ? SCH_OK : SCH_ERROR_UNKNOWN;
 }
 
 int schPoolUnLock(schTaskPool *pool) {
-	return pthread_mutex_unlock(pool->mutex) == 0;
+	return pthread_mutex_unlock(pool->mutex) == 0 ? SCH_OK : SCH_ERROR_UNKNOWN;
 }

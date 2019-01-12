@@ -76,11 +76,11 @@ int schCreateTaskPool(schTaskSch *sch, int cores, unsigned int flag, unsigned in
 int schReleaseTaskSch(schTaskSch *sch) {
 
 	int x;
-	int status = 1;
+	int status = SCH_OK;
 
 	/*  */
 	status = schTerminateTaskSch(sch);
-	if (status != SCH_OK)
+	if (status != SCH_OK && status != SCH_ERROR_INVALID_STATE)
 		return status;
 
 	/*  Iterate through each pool.  */
@@ -209,7 +209,7 @@ int schRunTaskSch(schTaskSch *sch) {
 
 int schTerminateTaskSch(schTaskSch *sch) {
 	int x;
-	int status = 1;
+	int status = SCH_OK;
 
 	/*  Non-initialized scheduler.  */
 	if (sch->flag & SCH_FLAG_INIT == 0)
@@ -308,8 +308,9 @@ int schWaitTask(schTaskSch *sch) {
 			continue;
 		else {
 			/*  Wait and check every milliseconds reset. */
-			if (schSignalWaitTimeOut(sch->set, (long int) 1E7L) < 0)
-				fprintf(stderr, "signal wait failed: %s", errno);
+			if (schSignalWaitTimeOut(sch->set, (long int) 1E7L) < 0){
+				fprintf(stderr, "signal wait failed: %s", strerror(errno));
+			}
 			i = -1;
 		}
 	}
