@@ -9,6 +9,7 @@
 #include<string.h>
 
 #include<pthread.h>
+#include<semaphore.h>
 #include<signal.h>
 #include<unistd.h>
 
@@ -65,37 +66,53 @@ void *schCurrentThread() {
 	return (void *) pthread_self();
 }
 
-int schCreateMutex(void **mutex) {
+int schCreateMutex(schMutexLock **mutex) {
 	*mutex = malloc(sizeof(pthread_mutex_t));
 	assert(*mutex);
 
 	return pthread_mutex_init((pthread_mutex_t *) *mutex, NULL) == 0;
 }
 
-int schCreateSpinLock(void** spinlock){
+int schCreateSpinLock(schSpinLock** spinlock){
 	*spinlock = malloc(sizeof(pthread_spinlock_t));
 	assert(*spinlock);
 
-	return pthread_spin_init(*spinlock, 0) == 0 ? SCH_OK : SCH_ERROR_UNKNOWN;;
+	return pthread_spin_init(*spinlock, 0) == 0 ? SCH_OK : SCH_ERROR_UNKNOWN;
 }
 
-int schDeleteMutex(void *mutex) {
+int schCreateSemaphore(schSemaphore** pSemaphore){
+	sem_t* sem = (sem_t*)malloc(sizeof(sem_t));
+	*pSemaphore = (schSemaphore*)sem;
+	assert(sem);
+
+	return sem_init(sem, 0, 0) == 0  ? SCH_OK : SCH_ERROR_UNKNOWN;
+}
+
+int schDeleteMutex(schMutexLock *mutex) {
 	int status = pthread_mutex_destroy((pthread_mutex_t *) mutex);
 	free(mutex);
 	return status == 0 ? SCH_OK : SCH_ERROR_UNKNOWN;;
 }
 
-int schDeleteSpinLock(void* spinlock){
+int schDeleteSpinLock(schSpinLock* spinlock){
 	int status = pthread_spin_destroy(spinlock);
 	free(spinlock);
 	return status == 0 ? SCH_OK : SCH_ERROR_UNKNOWN;;
 }
 
-int schSpinLock(void* spinlock){
+int schDeleteSemaphore(schSemaphore* pSemaphore){
+	sem_t* sem = pSemaphore;
+	sem_close(sem);
+	sem_destroy(sem);
+	free(pSemaphore);
+	return SCH_OK;
+}
+
+int schLockSpinLock(schSpinLock *spinlock){
 	return pthread_spin_lock(spinlock) == 0 ? SCH_OK : SCH_ERROR_UNKNOWN;;
 }
 
-int schSpinUnlock(void* spinlock){
+int schUnlockSpinLock(schSpinLock *spinlock){
 	return pthread_spin_unlock(spinlock) == 0 ? SCH_OK : SCH_ERROR_UNKNOWN;;
 }
 

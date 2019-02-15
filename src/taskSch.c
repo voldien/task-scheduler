@@ -321,7 +321,7 @@ void* schQueueMutexEnDeQueue(schTaskPool *taskPool, int dequeue, void *enqueue){
 	schTaskPackage* package = enqueue;
 
 	schTaskSch* sch = taskPool->sch;
-	schSpinLock(sch->spinlock);
+	schLockSpinLock(sch->spinlock);
 	if(dequeue){
 		taskPool->size--;
 		package = &taskPool->package[taskPool->head];
@@ -331,7 +331,7 @@ void* schQueueMutexEnDeQueue(schTaskPool *taskPool, int dequeue, void *enqueue){
 		taskPool->tail = (taskPool->tail + 1) % taskPool->reserved;
 		taskPool->size++;
 	}
-	schSpinUnlock(sch->spinlock);
+	schUnlockSpinLock(sch->spinlock);
 
 	return package;
 }

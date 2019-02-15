@@ -63,6 +63,12 @@ extern "C"{
 #define SCH_ERROR_SIGNAL        (int)-6     /*  Signal failed.  */
 #define SCH_ERROR_SYNC_OBJECT   (int)-7     /*  Synchronization object failed.   */
 
+/**
+ * Synchronization objects.
+ */
+typedef void* schSpinLock;           /*	*/
+typedef void* schMutexLock;          /*	*/
+typedef void* schSemaphore;          /*	*/
 
 /**
  * Scheduler task structure.
@@ -126,7 +132,7 @@ typedef struct sch_task_schedular_t {
 	schTaskPool *pool;      /*  Pools.  */
 	unsigned int flag;      /*  State/Status Flags. */
 	schTaskPool **dheap;    /*  Priority queue. */
-	void* spinlock;         /*  Spin lock.  */
+	schSpinLock* spinlock;  /*  Spin lock.  */
 	void* set;              /*  Signal listening mask.  */
 } schTaskSch;
 
@@ -371,7 +377,7 @@ extern int schSetSignalThreadMask(void* set, int nr, const int* signals);
  * @param mutex non-null pointer to mutex pointer.
  * @return non-zero if successfully.
  */
-extern int schCreateMutex(void **mutex);
+extern int schCreateMutex(schMutexLock **mutex);
 
 /**
  * Create spinlock synchronize primitive
@@ -379,35 +385,49 @@ extern int schCreateMutex(void **mutex);
  * @param spinlock valid pointer.
  * @return non-negative if successfully.
  */
-extern int schCreateSpinLock(void** spinlock);
+extern int schCreateSpinLock(schSpinLock** spinlock);
+
+/**
+ * Create semaphore object.
+ * @param pSemaphore valid pointer.
+ * @return non-negative if successfully.
+ */
+extern int schCreateSemaphore(schSemaphore** pSemaphore);
 
 /**
  * Release resources associated with the mutex object.
  * @param mutex valid mutex object pointer.
  * @return non-negative if successfully.
  */
-extern int schDeleteMutex(void *mutex);
+extern int schDeleteMutex(schMutexLock *mutex);
 
 /**
  * Release spinlock resources.
  * @param spinlock valid spinlock pointer.
  * @return non-negative if successfully.
  */
-extern int schDeleteSpinLock(void* spinlock);
+extern int schDeleteSpinLock(schSpinLock* spinlock);
+
+/**
+ * Delete semaphore.
+ * @param pSemaphore valid pointer.
+ * @return non-negative if successfully.
+ */
+extern int schDeleteSemaphore(schSemaphore* pSemaphore);
 
 /**
  * Lock spinlock.
  * @param spinlock valid spinlock pointer.
  * @return non-negative if successfully.
  */
-extern int schSpinLock(void* spinlock);
+extern int schLockSpinLock(schSpinLock *spinlock);
 
 /**
  * Unlock spinlock.
  * @param spinlock valid spinlock pointer.
  * @return non-negative if successfully.
  */
-extern int schSpinUnlock(void* spinlock);
+extern int schUnlockSpinLock(schSpinLock *spinlock);
 
 /**
  * Pool thread execution environment.
