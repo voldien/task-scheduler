@@ -102,16 +102,16 @@ typedef struct sch_task_pool_t {
 	void* set;                  /*	Thread signal.  */
 
 	/*  Task Queue.  */
-	unsigned int size;          /*  */
-	unsigned int tail;          /*  */
-	unsigned int head;          /*  */
+	unsigned int size;          /*  Size of number of elements. */
+	unsigned int tail;          /*  End of the queue.   */
+	unsigned int head;          /*  Start of the queue. */
 	unsigned int reserved;      /*  Number of allocate task packages.   */
 	schTaskPackage *package;    /*  */
 
 	/*  User and init and release functions callbacks.  */
-	void *userdata;             /*  */
-	schUserCallBack init;       /*  */
-	schUserCallBack deinit;     /*  */
+	void *userdata;             /*  User data.  */
+	schUserCallBack init;       /*  Init user callback function.    */
+	schUserCallBack deinit;     /*  DeInit user callback function.  */
 
 	/*  Statistics. */
 	int avergeDeque;            /*  Average package dequeue per time unit.  */
