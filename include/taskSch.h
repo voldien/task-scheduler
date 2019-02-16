@@ -66,9 +66,9 @@ extern "C"{
 /**
  * Synchronization objects.
  */
-typedef void* schSpinLock;           /*	*/
-typedef void* schMutexLock;          /*	*/
-typedef void* schSemaphore;          /*	*/
+typedef void* schSpinLock;           /*	Spinlock sync object.   */
+typedef void* schMutexLock;          /*	Mutex (mutual exclusion) sync object. */
+typedef void* schSemaphore;          /*	Semaphore sync object.  */
 
 /**
  * Scheduler task structure.
