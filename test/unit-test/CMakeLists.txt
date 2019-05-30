@@ -30,12 +30,14 @@ INCLUDE_DIRECTORIES(${CMAKE_CURRENT_SOURCE_DIR}/include)
 # Source files for the hpmassert program.
 FILE(GLOB unitsrc  ${CMAKE_CURRENT_SOURCE_DIR}/*.c)
 
+INCLUDE(${CMAKE_CURRENT_SOURCE_DIR}/Modules/FindCheck.cmake)
+INCLUDE_DIRECTORIES(${CHECK_INCLUDE_DIR})
+MESSAGE(STATUS "${CHECK_LIBRARIES}")
 # Executable hpm assert program.
 ADD_EXECUTABLE(sch-task-cunit ${unitsrc})
-TARGET_LINK_LIBRARIES(sch-task-cunit -lm -lcheck -lpthread -lrt -lsubunit taskSch)
+TARGET_LINK_LIBRARIES(sch-task-cunit ${CHECK_LIBRARIES} pthread taskSch)
 
 INSTALL(TARGETS sch-task-cunit DESTINATION bin)
-
 
 ADD_TEST(
         NAME assertPerformance
