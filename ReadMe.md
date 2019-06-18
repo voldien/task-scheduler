@@ -1,12 +1,12 @@
 # Task Scheduler
-The _Task Scheduler is a simple task scheduler library for distributing the tasks over a set of threads of cores.
+The _Task Scheduler_ is a simple task scheduler library for distributing the tasks over a set of threads of cores.
 
 ## Features ##
 * Task Scheduling with a priority queue, currently a simple version based on the average delta time.
 * Synchronization primitives used either with the task scheduler or with other multithreading components in the application.
 
 ## Motivation
-The original purpose was to create a simple task scheduler that could be used for game engines for disturbing the loads on the various individual game engine components such as frustum culling, animation and etc.
+The original purpose was to create a simple task scheduler that could be used for game engines for distributing the loads on the various individual game engine components such as frustum culling, animation and etc.
 
 ## Examples
 The following a simple example for creating the scheduler object, running it and releasing the resources.
