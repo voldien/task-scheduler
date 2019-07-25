@@ -70,6 +70,8 @@ typedef void* schSpinLock;           /*	Spinlock sync object.   */
 typedef void* schMutexLock;          /*	Mutex (mutual exclusion) sync object. */
 typedef void* schSemaphore;          /*	Semaphore sync object.  */
 
+typedef void* schThread;
+
 /**
  * Scheduler task structure.
  */
@@ -94,8 +96,8 @@ typedef int (*schUserCallBack)(struct sch_task_pool_t *);
 typedef struct sch_task_pool_t {
 
 	/*  Threading.  */
-	void *thread;               /*  Thread associated with the pool.    */
-	void* schThread;            /*  Scheduler thread.   */
+	schThread thread;           /*  Thread associated with the pool.    */
+	schThread schThread;            /*  Scheduler thread.   */
 
 	/*  Thread race condition variables.    */
 	void* mutex;                /*	Mutex.	*/
@@ -284,14 +286,14 @@ extern long int schTimeResolution(void);
  * @param userData user data associated with the function.
  * @return non-null if successfully.
  */
-extern void *schCreateThread(int affinity, void *pfunc, void *userData);
+extern schThread schCreateThread(int affinity, void *pfunc, void *userData);
 
 /**
  * Release thread resources.
  * @param thread valid thread.
  * @return non-negative if successfully released, otherwise a failure.
  */
-extern int schDeleteThread(void *thread);
+extern int schDeleteThread(schThread thread);
 
 /**
  * Wait in till thread is finished with
@@ -299,7 +301,7 @@ extern int schDeleteThread(void *thread);
  * @param thread valid thread.
  * @return non-negative if successfully.
  */
-extern int schWaitThread(void* thread);
+extern int schWaitThread(schThread thread);
 
 /**
  * Set thread name.
@@ -307,13 +309,13 @@ extern int schWaitThread(void* thread);
  * @param name non-null terminated string.
  * @return success status.
  */
-extern int schSetThreadName(void *thread, const char *name);
+extern int schSetThreadName(schThread thread, const char *name);
 
 /**
  * Get current thread pointer object.
  * @return non-null thread if successfully.
  */
-extern void *schCurrentThread(void);
+extern schThread schCurrentThread(void);
 
 /**
  * Raise signal to specified thread.
@@ -321,7 +323,7 @@ extern void *schCurrentThread(void);
  * @param signal valid signal.
  * @return non-negative if successfully.
  */
-extern int schRaiseThreadSignal(void* thread, int signal);
+extern int schRaiseThreadSignal(schThread thread, int signal);
 
 /**
  * Allocate signal object.
@@ -414,6 +416,27 @@ extern int schDeleteSpinLock(schSpinLock* spinlock);
  * @return non-negative if successfully.
  */
 extern int schDeleteSemaphore(schSemaphore* pSemaphore);
+
+/**
+ * Wait intill the semaphore has been unlocked.
+ * @param pSemaphore valid semaphore object.
+ * @return non-negative if successfully.
+ */
+extern int schSemaphoreWait(schSemaphore* pSemaphore);
+
+/**
+ *
+ * @param pSemaphore valid semaphore object.
+ * @return non-negative if successfully.
+ */
+extern int schSemaphorePost(schSemaphore* pSemaphore);
+
+/**
+ * Get current value of the semaphore.
+ * @param pSemaphore valid semaphore object.
+ * @return non-negative if successfully.
+ */
+extern int schSemaphoreValue(schSemaphore* pSemaphore, int* value);
 
 /**
  * Lock spinlock.

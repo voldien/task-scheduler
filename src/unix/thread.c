@@ -102,7 +102,6 @@ int schDeleteSpinLock(schSpinLock* spinlock){
 
 int schDeleteSemaphore(schSemaphore* pSemaphore){
 	sem_t* sem = pSemaphore;
-	sem_close(sem);
 	sem_destroy(sem);
 	free(pSemaphore);
 	return SCH_OK;
@@ -200,6 +199,23 @@ int schSetSignalThreadMask(void *set, int nr, const int *signals) {
 		return -1;
 	}
 	return err == 0 ? SCH_OK : SCH_ERROR_UNKNOWN;
+}
+
+int schSemaphoreWait(schSemaphore *pSemaphore) {
+	if (sem_wait(pSemaphore) == 0)
+		return SCH_OK;
+}
+
+int schSemaphorePost(schSemaphore *pSemaphore) {
+	if (sem_post((sem_t *) pSemaphore) == -1)
+		return SCH_ERROR_INTERNAL;
+	return SCH_OK;
+}
+
+int schSemaphoreValue(schSemaphore* pSemaphore, int* value){
+	if(sem_getvalue((sem_t*)pSemaphore, value) == -1)
+		return SCH_ERROR_INTERNAL;
+	return SCH_OK;
 }
 
 int schPoolLock(schTaskPool *pool) {
