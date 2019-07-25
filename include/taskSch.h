@@ -66,11 +66,14 @@ extern "C"{
 /**
  * Synchronization objects.
  */
-typedef void* schSpinLock;           /*	Spinlock sync object.   */
-typedef void* schMutexLock;          /*	Mutex (mutual exclusion) sync object. */
-typedef void* schSemaphore;          /*	Semaphore sync object.  */
+typedef void schSpinLock;           /*	Spinlock sync object.   */
+typedef void schMutexLock;          /*	Mutex (mutual exclusion) sync object. */
+typedef void schSemaphore;          /*	Semaphore sync object.  */
 
-typedef void* schThread;
+/**
+ * Thread objects.
+ */
+typedef void schThread;             /*  */
 
 /**
  * Scheduler task structure.
@@ -96,8 +99,8 @@ typedef int (*schUserCallBack)(struct sch_task_pool_t *);
 typedef struct sch_task_pool_t {
 
 	/*  Threading.  */
-	schThread thread;           /*  Thread associated with the pool.    */
-	schThread schThread;            /*  Scheduler thread.   */
+	schThread* thread;           /*  Thread associated with the pool.    */
+	schThread* schThread;            /*  Scheduler thread.   */
 
 	/*  Thread race condition variables.    */
 	void* mutex;                /*	Mutex.	*/
@@ -286,14 +289,14 @@ extern long int schTimeResolution(void);
  * @param userData user data associated with the function.
  * @return non-null if successfully.
  */
-extern schThread schCreateThread(int affinity, void *pfunc, void *userData);
+extern schThread* schCreateThread(int affinity, void *pfunc, void *userData);
 
 /**
  * Release thread resources.
  * @param thread valid thread.
  * @return non-negative if successfully released, otherwise a failure.
  */
-extern int schDeleteThread(schThread thread);
+extern int schDeleteThread(schThread* thread);
 
 /**
  * Wait in till thread is finished with
@@ -301,7 +304,7 @@ extern int schDeleteThread(schThread thread);
  * @param thread valid thread.
  * @return non-negative if successfully.
  */
-extern int schWaitThread(schThread thread);
+extern int schWaitThread(schThread* thread);
 
 /**
  * Set thread name.
@@ -309,13 +312,13 @@ extern int schWaitThread(schThread thread);
  * @param name non-null terminated string.
  * @return success status.
  */
-extern int schSetThreadName(schThread thread, const char *name);
+extern int schSetThreadName(schThread* thread, const char *name);
 
 /**
  * Get current thread pointer object.
  * @return non-null thread if successfully.
  */
-extern schThread schCurrentThread(void);
+extern schThread* schCurrentThread(void);
 
 /**
  * Raise signal to specified thread.
@@ -323,7 +326,7 @@ extern schThread schCurrentThread(void);
  * @param signal valid signal.
  * @return non-negative if successfully.
  */
-extern int schRaiseThreadSignal(schThread thread, int signal);
+extern int schRaiseThreadSignal(schThread* thread, int signal);
 
 /**
  * Allocate signal object.

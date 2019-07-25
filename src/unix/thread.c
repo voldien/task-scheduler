@@ -13,7 +13,7 @@
 #include<signal.h>
 #include<unistd.h>
 
-void *schCreateThread(int affinity, void *pfunc, void *userData) {
+schThread *schCreateThread(int affinity, void *pfunc, void *userData) {
 
 	pthread_t t0;
 	pthread_attr_t attr;
@@ -43,10 +43,10 @@ void *schCreateThread(int affinity, void *pfunc, void *userData) {
 
 	/*  Release attribute object.   */
 	pthread_attr_destroy(&attr);
-	return (void *) t0;
+	return (schThread *) t0;
 }
 
-int schDeleteThread(void *thread) {
+int schDeleteThread(schThread *thread) {
 	if (pthread_detach(thread) == -1) {
 		fprintf(stderr, strerror(errno));
 		return SCH_ERROR_INTERNAL;
@@ -54,7 +54,7 @@ int schDeleteThread(void *thread) {
 	return SCH_OK;
 }
 
-int schWaitThread(void *thread) {
+int schWaitThread(schThread *thread) {
 	if (pthread_join((pthread_t) thread, NULL) == -1) {
 		fprintf(stderr, strerror(errno));
 		return 0;
@@ -62,8 +62,8 @@ int schWaitThread(void *thread) {
 	return SCH_OK;
 }
 
-void *schCurrentThread() {
-	return (void *) pthread_self();
+schThread *schCurrentThread(void) {
+	return (schThread *) pthread_self();
 }
 
 int schCreateMutex(schMutexLock **mutex) {
@@ -131,12 +131,12 @@ int schGetNumCPUCores(void) {
 
 #define MAX_THREAD_NAME 16
 
-int schSetThreadName(void *thread, const char *threadName) {
+int schSetThreadName(schThread *thread, const char *threadName) {
 	int status = pthread_getname_np((pthread_t) thread, threadName, MAX_THREAD_NAME);
 	return status == 0 ? SCH_OK : SCH_ERROR_UNKNOWN;;
 }
 
-int schRaiseThreadSignal(void *thread, int signal) {
+int schRaiseThreadSignal(schThread *thread, int signal) {
 	return pthread_kill(thread, signal) == 0 ? SCH_OK : SCH_ERROR_UNKNOWN;
 }
 
