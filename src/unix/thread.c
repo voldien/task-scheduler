@@ -201,8 +201,8 @@ int schSetSignalThreadMask(void *set, int nr, const int *signals) {
 	return err == 0 ? SCH_OK : SCH_ERROR_UNKNOWN;
 }
 
-static int mutex_error_code(int error){
-	switch(error) {
+static int mutex_error_code(int error) {
+	switch (error) {
 		case EINVAL:
 			return SCH_ERROR_INVALID_ARG;
 		case EBUSY:
@@ -212,16 +212,16 @@ static int mutex_error_code(int error){
 	}
 }
 
-int schMutexLock(schMutex* mutex){
+int schMutexLock(schMutex *mutex) {
 	int error = pthread_mutex_lock(mutex);
-	if(error == 0)
+	if (error == 0)
 		return SCH_OK;
 	return mutex_error_code(error);
 }
 
-int schMutexUnLock(schMutex* mutex){
+int schMutexUnLock(schMutex *mutex) {
 	int error = pthread_mutex_unlock(mutex);
-	if(error == 0)
+	if (error == 0)
 		return SCH_OK;
 	return mutex_error_code(error);
 }
