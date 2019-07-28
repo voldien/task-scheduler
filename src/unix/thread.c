@@ -66,7 +66,7 @@ schThread *schCurrentThread(void) {
 	return (schThread *) pthread_self();
 }
 
-int schCreateMutex(schMutexLock **mutex) {
+int schCreateMutex(schMutex **mutex) {
 	*mutex = malloc(sizeof(pthread_mutex_t));
 	assert(*mutex);
 
@@ -88,7 +88,7 @@ int schCreateSemaphore(schSemaphore** pSemaphore){
 	return sem_init(sem, 0, 0) == 0  ? SCH_OK : SCH_ERROR_UNKNOWN;
 }
 
-int schDeleteMutex(schMutexLock *mutex) {
+int schDeleteMutex(schMutex *mutex) {
 	int status = pthread_mutex_destroy((pthread_mutex_t *) mutex);
 	free(mutex);
 	return status == 0 ? SCH_OK : SCH_ERROR_UNKNOWN;;
@@ -199,6 +199,31 @@ int schSetSignalThreadMask(void *set, int nr, const int *signals) {
 		return -1;
 	}
 	return err == 0 ? SCH_OK : SCH_ERROR_UNKNOWN;
+}
+
+static int mutex_error_code(int error){
+	switch(error) {
+		case EINVAL:
+			return SCH_ERROR_INVALID_ARG;
+		case EBUSY:
+			return SCH_ERROR_INVALID_STATE;
+		default:
+			return SCH_ERROR_UNKNOWN;
+	}
+}
+
+int schMutexLock(schMutex* mutex){
+	int error = pthread_mutex_lock(mutex);
+	if(error == 0)
+		return SCH_OK;
+	return mutex_error_code(error);
+}
+
+int schMutexUnLock(schMutex* mutex){
+	int error = pthread_mutex_unlock(mutex);
+	if(error == 0)
+		return SCH_OK;
+	return mutex_error_code(error);
 }
 
 int schSemaphoreWait(schSemaphore *pSemaphore) {

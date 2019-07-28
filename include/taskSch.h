@@ -67,7 +67,7 @@ extern "C"{
  * Synchronization objects.
  */
 typedef void schSpinLock;           /*	Spinlock sync object.   */
-typedef void schMutexLock;          /*	Mutex (mutual exclusion) sync object. */
+typedef void schMutex;          /*	Mutex (mutual exclusion) sync object. */
 typedef void schSemaphore;          /*	Semaphore sync object.  */
 
 /**
@@ -382,7 +382,7 @@ extern int schSetSignalThreadMask(void* set, int nr, const int* signals);
  * @param mutex non-null pointer to mutex pointer.
  * @return non-zero if successfully.
  */
-extern int schCreateMutex(schMutexLock **mutex);
+extern int schCreateMutex(schMutex **mutex);
 
 /**
  * Create spinlock synchronize primitive
@@ -404,7 +404,7 @@ extern int schCreateSemaphore(schSemaphore** pSemaphore);
  * @param mutex valid mutex object pointer.
  * @return non-negative if successfully.
  */
-extern int schDeleteMutex(schMutexLock *mutex);
+extern int schDeleteMutex(schMutex *mutex);
 
 /**
  * Release spinlock resources.
@@ -419,6 +419,20 @@ extern int schDeleteSpinLock(schSpinLock* spinlock);
  * @return non-negative if successfully.
  */
 extern int schDeleteSemaphore(schSemaphore* pSemaphore);
+
+/**
+ *
+ * @param mutexLock
+ * @return
+ */
+extern int schMutexLock(schMutex* mutexLock);
+
+/**
+ *
+ * @param mutexLock
+ * @return
+ */
+extern int schMutexUnLock(schMutex* mutexLock);
 
 /**
  * Wait intill the semaphore has been unlocked.
