@@ -71,15 +71,15 @@ extern "C"{
 /**
  * Error messages.
  */
-#define SCH_OK                  (int)1      /*  No error.   */
-#define SCH_ERROR_UNKNOWN       (int)0      /*  Error unknown.   */
-#define SCH_ERROR_INVALID_ARG   (int)-1     /*  Invalid argument.   */
-#define SCH_ERROR_INVALID_SCH   (int)-2     /*  Invalid scheduler object.   */
-#define SCH_ERROR_INVALID_STATE (int)-3     /*  Scheduler/Pool in bad state.    */
-#define SCH_ERROR_INTERNAL      (int)-4     /*  Internal error. */
-#define SCH_ERROR_POOL_FULL     (int)-5     /*  Pool queue is full. */
-#define SCH_ERROR_SIGNAL        (int)-6     /*  Signal failed.  */
-#define SCH_ERROR_SYNC_OBJECT   (int)-7     /*  Synchronization object failed.   */
+#define SCH_OK                  ((int)1)        /*  No error.   */
+#define SCH_ERROR_UNKNOWN       ((int)0)        /*  Error unknown.   */
+#define SCH_ERROR_INVALID_ARG   ((int)-1)       /*  Invalid argument.   */
+#define SCH_ERROR_INVALID_SCH   ((int)-2)       /*  Invalid scheduler object.   */
+#define SCH_ERROR_INVALID_STATE ((int)-3)       /*  Scheduler/Pool in bad state.    */
+#define SCH_ERROR_INTERNAL      ((int)-4)       /*  Internal error. */
+#define SCH_ERROR_POOL_FULL     ((int)-5)       /*  Pool queue is full. */
+#define SCH_ERROR_SIGNAL        ((int)-6)       /*  Signal failed.  */
+#define SCH_ERROR_SYNC_OBJECT   ((int)-7)       /*  Synchronization object failed.   */
 
 /**
  *
@@ -138,7 +138,7 @@ typedef struct sch_task_pool_t {
 	schTaskPackage *package;    /*  */
 
 	/*  User and init and release functions callbacks.  */
-	void *userdata;             /*  User data.  */
+	const void *userdata;       /*  User data.  */
 	schUserCallBack init;       /*  Init user callback function.    */
 	schUserCallBack deinit;     /*  DeInit user callback function.  */
 
@@ -210,7 +210,7 @@ extern TASH_SCH_EXTERN void schSetSchUserData(schTaskSch* sch, const void* user)
  * @param index index of the pool from 0.
  * @param user pointer.
  */
-extern TASH_SCH_EXTERN void schSetPoolUserData(schTaskSch *sch, int index, void *user);
+extern TASH_SCH_EXTERN void schSetPoolUserData(schTaskSch *sch, int index, const void *user);
 
 /**
  * Get pool user data.

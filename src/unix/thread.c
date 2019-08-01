@@ -47,7 +47,7 @@ schThread *schCreateThread(int affinity, schFunc *pfunc, void *userData) {
 }
 
 int schDeleteThread(schThread *thread) {
-	if (pthread_detach(thread) == -1) {
+	if (pthread_detach((pthread_t)thread) == -1) {
 		fprintf(stderr, strerror(errno));
 		return SCH_ERROR_INTERNAL;
 	}
@@ -91,13 +91,13 @@ int schCreateSemaphore(schSemaphore** pSemaphore){
 int schDeleteMutex(schMutex *mutex) {
 	int status = pthread_mutex_destroy((pthread_mutex_t *) mutex);
 	free(mutex);
-	return status == 0 ? SCH_OK : SCH_ERROR_UNKNOWN;;
+	return status == 0 ? SCH_OK : SCH_ERROR_UNKNOWN;
 }
 
 int schDeleteSpinLock(schSpinLock* spinlock){
 	int status = pthread_spin_destroy(spinlock);
 	free(spinlock);
-	return status == 0 ? SCH_OK : SCH_ERROR_UNKNOWN;;
+	return status == 0 ? SCH_OK : SCH_ERROR_UNKNOWN;
 }
 
 int schDeleteSemaphore(schSemaphore* pSemaphore){
@@ -108,11 +108,11 @@ int schDeleteSemaphore(schSemaphore* pSemaphore){
 }
 
 int schLockSpinLock(schSpinLock *spinlock){
-	return pthread_spin_lock(spinlock) == 0 ? SCH_OK : SCH_ERROR_UNKNOWN;;
+	return pthread_spin_lock(spinlock) == 0 ? SCH_OK : SCH_ERROR_UNKNOWN;
 }
 
 int schUnlockSpinLock(schSpinLock *spinlock){
-	return pthread_spin_unlock(spinlock) == 0 ? SCH_OK : SCH_ERROR_UNKNOWN;;
+	return pthread_spin_unlock(spinlock) == 0 ? SCH_OK : SCH_ERROR_UNKNOWN;
 }
 
 int schGetNumCPUCores(void) {
@@ -133,11 +133,11 @@ int schGetNumCPUCores(void) {
 
 int schSetThreadName(schThread *thread, const char *threadName) {
 	int status = pthread_getname_np((pthread_t) thread, threadName, MAX_THREAD_NAME);
-	return status == 0 ? SCH_OK : SCH_ERROR_UNKNOWN;;
+	return status == 0 ? SCH_OK : SCH_ERROR_UNKNOWN;
 }
 
 int schRaiseThreadSignal(schThread *thread, int signal) {
-	return pthread_kill(thread, signal) == 0 ? SCH_OK : SCH_ERROR_UNKNOWN;
+	return pthread_kill((pthread_t)thread, signal) == 0 ? SCH_OK : SCH_ERROR_UNKNOWN;
 }
 
 schSignalSet *schCreateSignal(void) {
