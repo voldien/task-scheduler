@@ -81,7 +81,10 @@ extern "C"{
 #define SCH_ERROR_SIGNAL        (int)-6     /*  Signal failed.  */
 #define SCH_ERROR_SYNC_OBJECT   (int)-7     /*  Synchronization object failed.   */
 
-typedef void* (*schFunc)(void* pdata);
+/**
+ *
+ */
+typedef void* (*schFunc)(void* pdata);  /*  */
 
 /**
  * Synchronization objects.
