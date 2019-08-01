@@ -81,6 +81,8 @@ extern "C"{
 #define SCH_ERROR_SIGNAL        (int)-6     /*  Signal failed.  */
 #define SCH_ERROR_SYNC_OBJECT   (int)-7     /*  Synchronization object failed.   */
 
+typedef void* (*schFunc)(void* pdata);
+
 /**
  * Synchronization objects.
  */
@@ -308,7 +310,7 @@ extern TASH_SCH_EXTERN long int schTimeResolution(void);
  * @param userData user data associated with the function.
  * @return non-null if successfully.
  */
-extern TASH_SCH_EXTERN schThread* schCreateThread(int affinity, void *pfunc, void *userData);
+extern TASH_SCH_EXTERN schThread* schCreateThread(int affinity, schFunc *pfunc, void *userData);
 
 /**
  * Release thread resources.

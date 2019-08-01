@@ -13,7 +13,7 @@
 #include<signal.h>
 #include<unistd.h>
 
-schThread *schCreateThread(int affinity, void *pfunc, void *userData) {
+schThread *schCreateThread(int affinity, schFunc *pfunc, void *userData) {
 
 	pthread_t t0;
 	pthread_attr_t attr;
