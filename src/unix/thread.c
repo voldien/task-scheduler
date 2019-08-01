@@ -155,7 +155,7 @@ int schBaseSignal(void) {
 	return SIGUSR1;
 }
 
-int schSignalWait(void *sig) {
+int schSignalWait(schSignalSet *sig) {
 	int signal;
 	if(sigwait(sig, &signal) == 0)
 		return signal;
@@ -163,7 +163,7 @@ int schSignalWait(void *sig) {
 		return -1;
 }
 
-int schSignalWaitTimeOut(void *sig, long int nano) {
+int schSignalWaitTimeOut(schSignalSet *sig, long int nano) {
 	siginfo_t info;
 	struct timespec spec;
 
@@ -175,7 +175,7 @@ int schSignalWaitTimeOut(void *sig, long int nano) {
 }
 
 
-int schSetSignalThreadMask(void *set, int nr, const int *signals) {
+int schSetSignalThreadMask(schSignalSet *set, int nr, const int *signals) {
 
 	int i;
 	int err;

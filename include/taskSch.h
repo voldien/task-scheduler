@@ -91,8 +91,8 @@ typedef void schSemaphore;          /*	Semaphore sync object.  */
 /**
  * Thread objects.
  */
-typedef void schThread;             /*  */
-typedef void schSignalSet;          /*  */
+typedef void schThread;             /*  Thread object.  */
+typedef void schSignalSet;          /*  Signal set object.  */
 
 /**
  * Scheduler task structure.
@@ -374,7 +374,7 @@ extern TASH_SCH_EXTERN int schBaseSignal(void);
  * @param sig signal object.
  * @return signal received.
  */
-extern TASH_SCH_EXTERN int schSignalWait(void* sig);
+extern TASH_SCH_EXTERN int schSignalWait(schSignalSet* sig);
 
 /**
  * Wait in till a signal has been issued in
@@ -383,7 +383,7 @@ extern TASH_SCH_EXTERN int schSignalWait(void* sig);
  * @param time in nano seconds for the timeout.
  * @return received.
  */
-extern TASH_SCH_EXTERN int schSignalWaitTimeOut(void* sig, long int nano);
+extern TASH_SCH_EXTERN int schSignalWaitTimeOut(schSignalSet* sig, long int nano);
 
 /**
  * Set thread signal mask. Mask what signal
@@ -394,7 +394,7 @@ extern TASH_SCH_EXTERN int schSignalWaitTimeOut(void* sig, long int nano);
  * @param signals array of valid signals.
  * @return non-negative if successfully.
  */
-extern TASH_SCH_EXTERN int schSetSignalThreadMask(void* set, int nr, const int* signals);
+extern TASH_SCH_EXTERN int schSetSignalThreadMask(schSignalSet* set, int nr, const int* signals);
 
 /**
  * Create mutex pointer.
