@@ -436,18 +436,21 @@ error:    /*	failure.	*/
 
 const char *schErrorMsg(int errMsg) {
 	static const char *msg[] = {
-			"no error.",                /*  SCH_OK */
-			"unknown error",            /*  SCH_ERROR_UNKNOWN  */
-			"invalid argument",         /*  SCH_ERROR_INVALID_ARG   */
-			"invalid schedular object", /*  SCH_ERROR_INVALID_SCH   */
+			"unknown error",            /*  SCH_ERROR_UNKNOWN : 0   */
+			"invalid argument",         /*  SCH_ERROR_INVALID_ARG : -1  */
+			"invalid schedular object", /*  SCH_ERROR_INVALID_SCH : -2  */
 			"schedular/pool bad state", /*  SCH_ERROR_INVALID_STATE */
 			"internal error",           /*  SCH_ERROR_INTERNAL  */
 			"pool queue is full",       /*  SCH_ERROR_POOL_FULL */
 			"internal signal error",    /*  SCH_ERROR_SIGNAL    */
 			"Synchronization error",    /*  SCH_ERROR_SYNC_OBJECT    */
 	};
-	if (errMsg > 0)
-		return "Invalid error msg";
+	if(errMsg == SCH_OK)
+		return "no error";
+	if (errMsg > SCH_OK)
+		return "Invalid error code";
+	else if(errMsg < SCH_ERROR_SYNC_OBJECT)
+		return "Invalid error code";
 	else
 		return msg[errMsg * -1];
 }

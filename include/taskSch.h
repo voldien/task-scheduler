@@ -24,6 +24,24 @@ extern "C"{
 #endif
 
 /**
+ * Macro for adding library
+ * support.
+ */
+#ifndef TASH_SCH_EXTERN
+	#ifndef TASH_SCH_STATIC
+		#ifdef _WIN32
+			#define TASH_SCH_EXTERN __declspec(dllimport)
+		#elif defined(__GNUC__) && __GNUC__ >= 4
+			#define TASH_SCH_EXTERN __attribute__((visibility("default")))
+		#else
+			#define TASH_SCH_EXTERN
+		#endif
+	#else
+		#define TASH_SCH_EXTERN
+	#endif
+#endif
+
+/**
  * Task scheduler option flags.
  */
 #define SCH_FLAG_NO_AFM     (unsigned int)0x80000000    /*  Disable affinity mapping.    */
@@ -67,13 +85,14 @@ extern "C"{
  * Synchronization objects.
  */
 typedef void schSpinLock;           /*	Spinlock sync object.   */
-typedef void schMutex;          /*	Mutex (mutual exclusion) sync object. */
+typedef void schMutex;              /*	Mutex (mutual exclusion) sync object. */
 typedef void schSemaphore;          /*	Semaphore sync object.  */
 
 /**
  * Thread objects.
  */
 typedef void schThread;             /*  */
+typedef void schSignalSet;          /*  */
 
 /**
  * Scheduler task structure.
@@ -99,8 +118,8 @@ typedef int (*schUserCallBack)(struct sch_task_pool_t *);
 typedef struct sch_task_pool_t {
 
 	/*  Threading.  */
-	schThread* thread;           /*  Thread associated with the pool.    */
-	schThread* schThread;            /*  Scheduler thread.   */
+	schThread* thread;              /*  Thread associated with the pool.    */
+	schThread* schThread;           /*  Scheduler thread.   */
 
 	/*  Thread race condition variables.    */
 	void* mutex;                /*	Mutex.	*/
@@ -118,7 +137,7 @@ typedef struct sch_task_pool_t {
 	schUserCallBack init;       /*  Init user callback function.    */
 	schUserCallBack deinit;     /*  DeInit user callback function.  */
 
-	/*  Statistics. */
+	/*  Statistics for handling next task to execute. */
 	int avergeDeque;            /*  Average package dequeue per time unit.  */
 	long int dheapPriority;     /*  */
 
@@ -150,7 +169,7 @@ typedef struct sch_task_schedular_t {
  * @param maxPackagesPool number of task on each pool.
  * @return non-negative if successfully releasing.
  */
-extern int schCreateTaskPool(schTaskSch *sch, int cores, unsigned int flag, unsigned int maxPackagesPool);
+extern TASH_SCH_EXTERN int schCreateTaskPool(schTaskSch *sch, int cores, unsigned int flag, unsigned int maxPackagesPool);
 
 /**
  * Release all resources associated with
@@ -158,35 +177,35 @@ extern int schCreateTaskPool(schTaskSch *sch, int cores, unsigned int flag, unsi
  * @param sch scheduler object.
  * @return non-negative if successfully releasing.
  */
-extern int schReleaseTaskSch(schTaskSch *sch);
+extern TASH_SCH_EXTERN int schReleaseTaskSch(schTaskSch *sch);
 
 /**
  * Set initialization callback.
  * @param sch scheduler object.
  * @param callback non-null function pointer.
  */
-extern void schSetInitCallBack(schTaskSch *sch, schUserCallBack callBack);
+extern TASH_SCH_EXTERN void schSetInitCallBack(schTaskSch *sch, schUserCallBack callBack);
 
 /**
  * Set user deinitialize callback.
  * @param sch scheduler object.
  * @param callback non-null function pointer.
  */
-extern void schSetDeInitCallBack(schTaskSch *sch, schUserCallBack callBack);
+extern TASH_SCH_EXTERN void schSetDeInitCallBack(schTaskSch *sch, schUserCallBack callBack);
 
 /**
  * Set the same user data to each pool.
  * @param sch valid schedular object.
  * @param user valid pointer.
  */
-extern void schSetSchUserData(schTaskSch* sch, const void* user);
+extern TASH_SCH_EXTERN void schSetSchUserData(schTaskSch* sch, const void* user);
 
 /**
  * Set pool user data.
  * @param index index of the pool from 0.
  * @param user pointer.
  */
-extern void schSetPoolUserData(schTaskSch *sch, int index, void *user);
+extern TASH_SCH_EXTERN void schSetPoolUserData(schTaskSch *sch, int index, void *user);
 
 /**
  * Get pool user data.
@@ -194,7 +213,7 @@ extern void schSetPoolUserData(schTaskSch *sch, int index, void *user);
  * @param index pool index, starting from 0.
  * @return non-null pointer if user pointer exists, NULL otherwise.
  */
-extern void *schGetPoolUserData(schTaskSch *sch, int index);
+extern TASH_SCH_EXTERN void *schGetPoolUserData(schTaskSch *sch, int index);
 
 /**
  * Get schedular pool by index.
@@ -202,7 +221,7 @@ extern void *schGetPoolUserData(schTaskSch *sch, int index);
  * @param index
  * @return
  */
-extern schTaskPool* schGetPool(schTaskSch* sch, int index);
+extern TASH_SCH_EXTERN schTaskPool* schGetPool(schTaskSch* sch, int index);
 
 /**
  * Start running task scheduler.
@@ -211,14 +230,14 @@ extern schTaskPool* schGetPool(schTaskSch* sch, int index);
  * @param sch valid schedular object.
  * @return positive if successfully. otherwise failure.
  */
-extern int schRunTaskSch(schTaskSch *sch);
+extern TASH_SCH_EXTERN int schRunTaskSch(schTaskSch *sch);
 
 /**
  * Terminate the schedular.
  * @param sch valid schedular.
  * @return non-negative if successful.
  */
-extern int schTerminateTaskSch(schTaskSch *sch);
+extern TASH_SCH_EXTERN int schTerminateTaskSch(schTaskSch *sch);
 
 /**
  * submit task packet.
@@ -227,7 +246,7 @@ extern int schTerminateTaskSch(schTaskSch *sch);
  * @param pPool specific pool queue.
  * @return non-negative if successfully, otherwise failure.
  */
-extern int schSubmitTask(schTaskSch *sch, schTaskPackage *package, schTaskPool *pPool);
+extern TASH_SCH_EXTERN int schSubmitTask(schTaskSch *sch, schTaskPackage *package, schTaskPool *pPool);
 
 /**
  * Wait for all pool to finish with all
@@ -235,7 +254,7 @@ extern int schSubmitTask(schTaskSch *sch, schTaskPackage *package, schTaskPool *
  * @param sch valid schedular object.
  * @return non-negative if successfully.
  */
-extern int schWaitTask(schTaskSch *sch);
+extern TASH_SCH_EXTERN int schWaitTask(schTaskSch *sch);
 
 /**
  * Perform queue enqueue/deqeue that will prevent
@@ -244,43 +263,43 @@ extern int schWaitTask(schTaskSch *sch);
  * @param enqueue enqueue data pointer.
  * @return NULL if enqueue, otherwise data from the dequeue.
  */
-extern void* schQueueMutexEnDeQueue(schTaskPool *taskPool, int dequeue, void *enqueue);
+extern TASH_SCH_EXTERN void* schQueueMutexEnDeQueue(schTaskPool *taskPool, int dequeue, void *enqueue);
 
 /**
  * Lock current task pool in current function
  * @param pool valid pool object.
  */
-extern int schPoolLock(schTaskPool *pool);
+extern TASH_SCH_EXTERN int schPoolLock(schTaskPool *pool);
 
 /**
  * Unlock current task pool in current function
  * @param pool valid pool object.
  */
-extern int schPoolUnLock(schTaskPool *pool);
+extern TASH_SCH_EXTERN int schPoolUnLock(schTaskPool *pool);
 
 /**
  * Perform priority queue on the pool
  * @param sch non-null scheduler object.
  */
-extern void schHeapify(schTaskSch *sch);
+extern TASH_SCH_EXTERN void schHeapify(schTaskSch *sch);
 
 /**
  * Get number of CPU cores on the system.
  * @return non-negative number is successfully.
  */
-extern int schGetNumCPUCores(void);
+extern TASH_SCH_EXTERN int schGetNumCPUCores(void);
 
 /**
  * Get current time.
  * @return non-negative number.
  */
-extern long int schGetTime(void);
+extern TASH_SCH_EXTERN long int schGetTime(void);
 
 /**
  * Time resolution per second.
  * @return non-negative number.
  */
-extern long int schTimeResolution(void);
+extern TASH_SCH_EXTERN long int schTimeResolution(void);
 
 /**
  * Create thread.
@@ -289,14 +308,14 @@ extern long int schTimeResolution(void);
  * @param userData user data associated with the function.
  * @return non-null if successfully.
  */
-extern schThread* schCreateThread(int affinity, void *pfunc, void *userData);
+extern TASH_SCH_EXTERN schThread* schCreateThread(int affinity, void *pfunc, void *userData);
 
 /**
  * Release thread resources.
  * @param thread valid thread.
  * @return non-negative if successfully released, otherwise a failure.
  */
-extern int schDeleteThread(schThread* thread);
+extern TASH_SCH_EXTERN int schDeleteThread(schThread* thread);
 
 /**
  * Wait in till thread is finished with
@@ -304,7 +323,7 @@ extern int schDeleteThread(schThread* thread);
  * @param thread valid thread.
  * @return non-negative if successfully.
  */
-extern int schWaitThread(schThread* thread);
+extern TASH_SCH_EXTERN int schWaitThread(schThread* thread);
 
 /**
  * Set thread name.
@@ -312,13 +331,13 @@ extern int schWaitThread(schThread* thread);
  * @param name non-null terminated string.
  * @return success status.
  */
-extern int schSetThreadName(schThread* thread, const char *name);
+extern TASH_SCH_EXTERN int schSetThreadName(schThread* thread, const char *name);
 
 /**
  * Get current thread pointer object.
  * @return non-null thread if successfully.
  */
-extern schThread* schCurrentThread(void);
+extern TASH_SCH_EXTERN schThread* schCurrentThread(void);
 
 /**
  * Raise signal to specified thread.
@@ -326,20 +345,20 @@ extern schThread* schCurrentThread(void);
  * @param signal valid signal.
  * @return non-negative if successfully.
  */
-extern int schRaiseThreadSignal(schThread* thread, int signal);
+extern TASH_SCH_EXTERN int schRaiseThreadSignal(schThread* thread, int signal);
 
 /**
  * Allocate signal object.
  * @return non-null if successfully.
  */
-extern void* schCreateSignal(void);
+extern TASH_SCH_EXTERN schSignalSet* schCreateSignal(void);
 
 /**
  * Release signal resources.
  * @param signal valid signal pointer.
  * @return
  */
-extern int schDeleteSignal(void* signal);
+extern TASH_SCH_EXTERN int schDeleteSignal(schSignalSet* signal);
 
 /**
  * Get the base signal number that
@@ -348,14 +367,14 @@ extern int schDeleteSignal(void* signal);
  * signals.
  * @return non-negative number.
  */
-extern int schBaseSignal(void);
+extern TASH_SCH_EXTERN int schBaseSignal(void);
 
 /**
  * Wait in till signal has been issued.
  * @param sig signal object.
  * @return signal received.
  */
-extern int schSignalWait(void* sig);
+extern TASH_SCH_EXTERN int schSignalWait(void* sig);
 
 /**
  * Wait in till a signal has been issued in
@@ -364,7 +383,7 @@ extern int schSignalWait(void* sig);
  * @param time in nano seconds for the timeout.
  * @return received.
  */
-extern int schSignalWaitTimeOut(void* sig, long int nano);
+extern TASH_SCH_EXTERN int schSignalWaitTimeOut(void* sig, long int nano);
 
 /**
  * Set thread signal mask. Mask what signal
@@ -375,14 +394,14 @@ extern int schSignalWaitTimeOut(void* sig, long int nano);
  * @param signals array of valid signals.
  * @return non-negative if successfully.
  */
-extern int schSetSignalThreadMask(void* set, int nr, const int* signals);
+extern TASH_SCH_EXTERN int schSetSignalThreadMask(void* set, int nr, const int* signals);
 
 /**
  * Create mutex pointer.
  * @param mutex non-null pointer to mutex pointer.
  * @return non-zero if successfully.
  */
-extern int schCreateMutex(schMutex **mutex);
+extern TASH_SCH_EXTERN int schCreateMutex(schMutex **mutex);
 
 /**
  * Create spinlock synchronize primitive
@@ -390,98 +409,98 @@ extern int schCreateMutex(schMutex **mutex);
  * @param spinlock valid pointer.
  * @return non-negative if successfully.
  */
-extern int schCreateSpinLock(schSpinLock** spinlock);
+extern TASH_SCH_EXTERN int schCreateSpinLock(schSpinLock** spinlock);
 
 /**
  * Create semaphore object.
  * @param pSemaphore valid pointer.
  * @return non-negative if successfully.
  */
-extern int schCreateSemaphore(schSemaphore** pSemaphore);
+extern TASH_SCH_EXTERN int schCreateSemaphore(schSemaphore** pSemaphore);
 
 /**
  * Release resources associated with the mutex object.
  * @param mutex valid mutex object pointer.
  * @return non-negative if successfully.
  */
-extern int schDeleteMutex(schMutex *mutex);
+extern TASH_SCH_EXTERN int schDeleteMutex(schMutex *mutex);
 
 /**
  * Release spinlock resources.
  * @param spinlock valid spinlock pointer.
  * @return non-negative if successfully.
  */
-extern int schDeleteSpinLock(schSpinLock* spinlock);
+extern TASH_SCH_EXTERN int schDeleteSpinLock(schSpinLock* spinlock);
 
 /**
  * Delete semaphore.
  * @param pSemaphore valid pointer.
  * @return non-negative if successfully.
  */
-extern int schDeleteSemaphore(schSemaphore* pSemaphore);
+extern TASH_SCH_EXTERN int schDeleteSemaphore(schSemaphore* pSemaphore);
 
 /**
- *
- * @param mutexLock
- * @return
+ * Lock mutex.
+ * @param mutexLock valid mutex pointer.
+ * @return non-negative if successfully.
  */
-extern int schMutexLock(schMutex* mutexLock);
+extern TASH_SCH_EXTERN int schMutexLock(schMutex* mutexLock);
 
 /**
- *
- * @param mutexLock
- * @return
+ * Unlock mutex.
+ * @param mutexLock valid mutex pointer.
+ * @return non-negative if successfully.
  */
-extern int schMutexUnLock(schMutex* mutexLock);
+extern TASH_SCH_EXTERN int schMutexUnLock(schMutex* mutexLock);
 
 /**
  * Wait intill the semaphore has been unlocked.
  * @param pSemaphore valid semaphore object.
  * @return non-negative if successfully.
  */
-extern int schSemaphoreWait(schSemaphore* pSemaphore);
+extern TASH_SCH_EXTERN int schSemaphoreWait(schSemaphore* pSemaphore);
 
 /**
  *
  * @param pSemaphore valid semaphore object.
  * @return non-negative if successfully.
  */
-extern int schSemaphorePost(schSemaphore* pSemaphore);
+extern TASH_SCH_EXTERN int schSemaphorePost(schSemaphore* pSemaphore);
 
 /**
  * Get current value of the semaphore.
  * @param pSemaphore valid semaphore object.
  * @return non-negative if successfully.
  */
-extern int schSemaphoreValue(schSemaphore* pSemaphore, int* value);
+extern TASH_SCH_EXTERN int schSemaphoreValue(schSemaphore* pSemaphore, int* value);
 
 /**
  * Lock spinlock.
  * @param spinlock valid spinlock pointer.
  * @return non-negative if successfully.
  */
-extern int schLockSpinLock(schSpinLock *spinlock);
+extern TASH_SCH_EXTERN int schLockSpinLock(schSpinLock *spinlock);
 
 /**
  * Unlock spinlock.
  * @param spinlock valid spinlock pointer.
  * @return non-negative if successfully.
  */
-extern int schUnlockSpinLock(schSpinLock *spinlock);
+extern TASH_SCH_EXTERN int schUnlockSpinLock(schSpinLock *spinlock);
 
 /**
  * Pool thread execution environment.
  * @param handle user specified data.
  * @return NULL
  */
-extern void *schPoolExecutor(void *handle);
+extern TASH_SCH_EXTERN void *schPoolExecutor(void *handle);
 
 /**
  * Get error code message.
  * @param errMsg zero or negative number.
  * @return non-null terminated string.
  */
-extern const char* schErrorMsg(int errMsg);
+extern TASH_SCH_EXTERN const char* schErrorMsg(int errMsg);
 
 #ifdef __cplusplus
 }

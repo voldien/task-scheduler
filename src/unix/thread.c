@@ -140,13 +140,13 @@ int schRaiseThreadSignal(schThread *thread, int signal) {
 	return pthread_kill(thread, signal) == 0 ? SCH_OK : SCH_ERROR_UNKNOWN;
 }
 
-void *schCreateSignal(void) {
+schSignalSet *schCreateSignal(void) {
 	sigset_t *sig = (sigset_t *) malloc(sizeof(sigset_t));
 	assert(sig);
 	return sig;
 }
 
-int schDeleteSignal(void* signal){
+int schDeleteSignal(schSignalSet* signal){
 	free(signal);
 	return SCH_OK;
 }
