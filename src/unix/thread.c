@@ -108,7 +108,25 @@ int schDeleteSemaphore(schSemaphore* pSemaphore){
 }
 
 int schLockSpinLock(schSpinLock *spinlock){
-	return pthread_spin_lock(spinlock) == 0 ? SCH_OK : SCH_ERROR_UNKNOWN;
+	switch(pthread_spin_lock(spinlock)){
+		case 0: return SCH_OK;
+		case EBUSY:
+			return SCH_ERROR_BUSY;
+		case EDEADLK:
+		default:
+			return SCH_ERROR_INTERNAL;
+	}
+}
+
+int schTryLockSpinLock(schSpinLock* spinLock){
+	switch(pthread_spin_trylock(spinLock)){
+		case 0: return SCH_OK;
+		case EBUSY:
+			return SCH_ERROR_BUSY;
+		case EDEADLK:
+		default:
+			return SCH_ERROR_INTERNAL;
+	}
 }
 
 int schUnlockSpinLock(schSpinLock *spinlock){
@@ -203,6 +221,10 @@ int schSetSignalThreadMask(schSignalSet *set, int nr, const int *signals) {
 
 static int mutex_error_code(int error) {
 	switch (error) {
+		case 0:
+			return SCH_OK;
+//		case EBUSY:
+//			return SCH_ERROR_BUSY;
 		case EINVAL:
 			return SCH_ERROR_INVALID_ARG;
 		case EBUSY:
@@ -217,6 +239,20 @@ int schMutexLock(schMutex *mutex) {
 	if (error == 0)
 		return SCH_OK;
 	return mutex_error_code(error);
+}
+
+int schMutexTryLock(schMutex* mutex, long int timeout){
+	struct timespec spec;
+
+	spec.tv_sec = timeout / 1000000000;
+	spec.tv_nsec = timeout % 1000000000;
+
+	int error = pthread_mutex_timedlock(mutex, &spec);
+	if(error == 0)
+		return SCH_OK;
+	if(error == ETIMEDOUT)
+		return SCH_ERROR_TIMEOUT;
+	return SCH_ERROR_INTERNAL;
 }
 
 int schMutexUnLock(schMutex *mutex) {

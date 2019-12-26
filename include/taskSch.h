@@ -80,6 +80,8 @@ extern "C"{
 #define SCH_ERROR_POOL_FULL     ((int)-5)       /*  Pool queue is full. */
 #define SCH_ERROR_SIGNAL        ((int)-6)       /*  Signal failed.  */
 #define SCH_ERROR_SYNC_OBJECT   ((int)-7)       /*  Synchronization object failed.   */
+#define SCH_ERROR_TIMEOUT       ((int)-8)       /*  Timeout.    */
+#define SCH_ERROR_BUSY          ((int)-9)       /*  Busy error. */
 
 /**
  *
@@ -123,8 +125,8 @@ typedef int (*schUserCallBack)(struct sch_task_pool_t *);
 typedef struct sch_task_pool_t {
 
 	/*  Threading.  */
-	schThread* thread;              /*  Thread associated with the pool.    */
-	schThread* schThread;           /*  Scheduler thread.   */
+	schThread* thread;          /*  Thread associated with the pool.    */
+	schThread* schThread;       /*  Scheduler thread.   */
 
 	/*  Thread race condition variables.    */
 	void* mutex;                /*	Mutex.	*/
@@ -156,7 +158,7 @@ typedef struct sch_task_pool_t {
 /**
  * Task scheduler main struct container.
  */
-typedef struct sch_task_schedular_t {
+typedef struct sch_task_scheduler_t {
 	unsigned int num;       /*  Number of pools.    */
 	schTaskPool *pool;      /*  Pools.  */
 	unsigned int flag;      /*  State/Status Flags. */
@@ -445,11 +447,21 @@ extern TASH_SCH_EXTERN int schDeleteSpinLock(schSpinLock* spinlock);
 extern TASH_SCH_EXTERN int schDeleteSemaphore(schSemaphore* pSemaphore);
 
 /**
- * Lock mutex.
+ * Lock mutex and wait initill it has been unlocked for the
+ * thread to use the mutex.
  * @param mutexLock valid mutex pointer.
  * @return non-negative if successfully.
  */
 extern TASH_SCH_EXTERN int schMutexLock(schMutex* mutexLock);
+
+/**
+ * Attempt to lock the mutex. If the wait time exceeds the timeout
+ * it will return with the status of timeout.
+ * @param mutex valid mutex pointer object.
+ * @param timeout number of nanoseconds that it will wait.
+ * @return non-negative if successfully.
+ */
+extern TASH_SCH_EXTERN int schMutexTryLock(schMutex* mutex, long int timeout);
 
 /**
  * Unlock mutex.
@@ -485,6 +497,14 @@ extern TASH_SCH_EXTERN int schSemaphoreValue(schSemaphore* pSemaphore, int* valu
  * @return non-negative if successfully.
  */
 extern TASH_SCH_EXTERN int schLockSpinLock(schSpinLock *spinlock);
+
+/**
+ * Attempt to lock the spinlock. If failed it will return directly
+ * rather than wait.
+ * @param spinLock valid spinlock pointer object.
+ * @return non-negative if successfully.
+ */
+extern TASH_SCH_EXTERN int schTryLockSpinLock(schSpinLock* spinLock);
 
 /**
  * Unlock spinlock.

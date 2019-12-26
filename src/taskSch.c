@@ -435,7 +435,7 @@ error:    /*	failure.	*/
 }
 
 const char *schErrorMsg(int errMsg) {
-	static const char *msg[] = {
+	static const char *msgErr[] = {
 			"unknown error",            /*  SCH_ERROR_UNKNOWN : 0   */
 			"invalid argument",         /*  SCH_ERROR_INVALID_ARG : -1  */
 			"invalid schedular object", /*  SCH_ERROR_INVALID_SCH : -2  */
@@ -444,13 +444,15 @@ const char *schErrorMsg(int errMsg) {
 			"pool queue is full",       /*  SCH_ERROR_POOL_FULL */
 			"internal signal error",    /*  SCH_ERROR_SIGNAL    */
 			"Synchronization error",    /*  SCH_ERROR_SYNC_OBJECT    */
+			"Timeout error",            /*  SCH_ERROR_TIMEOUT    */
+			"Busy error",               /*  SCH_ERROR_BUSY    */
 	};
 	if(errMsg == SCH_OK)
 		return "no error";
 	if (errMsg > SCH_OK)
 		return "Invalid error code";
-	else if(errMsg < SCH_ERROR_SYNC_OBJECT)
+	else if(errMsg < SCH_ERROR_BUSY)
 		return "Invalid error code";
 	else
-		return msg[errMsg * -1];
+		return msgErr[errMsg * -1];
 }
