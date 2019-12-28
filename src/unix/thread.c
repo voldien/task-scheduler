@@ -46,20 +46,36 @@ schThread *schCreateThread(int affinity, schFunc *pfunc, void *userData) {
 	return (schThread *) t0;
 }
 
-int schDeleteThread(schThread *thread) {
-	if (pthread_detach((pthread_t)thread) == -1) {
-		fprintf(stderr, strerror(errno));
-		return SCH_ERROR_INTERNAL;
+
+static int pthread_error_code2sch_error_code(int error) {
+	switch (error) {
+		case ESRCH:
+		case 0:
+			return SCH_OK;
+		case EBUSY:
+			return SCH_ERROR_BUSY;
+		case EINVAL:
+			return SCH_ERROR_INVALID_ARG;
+		case EPERM:
+			return SCH_ERROR_PERMISSION_DENIED;
+		case EAGAIN:
+			return SCH_ERROR_LACK_OF_RESOURCES;
+		case ENOMEM:
+			return SCH_ERROR_NOMEM;
+		case EINTR:
+		case EDEADLK:
+		case ENOSYS:
+		default:
+			return SCH_ERROR_UNKNOWN;
 	}
-	return SCH_OK;
+}
+
+int schDeleteThread(schThread *thread) {
+	return pthread_error_code2sch_error_code(pthread_detach((pthread_t) thread));
 }
 
 int schWaitThread(schThread *thread) {
-	if (pthread_join((pthread_t) thread, NULL) == -1) {
-		fprintf(stderr, strerror(errno));
-		return 0;
-	}
-	return SCH_OK;
+	return pthread_error_code2sch_error_code(pthread_join((pthread_t) thread, NULL));
 }
 
 schThread *schCurrentThread(void) {
@@ -70,67 +86,56 @@ int schCreateMutex(schMutex **mutex) {
 	*mutex = malloc(sizeof(pthread_mutex_t));
 	assert(*mutex);
 
-	return pthread_mutex_init((pthread_mutex_t *) *mutex, NULL) == 0;
+	return pthread_error_code2sch_error_code(pthread_mutex_init((pthread_mutex_t *) *mutex, NULL));//== 0;
 }
 
-int schCreateSpinLock(schSpinLock** spinlock){
+int schCreateSpinLock(schSpinLock **spinlock) {
 	*spinlock = malloc(sizeof(pthread_spinlock_t));
 	assert(*spinlock);
 
-	return pthread_spin_init(*spinlock, 0) == 0 ? SCH_OK : SCH_ERROR_UNKNOWN;
+	return pthread_error_code2sch_error_code(pthread_spin_init(*spinlock, 0));
 }
 
-int schCreateSemaphore(schSemaphore** pSemaphore){
-	sem_t* sem = (sem_t*)malloc(sizeof(sem_t));
-	*pSemaphore = (schSemaphore*)sem;
+int schCreateSemaphore(schSemaphore **pSemaphore) {
+	sem_t *sem = (sem_t *) malloc(sizeof(sem_t));
+	*pSemaphore = (schSemaphore *) sem;
 	assert(sem);
 
-	return sem_init(sem, 0, 0) == 0  ? SCH_OK : SCH_ERROR_UNKNOWN;
+	if(sem_init(sem, 0, 0))
+		return SCH_OK;
+	else
+		return pthread_error_code2sch_error_code(errno);
 }
 
 int schDeleteMutex(schMutex *mutex) {
-	int status = pthread_mutex_destroy((pthread_mutex_t *) mutex);
+	int status = pthread_error_code2sch_error_code(pthread_mutex_destroy((pthread_mutex_t *) mutex));
 	free(mutex);
-	return status == 0 ? SCH_OK : SCH_ERROR_UNKNOWN;
+	return status;
 }
 
-int schDeleteSpinLock(schSpinLock* spinlock){
-	int status = pthread_spin_destroy(spinlock);
+int schDeleteSpinLock(schSpinLock *spinlock) {
+	int status = pthread_error_code2sch_error_code(pthread_spin_destroy(spinlock));
 	free(spinlock);
-	return status == 0 ? SCH_OK : SCH_ERROR_UNKNOWN;
+	return status;
 }
 
-int schDeleteSemaphore(schSemaphore* pSemaphore){
-	sem_t* sem = pSemaphore;
-	sem_destroy(sem);
+int schDeleteSemaphore(schSemaphore *pSemaphore) {
+	sem_t *sem = pSemaphore;
+	int status = pthread_error_code2sch_error_code(sem_destroy(sem));
 	free(pSemaphore);
-	return SCH_OK;
+	return status;
 }
 
-int schLockSpinLock(schSpinLock *spinlock){
-	switch(pthread_spin_lock(spinlock)){
-		case 0: return SCH_OK;
-		case EBUSY:
-			return SCH_ERROR_BUSY;
-		case EDEADLK:
-		default:
-			return SCH_ERROR_INTERNAL;
-	}
+int schLockSpinLock(schSpinLock *spinlock) {
+	return pthread_error_code2sch_error_code(pthread_spin_lock(spinlock));
 }
 
-int schTryLockSpinLock(schSpinLock* spinLock){
-	switch(pthread_spin_trylock(spinLock)){
-		case 0: return SCH_OK;
-		case EBUSY:
-			return SCH_ERROR_BUSY;
-		case EDEADLK:
-		default:
-			return SCH_ERROR_INTERNAL;
-	}
+int schTryLockSpinLock(schSpinLock *spinLock) {
+	return pthread_error_code2sch_error_code(pthread_spin_trylock(spinLock));
 }
 
-int schUnlockSpinLock(schSpinLock *spinlock){
-	return pthread_spin_unlock(spinlock) == 0 ? SCH_OK : SCH_ERROR_UNKNOWN;
+int schUnlockSpinLock(schSpinLock *spinlock) {
+	return pthread_error_code2sch_error_code(pthread_spin_unlock(spinlock));//== 0 ? SCH_OK : SCH_ERROR_UNKNOWN;
 }
 
 int schGetNumCPUCores(void) {
@@ -150,12 +155,13 @@ int schGetNumCPUCores(void) {
 #define MAX_THREAD_NAME 16
 
 int schSetThreadName(schThread *thread, const char *threadName) {
-	int status = pthread_getname_np((pthread_t) thread, threadName, MAX_THREAD_NAME);
-	return status == 0 ? SCH_OK : SCH_ERROR_UNKNOWN;
+	int status = pthread_error_code2sch_error_code(pthread_getname_np((pthread_t) thread, threadName, MAX_THREAD_NAME));
+	return status;
 }
 
 int schRaiseThreadSignal(schThread *thread, int signal) {
-	return pthread_kill((pthread_t)thread, signal) == 0 ? SCH_OK : SCH_ERROR_UNKNOWN;
+	return pthread_error_code2sch_error_code(
+			pthread_kill((pthread_t) thread, signal));
 }
 
 schSignalSet *schCreateSignal(void) {
@@ -164,7 +170,7 @@ schSignalSet *schCreateSignal(void) {
 	return sig;
 }
 
-int schDeleteSignal(schSignalSet* signal){
+int schDeleteSignal(schSignalSet *signal) {
 	free(signal);
 	return SCH_OK;
 }
@@ -175,7 +181,7 @@ int schBaseSignal(void) {
 
 int schSignalWait(schSignalSet *sig) {
 	int signal;
-	if(sigwait(sig, &signal) == 0)
+	if (sigwait(sig, &signal) == 0)
 		return signal;
 	else
 		return -1;
@@ -216,73 +222,68 @@ int schSetSignalThreadMask(schSignalSet *set, int nr, const int *signals) {
 		fprintf(stderr, "failed mapping thread: %s\n", strerror(err));
 		return -1;
 	}
-	return err == 0 ? SCH_OK : SCH_ERROR_UNKNOWN;
+	return pthread_error_code2sch_error_code(err);
 }
 
-static int mutex_error_code(int error) {
-	switch (error) {
-		case 0:
-			return SCH_OK;
-//		case EBUSY:
-//			return SCH_ERROR_BUSY;
-		case EINVAL:
-			return SCH_ERROR_INVALID_ARG;
-		case EBUSY:
-			return SCH_ERROR_INVALID_STATE;
-		default:
-			return SCH_ERROR_UNKNOWN;
-	}
-}
 
 int schMutexLock(schMutex *mutex) {
 	int error = pthread_mutex_lock(mutex);
-	if (error == 0)
-		return SCH_OK;
-	return mutex_error_code(error);
+	return pthread_error_code2sch_error_code(error);
 }
 
-int schMutexTryLock(schMutex* mutex, long int timeout){
+int schMutexTryLock(schMutex *mutex, long int timeout) {
 	struct timespec spec;
 
 	spec.tv_sec = timeout / 1000000000;
 	spec.tv_nsec = timeout % 1000000000;
 
-	int error = pthread_mutex_timedlock(mutex, &spec);
-	if(error == 0)
-		return SCH_OK;
-	if(error == ETIMEDOUT)
-		return SCH_ERROR_TIMEOUT;
-	return SCH_ERROR_INTERNAL;
+	return pthread_error_code2sch_error_code(pthread_mutex_timedlock(mutex, &spec));
 }
 
 int schMutexUnLock(schMutex *mutex) {
 	int error = pthread_mutex_unlock(mutex);
 	if (error == 0)
 		return SCH_OK;
-	return mutex_error_code(error);
+	return pthread_error_code2sch_error_code(error);
 }
 
 int schSemaphoreWait(schSemaphore *pSemaphore) {
 	if (sem_wait(pSemaphore) == 0)
 		return SCH_OK;
+	else
+		pthread_error_code2sch_error_code(errno);
+}
+
+int schSemaphoreTimedWait(schSemaphore *pSemaphore, long int timeout) {
+	struct timespec spec;
+
+	spec.tv_sec = timeout / 1000000000;
+	spec.tv_nsec = timeout % 1000000000;
+
+	if (sem_timedwait(pSemaphore, &spec) == 0)
+		return SCH_OK;
+	else
+		pthread_error_code2sch_error_code(errno);
 }
 
 int schSemaphorePost(schSemaphore *pSemaphore) {
-	if (sem_post((sem_t *) pSemaphore) == -1)
-		return SCH_ERROR_INTERNAL;
-	return SCH_OK;
+	if (sem_post((sem_t *) pSemaphore) == 0)
+		return SCH_OK;
+	else
+		pthread_error_code2sch_error_code(errno);
 }
 
-int schSemaphoreValue(schSemaphore* pSemaphore, int* value){
-	if(sem_getvalue((sem_t*)pSemaphore, value) == -1)
-		return SCH_ERROR_INTERNAL;
-	return SCH_OK;
+int schSemaphoreValue(schSemaphore *pSemaphore, int *value) {
+	if (sem_getvalue((sem_t *) pSemaphore, value) == 0)
+		return SCH_OK;
+	else
+		return pthread_error_code2sch_error_code(errno);
 }
 
 int schPoolLock(schTaskPool *pool) {
-	return pthread_mutex_lock(pool->mutex) == 0 ? SCH_OK : SCH_ERROR_UNKNOWN;
+	return schMutexLock(pool->mutex);
 }
 
 int schPoolUnLock(schTaskPool *pool) {
-	return pthread_mutex_unlock(pool->mutex) == 0 ? SCH_OK : SCH_ERROR_UNKNOWN;
+	return schMutexUnLock(pool->mutex);
 }

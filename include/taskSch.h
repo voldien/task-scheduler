@@ -71,17 +71,20 @@ extern "C"{
 /**
  * Error messages.
  */
-#define SCH_OK                  ((int)1)        /*  No error.   */
-#define SCH_ERROR_UNKNOWN       ((int)0)        /*  Error unknown.   */
-#define SCH_ERROR_INVALID_ARG   ((int)-1)       /*  Invalid argument.   */
-#define SCH_ERROR_INVALID_SCH   ((int)-2)       /*  Invalid scheduler object.   */
-#define SCH_ERROR_INVALID_STATE ((int)-3)       /*  Scheduler/Pool in bad state.    */
-#define SCH_ERROR_INTERNAL      ((int)-4)       /*  Internal error. */
-#define SCH_ERROR_POOL_FULL     ((int)-5)       /*  Pool queue is full. */
-#define SCH_ERROR_SIGNAL        ((int)-6)       /*  Signal failed.  */
-#define SCH_ERROR_SYNC_OBJECT   ((int)-7)       /*  Synchronization object failed.   */
-#define SCH_ERROR_TIMEOUT       ((int)-8)       /*  Timeout.    */
-#define SCH_ERROR_BUSY          ((int)-9)       /*  Busy error. */
+#define SCH_OK                      ((int)1)        /*  No error.   */
+#define SCH_ERROR_UNKNOWN           ((int)0)        /*  Error unknown.   */
+#define SCH_ERROR_INVALID_ARG       ((int)-1)       /*  Invalid argument.   */
+#define SCH_ERROR_INVALID_SCH       ((int)-2)       /*  Invalid scheduler object.   */
+#define SCH_ERROR_INVALID_STATE     ((int)-3)       /*  Scheduler/Pool in bad state.    */
+#define SCH_ERROR_INTERNAL          ((int)-4)       /*  Internal error. */
+#define SCH_ERROR_POOL_FULL         ((int)-5)       /*  Pool queue is full. */
+#define SCH_ERROR_SIGNAL            ((int)-6)       /*  Signal failed.  */
+#define SCH_ERROR_SYNC_OBJECT       ((int)-7)       /*  Synchronization object failed.   */
+#define SCH_ERROR_TIMEOUT           ((int)-8)       /*  Timeout.    */
+#define SCH_ERROR_BUSY              ((int)-9)       /*  Busy error. */
+#define SCH_ERROR_NOMEM             ((int)-10)      /*  No Memory.  */
+#define SCH_ERROR_LACK_OF_RESOURCES ((int)-11)      /*  There system is lacking resources.  */
+#define SCH_ERROR_PERMISSION_DENIED ((int)-12)      /*  Permission denied of the operation. */
 
 /**
  *
@@ -476,6 +479,15 @@ extern TASH_SCH_EXTERN int schMutexUnLock(schMutex* mutexLock);
  * @return non-negative if successfully.
  */
 extern TASH_SCH_EXTERN int schSemaphoreWait(schSemaphore* pSemaphore);
+
+/**
+ * Wait for the semaphore has been unlocked for
+ * a explicit duration of time in nanoseconds.
+ * @param pSemaphore valid semaphore object.
+ * @param timeout non-negative time in nanoseconds.
+ * @return non-negative if successfully.
+ */
+extern TASH_SCH_EXTERN int schSemaphoreTimedWait(schSemaphore* pSemaphore, long int timeout);
 
 /**
  *

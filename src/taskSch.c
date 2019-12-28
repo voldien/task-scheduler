@@ -446,13 +446,18 @@ const char *schErrorMsg(int errMsg) {
 			"Synchronization error",    /*  SCH_ERROR_SYNC_OBJECT    */
 			"Timeout error",            /*  SCH_ERROR_TIMEOUT    */
 			"Busy error",               /*  SCH_ERROR_BUSY    */
+			"No Memory",                /*  SCH_ERROR_NOMEM    */
+			"OS lacking resources",     /*  SCH_ERROR_LACK_OF_RESOURCES    */
+			"Permission denied",        /*  SCH_ERROR_PERMISSION_DENIED    */
 	};
+
+	/*  Check and the error message and determine if error code within the error array size.    */
 	if(errMsg == SCH_OK)
 		return "no error";
 	if (errMsg > SCH_OK)
-		return "Invalid error code";
-	else if(errMsg < SCH_ERROR_BUSY)
-		return "Invalid error code";
+		return NULL;
+	else if(errMsg < SCH_ERROR_PERMISSION_DENIED)
+		return NULL;
 	else
 		return msgErr[errMsg * -1];
 }

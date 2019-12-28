@@ -108,20 +108,34 @@ START_TEST(submit){
 }
 END_TEST
 
+START_TEST(errorCodeMsg){
+	/*  */
+	ck_assert_ptr_eq(schErrorMsg(SCH_OK + 1), NULL);
+	ck_assert_ptr_eq(schErrorMsg(SCH_ERROR_PERMISSION_DENIED - 1), NULL);
+
+	for(int i = SCH_ERROR_PERMISSION_DENIED; i < SCH_OK; i++){
+		ck_assert_ptr_ne(schErrorMsg(i), NULL);
+	}
+}
+END_TEST
+
 Suite* schCreateSuite(void){
 
 	/*	Create suite and test cases.	*/
 	Suite* suite = suite_create("task-scheduler");
 	TCase* testCreate = tcase_create("create");
 	TCase* testSubmit = tcase_create("submit");
+	TCase* testErrorMsgCodes = tcase_create("error-code-message");
 
 	/*	Link test cases with functions.	*/
 	tcase_add_test(testCreate, create);
 	tcase_add_test(testSubmit, submit);
+	tcase_add_test(testErrorMsgCodes, errorCodeMsg);
 
 	/*	Add test cases to test suite.	*/
 	suite_add_tcase(suite, testCreate);
 	suite_add_tcase(suite, testSubmit);
+	suite_add_tcase(suite, testErrorMsgCodes);
 
 	return suite;
 }
