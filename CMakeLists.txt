@@ -3,10 +3,16 @@ PROJECT(schScheduler)
 
 #	build shared/dynamic library option
 OPTION(BUILD_SHARED_LIBS "Build package with shared libraries." ON)
+OPTION(BUILD_WITH_COVERAGE "Enable profiling and coverage report analysis." ON)
+OPTION(BUILD_WITH_PROFILER "Enable profiling." ON)
 IF(NOT BUILD_SHARED_LIBS)
-    set(CMAKE_EXE_LINKER_FLAGS "-static")
-    set(LINK_SEARCH_START_STATIC TRUE)
-ENDIF()
+    SET(CMAKE_EXE_LINKER_FLAGS "-static")
+    SET(LINK_SEARCH_START_STATIC TRUE)
+ELSE()
+    MESSAGE(STATUS "Shared libraries enabled")
+ENDIF(NOT BUILD_SHARED_LIBS)
+
+OPTION(BUILD_WITH_TEST "Enable Testing." ON)
 
 # Version setup.
 SET(SCH_VERSION_MAJOR 0)
@@ -24,7 +30,6 @@ IF((CMAKE_COMPILER_IS_GNUCC OR CMAKE_COMPILER_IS_GNUCXX) AND NOT CMAKE_COMPILER_
 
     ADD_DEFINITIONS( -Wall -w -fpermissive -Wfatal-errors)
 
-
     IF (CMAKE_BUILD_TYPE STREQUAL "Release")
         MESSAGE(STATUS "Compile for release.")
         ADD_DEFINITIONS( -DNDEBUG )
@@ -36,36 +41,66 @@ IF((CMAKE_COMPILER_IS_GNUCC OR CMAKE_COMPILER_IS_GNUCXX) AND NOT CMAKE_COMPILER_
         ADD_DEFINITIONS( -g3 -O0 )
         SET(CMAKE_DEBUG TRUE)
     ENDIF()
+
+    #
+    IF(BUILD_WITH_COVERAGE)
+        MESSAGE(STATUS "Building with coverage")
+        SET(GCC_COVERAGE_COMPILE_FLAGS "--coverage -fprofile-arcs -ftest-coverage")
+        SET(GCC_COVERAGE_LINK_FLAGS    "-lgcov")
+        SET(CMAKE_C_FLAGS  "${CMAKE_C_FLAGS} ${GCC_COVERAGE_COMPILE_FLAGS}")
+        SET(CMAKE_CXX_FLAGS  "${CMAKE_CXX_FLAGS} ${GCC_COVERAGE_COMPILE_FLAGS}")
+        SET(CMAKE_EXE_LINKER_FLAGS  "${CMAKE_EXE_LINKER_FLAGS} ${GCC_COVERAGE_LINK_FLAGS}")
+    ENDIF()
+    #
+    IF(BUILD_WITH_PROFILER)
+        SET(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -pg")
+        SET(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} -pg")
+        SET(CMAKE_SHARED_LINKER_FLAGS "${CMAKE_SHARED_LINKER_FLAGS} -pg")
+    ENDIF()
+ELSEIF(MSVC)
+    # Enable multi-core compilation with MSVC
+    ADD_COMPILE_OPTIONS(/MP)
+ELSEIF ( "${CMAKE_CXX_COMPILER_ID}" MATCHES "Clang" )
+    SET(CMAKE_CXX_FLAGS "-g -fvisibility=hidden -fno-strict-aliasing -Wall -Wno-long-long ${CMAKE_CXX_FLAGS}" )
+    SET(CMAKE_C_FLAGS "-fno-strict-aliasing ${CMAKE_C_FLAGS}")
+ELSEIF( CMAKE_COMPILER_IS_MINGW )
+    SET(CMAKE_CXX_FLAGS "-fvisibility=hidden -fno-strict-aliasing -Wall -Wno-long-long -Wa,-mbig-obj ${CMAKE_CXX_FLAGS}")
+    SET(CMAKE_C_FLAGS "-fno-strict-aliasing ${CMAKE_C_FLAGS}")
+    ADD_DEFINITIONS( -U__STRICT_ANSI__ )
 ENDIF()
 
 # Source files.
-INCLUDE_DIRECTORIES(${CMAKE_CURRENT_SOURCE_DIR}/include)
-FILE(GLOB src ${CMAKE_CURRENT_SOURCE_DIR}/src/*.c)
-FILE(GLOB headers ${CMAKE_CURRENT_SOURCE_DIR}/include/*.h)
+FILE(GLOB SOURCE_FILES ${CMAKE_CURRENT_SOURCE_DIR}/src/*.c)
+FILE(GLOB HEADER_FILES ${CMAKE_CURRENT_SOURCE_DIR}/include/*.h)
 IF( UNIX )
-    FILE(GLOB platform ${CMAKE_CURRENT_SOURCE_DIR}/src/unix/*.c)
+    FILE(GLOB PLATFORM_FILES ${CMAKE_CURRENT_SOURCE_DIR}/src/unix/*.c)
 ELSEIF(WIN32)
-    FILE(GLOB platform ${CMAKE_CURRENT_SOURCE_DIR}/src/windows/*.c)
+    FILE(GLOB PLATFORM_FILES ${CMAKE_CURRENT_SOURCE_DIR}/src/windows/*.c)
 ENDIF()
 
 # Create executable target.
-ADD_LIBRARY(taskSch ${src} ${platform} ${headers})
+ADD_LIBRARY(taskSch ${SOURCE_FILES} ${PLATFORM_FILES} ${HEADER_FILES})
+TARGET_INCLUDE_DIRECTORIES(taskSch PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/include)
 
 # Install the target.
 INSTALL(TARGETS taskSch DESTINATION lib)
 INSTALL (FILES ${headers} DESTINATION include)
 
 # Unit testing
-ADD_SUBDIRECTORY(${CMAKE_CURRENT_SOURCE_DIR}/test)
+IF(BUILD_WITH_TEST)
+    ENABLE_TESTING()
+    ADD_SUBDIRECTORY(${CMAKE_CURRENT_SOURCE_DIR}/test)
+ENDIF()
 
 IF( UNIX )
+    Find_PACKAGE(UnixCommands REQUIRED)
 
     # Create distribution tarball.
     SET( TARGETDIR "${PROJECT_NAME}-${SCH_VERSION}")
     ADD_CUSTOM_TARGET(	distribution
             COMMAND mkdir -p ${TARGETDIR}
-            COMMAND cp -r ${CMAKE_CURRENT_SOURCE_DIR}/src ${CMAKE_CURRENT_SOURCE_DIR}/test ${CMAKE_CURRENT_SOURCE_DIR}/include ${CMAKE_CURRENT_SOURCE_DIR}/CMakeLists.txt ${CMAKE_CURRENT_SOURCE_DIR}/LICENSE ${TARGETDIR}
-            COMMAND tar cf - ${TARGETDIR} | gzip -c > ${TARGETDIR}.tar.gz
-            COMMAND rm -r ${TARGETDIR} )
+            COMMAND ${CP} -r ${CMAKE_CURRENT_SOURCE_DIR}/src ${CMAKE_CURRENT_SOURCE_DIR}/test ${CMAKE_CURRENT_SOURCE_DIR}/include ${CMAKE_CURRENT_SOURCE_DIR}/CMakeLists.txt ${CMAKE_CURRENT_SOURCE_DIR}/LICENSE ${TARGETDIR}
+            COMMAND ${TAR} cf - ${TARGETDIR} | ${GZIP} -c > ${TARGETDIR}.tar.gz
+            COMMAND ${RM} -r ${TARGETDIR} )
 
 ENDIF()
