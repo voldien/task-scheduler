@@ -46,7 +46,6 @@ schThread *schCreateThread(int affinity, schFunc *pfunc, void *userData) {
 	return (schThread *) t0;
 }
 
-
 static int pthread_error_code2sch_error_code(int error) {
 	switch (error) {
 		case ESRCH:
@@ -101,10 +100,38 @@ int schCreateSemaphore(schSemaphore **pSemaphore) {
 	*pSemaphore = (schSemaphore *) sem;
 	assert(sem);
 
-	if(sem_init(sem, 0, 0))
+	if (sem_init(sem, 0, 0))
 		return SCH_OK;
 	else
 		return pthread_error_code2sch_error_code(errno);
+}
+
+int schCreateBarrier(schBarrier **pBarrier) {
+	*pBarrier = (schBarrier *) malloc(sizeof(pthread_barrier_t));
+	memset(*pBarrier, 0, sizeof(pthread_barrier_t));
+	//pthread_barrier_init()
+}
+
+int schInitBarrier(schBarrier *pBarrier, int count) {
+	return pthread_error_code2sch_error_code(pthread_barrier_init(pBarrier, NULL, count));
+}
+
+int schDeleteBarrier(schBarrier *barrier) {
+	int status = pthread_error_code2sch_error_code(pthread_barrier_destroy(barrier));
+	free(barrier);
+}
+
+int schWaitBarrier(schBarrier *barrier) {
+	int status = pthread_barrier_wait(barrier);
+	if (status == PTHREAD_BARRIER_SERIAL_THREAD)
+		return SCH_OK;
+	else
+		return pthread_error_code2sch_error_code(status);
+}
+
+int schCreateCondition(schConditional **pCondVariable) {
+	//pthread_cond_broadcast()
+	//pthread_cond_wait()
 }
 
 int schDeleteMutex(schMutex *mutex) {
