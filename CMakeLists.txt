@@ -49,7 +49,7 @@ ELSEIF(WIN32)
 ENDIF()
 
 # Create executable target.
-ADD_LIBRARY(taskSch ${src} ${platform})
+ADD_LIBRARY(taskSch ${src} ${platform} ${headers})
 
 # Install the target.
 INSTALL(TARGETS taskSch DESTINATION lib)
