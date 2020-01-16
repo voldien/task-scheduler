@@ -97,6 +97,9 @@ typedef void* (*schFunc)(void* pdata);  /*  */
 typedef void schSpinLock;           /*	Spinlock sync object.   */
 typedef void schMutex;              /*	Mutex (mutual exclusion) sync object. */
 typedef void schSemaphore;          /*	Semaphore sync object.  */
+typedef void schRWLock;             /*  */
+typedef void schConditional;        /*  */
+typedef void schBarrier;            /*  */
 
 /**
  * Thread objects.
@@ -427,6 +430,13 @@ extern TASH_SCH_EXTERN int schCreateSpinLock(schSpinLock** spinlock);
  * @return non-negative if successfully.
  */
 extern TASH_SCH_EXTERN int schCreateSemaphore(schSemaphore** pSemaphore);
+
+extern TASH_SCH_EXTERN int schCreateBarrier(schBarrier ** pBarrier);
+extern TASH_SCH_EXTERN int schInitBarrier(schBarrier * pBarrier, int count);
+extern TASH_SCH_EXTERN int schDeleteBarrier(schBarrier* barrier);
+extern TASH_SCH_EXTERN int schWaitBarrier(schBarrier* barrier);
+
+extern TASH_SCH_EXTERN int schCreateCondition(schConditional** pCondVariable);
 
 /**
  * Release resources associated with the mutex object.

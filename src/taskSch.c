@@ -6,6 +6,7 @@
 
 int schCreateTaskPool(schTaskSch *sch, int cores, unsigned int flag, unsigned int maxPackagesPool) {
 	unsigned int i;
+	unsigned int status = SCH_OK;
 
 	if(sch == NULL)
 		return SCH_ERROR_INVALID_SCH;
@@ -70,7 +71,7 @@ int schCreateTaskPool(schTaskSch *sch, int cores, unsigned int flag, unsigned in
 	}
 
 	sch->flag |= SCH_FLAG_INIT;
-	return SCH_OK;
+	return status;
 }
 
 int schReleaseTaskSch(schTaskSch *sch) {
