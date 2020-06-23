@@ -12,6 +12,23 @@
 #include<semaphore.h>
 #include<signal.h>
 #include<unistd.h>
+#include <setjmp.h>
+
+/*  TODO add memory allocation mench.   */
+
+
+//TODO determine what function needs it.
+static void maketimeout(struct timespec *tsp, long nanoseconds)
+{
+	struct timeval now;
+	/* get the current time */
+	gettimeofday(&now, NULL);
+	tsp->tv_sec = now.tv_sec;
+	tsp->tv_nsec = now.tv_usec * 1000; /* usec to nsec */
+	/* add the offset to get timeout value */
+	tsp->tv_sec += nanoseconds / 1000000000;
+	tsp->tv_nsec += nanoseconds % 1000000000;
+}
 
 schThread *schCreateThread(int affinity, schFunc *pfunc, void *userData) {
 
@@ -51,6 +68,8 @@ static int pthread_error_code2sch_error_code(int error) {
 		case ESRCH:
 		case 0:
 			return SCH_OK;
+		case ETIMEDOUT:
+			return SCH_ERROR_TIMEOUT;
 		case EBUSY:
 			return SCH_ERROR_BUSY;
 		case EINVAL:
@@ -73,8 +92,8 @@ int schDeleteThread(schThread *thread) {
 	return pthread_error_code2sch_error_code(pthread_detach((pthread_t) thread));
 }
 
-int schWaitThread(schThread *thread) {
-	return pthread_error_code2sch_error_code(pthread_join((pthread_t) thread, NULL));
+int schWaitThread(schThread *thread, void** retval) {
+	return pthread_error_code2sch_error_code(pthread_join((pthread_t) thread, retval));
 }
 
 schThread *schCurrentThread(void) {
@@ -110,6 +129,7 @@ int schCreateBarrier(schBarrier **pBarrier) {
 	*pBarrier = (schBarrier *) malloc(sizeof(pthread_barrier_t));
 	memset(*pBarrier, 0, sizeof(pthread_barrier_t));
 	//pthread_barrier_init()
+	return SCH_OK;
 }
 
 int schInitBarrier(schBarrier *pBarrier, int count) {
@@ -129,9 +149,43 @@ int schWaitBarrier(schBarrier *barrier) {
 		return pthread_error_code2sch_error_code(status);
 }
 
-int schCreateCondition(schConditional **pCondVariable) {
+int schCreateConditional(schConditional **pCondVariable) {
+	*pCondVariable = malloc(sizeof(pthread_cond_t));
+	return pthread_error_code2sch_error_code(pthread_cond_init(*pCondVariable, NULL));
 	//pthread_cond_broadcast()
 	//pthread_cond_wait()
+}
+
+int schDeleteConditional(schConditional* conditional){
+	return pthread_error_code2sch_error_code(pthread_cond_destroy(conditional));
+}
+
+int schConditionalWait(schConditional* conditional, schMutex* mutex){
+	return pthread_error_code2sch_error_code(pthread_cond_wait(conditional, mutex));
+}
+
+int schConditionalSignal(schConditional* conditional){
+	return pthread_error_code2sch_error_code(pthread_cond_signal(conditional));
+}
+
+int schCreateRWLock(schRWLock** pRwLock){
+	*pRwLock = (schRWLock*)malloc(sizeof(pthread_rwlock_t));
+	return pthread_error_code2sch_error_code(pthread_rwlock_init(pRwLock, NULL));
+}
+
+int schDeleteRWLock(schRWLock* rwLock){
+	pthread_rwlock_destroy(rwLock);
+	free(rwLock);
+}
+
+int schRWLockRead(schRWLock* rwLock){
+	return pthread_error_code2sch_error_code(pthread_rwlock_rdlock(rwLock ));
+}
+int schRWLockWrite(schRWLock* rwLock){
+	return pthread_error_code2sch_error_code(pthread_rwlock_wrlock(rwLock));
+}
+int schRWLocUnLock(schRWLock* rwLock){
+	return pthread_error_code2sch_error_code(pthread_rwlock_unlock(rwLock));
 }
 
 int schDeleteMutex(schMutex *mutex) {
@@ -225,7 +279,6 @@ int schSignalWaitTimeOut(schSignalSet *sig, long int nano) {
 	return info.si_signo;
 }
 
-
 int schSetSignalThreadMask(schSignalSet *set, int nr, const int *signals) {
 
 	int i;
@@ -239,7 +292,8 @@ int schSetSignalThreadMask(schSignalSet *set, int nr, const int *signals) {
 		/*  */
 		if (err != 0) {
 			fprintf(stderr, "failed mapping thread: %s\n", strerror(err));
-
+			sigemptyset(set);
+			return pthread_error_code2sch_error_code(err);
 		}
 	}
 
@@ -281,6 +335,13 @@ int schSemaphoreWait(schSemaphore *pSemaphore) {
 		pthread_error_code2sch_error_code(errno);
 }
 
+int schSemaphoreTryWait(schSemaphore* semaphore){
+	if (sem_trywait(semaphore) == 0)
+		return SCH_OK;
+	else
+		pthread_error_code2sch_error_code(errno);
+}
+
 int schSemaphoreTimedWait(schSemaphore *pSemaphore, long int timeout) {
 	struct timespec spec;
 
@@ -305,12 +366,4 @@ int schSemaphoreValue(schSemaphore *pSemaphore, int *value) {
 		return SCH_OK;
 	else
 		return pthread_error_code2sch_error_code(errno);
-}
-
-int schPoolLock(schTaskPool *pool) {
-	return schMutexLock(pool->mutex);
-}
-
-int schPoolUnLock(schTaskPool *pool) {
-	return schMutexUnLock(pool->mutex);
 }

@@ -3,39 +3,122 @@
 #include<assert.h>
 #include<string.h>
 #include<errno.h>
+#include<signal.h>
+#include<setjmp.h>
+#include"internal/sch.h"
+#include"internal/queue.h"
+
+static int translate_errno_to_sch_error(int errno_num) {
+	switch (errno_num) {
+		case ENOMEM:
+			return SCH_ERROR_NOMEM;
+		default:
+			return SCH_ERROR_UNKNOWN;
+	}
+}
+
+static int sch_release_scheduler_resources(schTaskSch *sch) {
+	int i;
+
+	if (sch->set)
+		schDeleteSignal(sch->set);
+	if (sch->spinlock)
+		schDeleteSpinLock(sch->spinlock);
+	if (sch->mutex)
+		schDeleteMutex(sch->mutex);
+	if (sch->conditional)
+		schDeleteConditional(sch->conditional);
+	if (sch->barrier)
+		schDeleteBarrier(sch->mutex);
+	if (sch->pool) {
+		for (i = 0; i < sch->num; i++) {
+			free(sch->pool[i].package);
+		}
+	}
+	free(sch->pool);
+	free(sch->dheap);
+
+	/*  Reset attribute values. */
+	sch->dheap = NULL;
+	sch->pool = NULL;
+	sch->spinlock = NULL;
+	sch->set = NULL;
+	sch->num = 0;
+	sch->flag = 0;
+}
+
+int schAllocateTaskPool(schTaskSch **pSch) {
+	*pSch = malloc(sizeof(schTaskSch));
+	if (*pSch == NULL)
+		return translate_errno_to_sch_error(errno);
+	return SCH_OK;
+}
 
 int schCreateTaskPool(schTaskSch *sch, int cores, unsigned int flag, unsigned int maxPackagesPool) {
 	unsigned int i;
 	unsigned int status = SCH_OK;
 
-	if(sch == NULL)
+	if (sch == NULL)
 		return SCH_ERROR_INVALID_SCH;
 
 	/*  Invalid argument.   */
-	if (cores > schGetNumCPUCores())
+	if ((cores > schGetNumCPUCores() && (flag & SCH_FLAG_NO_AFM) == 0) || maxPackagesPool < 1)
 		return SCH_ERROR_INVALID_ARG;
-
-	if (cores == -1)
+	if (cores <= 0)
 		cores = schGetNumCPUCores();
 	sch->num = (unsigned int) cores;
-	sch->flag = flag & ~(SCH_FLAG_INIT | SCH_FLAG_RUNNING);
+	assert(sch->num > 0);
+	sch->flag = ATOMIC_VAR_INIT(flag & ~(SCH_FLAG_INIT | SCH_FLAG_RUNNING));
+
+	/*  Init state. */
+	sch->pool = NULL;
+	sch->dheap = NULL;
+	sch->set = NULL;
+	sch->spinlock = NULL;
+	sch->mutex = NULL;
+	sch->conditional = NULL;
+	sch->barrier = NULL;
 
 	/*  Allocate pools. */
 	sch->pool = malloc(sizeof(schTaskPool) * sch->num);
-	assert(sch->pool);
+	if (sch->pool == NULL) {
+		/*  Memory error and must exit.    */
+		status = translate_errno_to_sch_error(errno);
+		goto error;
+	}
 	sch->dheap = malloc(sizeof(schTaskPool *) * sch->num);
+	if (sch->dheap == NULL) {
+		status = translate_errno_to_sch_error(errno);
+		goto error;
+	}
 
 	/*  Create signal object.   */
 	sch->set = schCreateSignal();
-
-	/*  Create internal spinlock.   */
-	if(!schCreateSpinLock(&sch->spinlock)){
-		free(sch->pool);
-		free(sch->dheap);
-		return SCH_ERROR_SYNC_OBJECT;
+	if (sch->set == NULL) {
+		status = SCH_ERROR_UNKNOWN;
+		goto error;
 	}
 
-	/*  Iterate through each pool.  */
+	/*  Create internal spinlock.   */
+	status = schCreateSpinLock(&sch->spinlock);
+	if (status != SCH_OK)
+		goto error;
+
+	status = schCreateMutex(&sch->mutex);
+	if (status != SCH_OK)
+		goto error;
+	status = schCreateConditional(&sch->conditional);
+	if (status != SCH_OK)
+		goto error;
+
+	status = schCreateBarrier(&sch->barrier);
+	if (status != SCH_OK)
+		goto error;
+	status = schInitBarrier(sch->barrier, sch->num);
+	if (status != SCH_OK)
+		goto error;
+
+	/*  Iterate through each pool and preallocate and init setup.  */
 	for (i = 0; i < sch->num; i++) {
 
 		/*  Copy the default pool pointers. */
@@ -43,13 +126,16 @@ int schCreateTaskPool(schTaskSch *sch, int cores, unsigned int flag, unsigned in
 
 		/*  Allocate queue. */
 		sch->pool[i].package = (schTaskPackage *) malloc(sizeof(schTaskPackage) * maxPackagesPool);
+		if (sch->pool[i].package == NULL) {
+			/*  Memory error and must exit.    */
+			status = translate_errno_to_sch_error(errno);
+			goto error;
+		}
 		sch->pool[i].head = 0;
 		sch->pool[i].tail = 0;
-
 		/*  Initialize queue data attributes.   */
 		sch->pool[i].size = 0;
 		sch->pool[i].reserved = maxPackagesPool;
-		sch->pool[i].index = i;
 
 		/*  Default statistics.  */
 		sch->pool[i].avergeDeque = 0;
@@ -68,9 +154,16 @@ int schCreateTaskPool(schTaskSch *sch, int cores, unsigned int flag, unsigned in
 		/*  */
 		sch->pool[i].schThread = schCurrentThread();
 		sch->pool[i].sch = sch;
+		sch->pool[i].index = i;
+		sch->pool[i].flag = 0;
 	}
 
-	sch->flag |= SCH_FLAG_INIT;
+	/*  Set scheduler ready and initialized. */
+	atomic_fetch_or(&sch->flag, SCH_FLAG_INIT);
+	return status;
+
+error:  /*  Failed. Release resource in correct order if allocated. */
+	sch_release_scheduler_resources(sch);
 	return status;
 }
 
@@ -79,43 +172,29 @@ int schReleaseTaskSch(schTaskSch *sch) {
 	int x;
 	int status = SCH_OK;
 
-	/*  */
+	/*  Check state of termination. */
 	status = schTerminateTaskSch(sch);
 	if (status != SCH_OK && status != SCH_ERROR_INVALID_STATE)
 		return status;
 
 	/*  Iterate through each pool.  */
 	for (x = 0; x < sch->num; x++) {
+		/*  Fetch pool pointer. */
 		schTaskPool *pool = &sch->pool[x];
 
-		/*  Empty pool size.    */
+		//TODO add release of sync objects.
 		free(pool->package);
 		pool->package = NULL;
 		pool->flag = 0;
 	}
 
 	/*  */
-	status &= schDeleteSpinLock(sch->spinlock);
-	status &= schDeleteSignal(sch->set);
-
-	/*  Release pool and heap.  */
-	free(sch->pool);
-	free(sch->dheap);
-
-	/*  Reset attribute values. */
-	sch->dheap = NULL;
-	sch->pool = NULL;
-	sch->spinlock = NULL;
-	sch->set = NULL;
-	sch->num = 0;
-	sch->flag = 0;
-
-	return status ? SCH_OK : SCH_ERROR_UNKNOWN;
+	sch_release_scheduler_resources(sch);
+	return status;
 }
 
 void schSetInitCallBack(schTaskSch *sch, schUserCallBack callback) {
 	int i;
-
 	/*  Iterate through each pool.  */
 	for (i = 0; i < sch->num; i++)
 		sch->pool[i].init = callback;
@@ -129,7 +208,7 @@ void schSetDeInitCallBack(schTaskSch *sch, schUserCallBack callback) {
 		sch->pool[i].deinit = callback;
 }
 
-void schSetSchUserData(schTaskSch* sch, const void* user) {
+void schSetSchUserData(schTaskSch *sch, const void *user) {
 	int i;
 	/*  Iterate through each pool.  */
 	for (i = 0; i < sch->num; i++)
@@ -144,26 +223,31 @@ void *schGetPoolUserData(schTaskSch *sch, int index) {
 	return sch->pool[index].userdata;
 }
 
-schTaskPool* schGetPool(schTaskSch* sch, int index){
+schTaskPool *schGetPool(schTaskSch *sch, int index) {
 	return &sch->pool[index];
 }
 
 int schRunTaskSch(schTaskSch *sch) {
 	unsigned int i;
 	char buf[64] = {0};
+	int status;
 
-	/*  Must have been initialized before can start running.    */
+	/*  Must have been initialized before it can start running.    */
 	if ((sch->flag & SCH_FLAG_INIT) == 0)
 		return SCH_ERROR_INVALID_STATE;
 
 	/*  Initialize scheduler signal mask.   */
 	const int mask[] = {SCH_SIGNAL_CONTINUE, SCH_SIGNAL_DONE, SCH_SIGNAL_RUNNING};
 	const int nrMask = sizeof(mask) / sizeof(mask[0]);
-	if (!schSetSignalThreadMask(sch->set, nrMask, mask)) {
+	//TODO determine that it does not override the current masking.
+	status = schSetSignalThreadMask(sch->set, nrMask, mask);
+	if (status != SCH_OK)
 		return SCH_ERROR_INTERNAL;
-	}
 
-	/*  Iterate through each pool.  */
+	//TODO improve status error
+	schInitBarrier(sch->barrier, sch->num);
+
+	/*  Iterate through each pool and perform final allocation.  */
 	for (i = 0; i < sch->num; i++) {
 		int ncoreIndex = i;
 
@@ -175,42 +259,66 @@ int schRunTaskSch(schTaskSch *sch) {
 		sch->pool[i].set = schCreateSignal();
 
 		/*  Set affinity core mapping.  */
-		if(sch->flag & SCH_FLAG_NO_AFM)
+		if (sch->flag & SCH_FLAG_NO_AFM)
 			ncoreIndex = -1;
 
 		/*  Create thread.  */
 		sch->pool[i].thread = schCreateThread(ncoreIndex, schPoolExecutor, &sch->pool[i]);
+		/*  Check if thread were create successfully.    */
+		if (sch->pool[i].thread == NULL) {
+			status = SCH_ERROR_INVALID_SCH;
+			goto failed;
+		}
 		assert(sch->pool[i].thread);
 
-		/*  Check if thread were create successfully.    */
-		if (sch->pool[i].thread != NULL) {
-			/*  Create thread name. */
-			sprintf(buf, "task_schedule%d", i);
-			buf[15] = '\0';
+		/*  Create thread name. */
+		sprintf(buf, "task_schedule%d", i);
+		buf[15] = '\0';
 
-			/*  Set thread name.    */
-			schSetThreadName(sch->pool[i].thread, buf);
-		} else {
-			/*  Error occurred!  */
-			fprintf(stderr, "Failed to create thread:%d\n", i);
-			return SCH_ERROR_INTERNAL;
-		}
+		/*  Set thread name - Error allowed.   */
+		status = schSetThreadName(sch->pool[i].thread, buf);
 	}
 
 	/*  Iterate through each pool and start.    */
 	for (i = 0; i < sch->num; i++) {
-		if (!schRaiseThreadSignal(sch->pool[i].thread, SCH_SIGNAL_CONTINUE))
+		status = schRaiseThreadSignal(sch->pool[i].thread, SCH_SIGNAL_CONTINUE);
+		if (status != SCH_OK)
 			return SCH_ERROR_INTERNAL;
 	}
 
 	/*  Update scheduler flag state.    */
-	sch->flag |= SCH_FLAG_RUNNING;    /*	Running.    */
+	atomic_fetch_or(&sch->flag, SCH_FLAG_RUNNING);    /*	Running.    */
 	return SCH_OK;
+
+failed:
+	schTerminateTaskSch(sch);
+	return status;
 }
+
+int schStopTaskSch(schTaskSch *sch, long int timeout) {
+	int status;
+	int i;
+
+	/*  Must have been initialized before it can start running.    */
+	if ((sch->flag & SCH_FLAG_INIT) == 0)
+		return SCH_ERROR_INVALID_STATE;
+	/*  Not running.    */
+	if ((sch->flag & SCH_FLAG_RUNNING) == 0)
+		return SCH_ERROR_INVALID_STATE;
+
+	/*  Iterate through each pool and start.    */
+	for (i = 0; i < sch->num; i++) {
+		status = schRaiseThreadSignal(sch->pool[i].thread, SCH_SIGNAL_CONTINUE);
+		if (status != SCH_OK)
+			return SCH_ERROR_INTERNAL;
+	}
+}
+
 
 int schTerminateTaskSch(schTaskSch *sch) {
 	int x;
 	int status = SCH_OK;
+	long thread_status;
 
 	/*  Non-initialized scheduler.  */
 	if (sch->flag & SCH_FLAG_INIT == 0)
@@ -220,8 +328,11 @@ int schTerminateTaskSch(schTaskSch *sch) {
 	if ((sch->flag & SCH_FLAG_RUNNING) == 0)
 		return SCH_ERROR_INVALID_STATE;
 
-	/*  Wait in till scheduler is finished. */
-	schWaitTask(sch);
+	/*  Instantly terminate the scheduler. */
+//	schStopTaskSch(sch, 0);
+
+	/*  Wait in till scheduler is finished with all tasks. */
+	status = schWaitTask(sch);
 
 	/*  Iterate through each pool.  */
 	for (x = 0; x < sch->num; x++) {
@@ -229,11 +340,12 @@ int schTerminateTaskSch(schTaskSch *sch) {
 
 		/*  If thread has been created. */
 		if (pool->thread) {
-			status &= schRaiseThreadSignal(pool->thread, SCH_SIGNAL_QUIT);
+			status &= schRaiseThreadSignal(pool->thread, SIGTERM);
+//			status &= schRaiseThreadSignal(pool->thread, SCH_SIGNAL_QUIT);
 
 			/*  Wait in till thread has terminated. */
-			status &= schWaitThread(pool->thread);
-			status &= schDeleteThread(pool->thread);
+			status &= schWaitThread(pool->thread, &thread_status);
+			//status &= schDeleteThread(pool->thread);
 			pool->thread = NULL;
 			pool->schThread = NULL;
 
@@ -251,7 +363,7 @@ int schTerminateTaskSch(schTaskSch *sch) {
 	}
 
 	/*  Update scheduler state. */
-	sch->flag &= ~(sch->flag & SCH_FLAG_RUNNING);
+	atomic_fetch_and(&sch->flag, ~SCH_FLAG_RUNNING);
 
 	/*  */
 	return status ? SCH_OK : SCH_ERROR_UNKNOWN;
@@ -262,22 +374,22 @@ int schSubmitTask(schTaskSch *sch, schTaskPackage *package, schTaskPool *pPool) 
 
 	schTaskPool *pool;
 
-	if((sch->flag & SCH_FLAG_RUNNING) == 0 || (sch->flag & SCH_FLAG_INIT) == 0)
+	if ((sch->flag & SCH_FLAG_RUNNING) == 0 || (sch->flag & SCH_FLAG_INIT) == 0)
 		return SCH_ERROR_INVALID_STATE;
 
 	/*  Validate argument.  */
-	if(package == NULL || package->callback == NULL)
+	if (package == NULL || package->callback == NULL)
 		return SCH_ERROR_INVALID_ARG;
 
 	/*	Determine which pool has least work ahead.*/
 	schHeapify(sch);
-	if(pPool == NULL)
+	if (pPool == NULL)
 		pool = sch->dheap[0];
 	else
 		pool = pPool;
 
 	/*  Full queue. */
-	if(pool->size >= pool->reserved)
+	if (pool->size >= pool->reserved)
 		return SCH_ERROR_POOL_FULL;
 
 	/*  Set pool index. */
@@ -292,16 +404,36 @@ int schSubmitTask(schTaskSch *sch, schTaskPackage *package, schTaskPool *pPool) 
 	if (pool->size <= 1 && pool->flag & SCH_POOL_SLEEP) {
 		if (!schRaiseThreadSignal(pool->thread, SCH_SIGNAL_CONTINUE))
 			return SCH_ERROR_SIGNAL;
+		schInitBarrier(sch->barrier, sch->num);
 	}
 	return SCH_OK;
 }
 
+int schClearTask(schTaskSch *sch, schTaskPool *pool) {
+
+}
+
+int schClearAllTask(schTaskSch* sch) {
+
+}
+
 int schWaitTask(schTaskSch *sch) {
+	return schWaitTaskWait(sch, -1);
+}
+
+int schWaitTaskWait(schTaskSch *sch, long wait) {
 	int i;
 
 	/*  Check if valid scheduler.   */
 	if ((sch->flag & SCH_FLAG_RUNNING) == 0)
 		return SCH_ERROR_INVALID_STATE;
+
+	/*  */  //TODO add support for wait utilization.
+	schMutexLock(sch->mutex);
+	while (!(sch->flag & SCH_FLAG_RUNNING)) {
+		schConditionalWait(sch->conditional, sch->mutex);
+	}
+	schMutexUnLock(sch->mutex);
 
 	/*  Iterate through each pool.  */
 	for (i = 0; i < sch->num; i++) {
@@ -309,7 +441,7 @@ int schWaitTask(schTaskSch *sch) {
 			continue;
 		else {
 			/*  Wait and check every milliseconds reset. */
-			if (schSignalWaitTimeOut(sch->set, (long int) 1E7L) < 0){
+			if (schSignalWaitTimeOut(sch->set, (long int) 1E7L) < 0) {
 				fprintf(stderr, "signal wait failed: %s", strerror(errno));
 			}
 			i = -1;
@@ -318,16 +450,24 @@ int schWaitTask(schTaskSch *sch) {
 	return SCH_OK;
 }
 
-void* schQueueMutexEnDeQueue(schTaskPool *taskPool, int dequeue, void *enqueue){
-	schTaskPackage* package = enqueue;
+int schPoolMutexLock(schTaskPool *pool) {
+	return schMutexLock(pool->mutex);
+}
 
-	schTaskSch* sch = taskPool->sch;
+int schPoolMutexUnLock(schTaskPool *pool) {
+	return schMutexUnLock(pool->mutex);
+}
+
+void *schQueueMutexEnDeQueue(schTaskPool *taskPool, int dequeue, void *enqueue) {
+	schTaskPackage *package = enqueue;
+
+	schTaskSch *sch = taskPool->sch;
 	schLockSpinLock(sch->spinlock);
-	if(dequeue){
+	if (dequeue) {
 		taskPool->size--;
 		package = &taskPool->package[taskPool->head];
 		taskPool->head = (taskPool->head + 1) % taskPool->reserved;
-	}else{
+	} else {
 		memcpy(&taskPool->package[taskPool->tail], package, sizeof(*package));
 		taskPool->tail = (taskPool->tail + 1) % taskPool->reserved;
 		taskPool->size++;
@@ -337,110 +477,13 @@ void* schQueueMutexEnDeQueue(schTaskPool *taskPool, int dequeue, void *enqueue){
 	return package;
 }
 
-static void setPoolRunning(schTaskPool *pool) {
-	pool->flag |= SCH_POOL_RUNNING;
-	pool->flag = pool->flag & ~SCH_POOL_SLEEP;
-}
-
-static void setPoolIdle(schTaskPool *pool) {
-	pool->flag = (pool->flag & ~SCH_POOL_RUNNING) | SCH_POOL_SLEEP;
-}
-static void setPoolTerminated(schTaskPool* pool){
-	pool->flag = (pool->flag & ~(SCH_POOL_RUNNING | SCH_POOL_SLEEP)) | SCH_POOL_TERMINATE;
-}
-
-void *schPoolExecutor(void *handle) {
-
-	/*	*/
-	int signal;
-	const unsigned int SigQuit = SCH_SIGNAL_QUIT;
-	const long int timeRes = schTimeResolution();
-	long int taskInvoke;
-
-	assert(handle);
-	schTaskPool *pool = handle;
-	const unsigned int index = pool->index;
-
-	/*  Initialize thread signal mask.   */
-	const int mask[] = {SCH_SIGNAL_CONTINUE, SCH_SIGNAL_DONE, SCH_SIGNAL_RUNNING, SCH_SIGNAL_QUIT};
-	const int nrMask = sizeof(mask) / sizeof(mask[0]);
-	if(schSetSignalThreadMask(pool->set, nrMask, mask) <= 0)
-		goto error;
-
-	/*  Wait in till all thread has been executed and is ready.   */
-	while(schSignalWait(pool->set) != SCH_SIGNAL_CONTINUE){}
-
-	/*	Initialize callback */
-	if (pool->init)
-		pool->init(pool);
-
-	/*	Main iterative loop.	*/
-	do {
-		if (pool->size > 0) {
-			schCallback callback;
-			schTaskPackage* package;
-
-			/*  Get next package and update queue.  */
-			package = schQueueMutexEnDeQueue(pool, 1, NULL);
-
-			/*  Extract package and callback and update queue.  */
-			callback = package->callback;
-			package->index = index;
-
-			/*  Invoke task callback.   */
-			taskInvoke = schGetTime();
-			callback(package);
-			taskInvoke = schGetTime() - taskInvoke;
-
-			/*  Update pool priority queue key. */
-			pool->avergeDeque = 0;
-			pool->dheapPriority = taskInvoke;
-		} else {
-
-			/*  No tasks.   */
-			pool->dheapPriority = 0;
-
-			/*  Set pool in idle state. */
-			setPoolIdle(pool);
-
-			/*	Send signal to main thread, that pool is finished.	*/
-			schRaiseThreadSignal(pool->schThread, SCH_SIGNAL_DONE);
-
-			/*  Wait in till additional packages has been added and continue signal has been issued.    */
-			do {
-
-				/*  Wait in till the signal from the scheduler gives signal to continue.    */
-				signal = schSignalWait(pool->set);
-				if (signal == SigQuit) {
-					fprintf(stderr, "Quitting task schedule thread of core %d\n", pool->index);
-					goto error;
-				}
-
-			} while (signal != SCH_SIGNAL_CONTINUE);
-
-			/*	Set pool thread as running.	*/
-			setPoolRunning(pool);
-		}
-
-	} while (1);  /*  */
-
-error:    /*	failure.	*/
-
-	/*	clean up.	*/
-	if (pool->deinit)
-		pool->deinit(pool);
-
-	/*  Update flag status. */
-	setPoolTerminated(pool);
-	return NULL;
-}
 
 const char *schErrorMsg(int errMsg) {
 	static const char *msgErr[] = {
 			"unknown error",            /*  SCH_ERROR_UNKNOWN : 0   */
 			"invalid argument",         /*  SCH_ERROR_INVALID_ARG : -1  */
-			"invalid schedular object", /*  SCH_ERROR_INVALID_SCH : -2  */
-			"schedular/pool bad state", /*  SCH_ERROR_INVALID_STATE */
+			"invalid scheduler object", /*  SCH_ERROR_INVALID_SCH : -2  */
+			"scheduler/pool bad state", /*  SCH_ERROR_INVALID_STATE */
 			"internal error",           /*  SCH_ERROR_INTERNAL  */
 			"pool queue is full",       /*  SCH_ERROR_POOL_FULL */
 			"internal signal error",    /*  SCH_ERROR_SIGNAL    */
@@ -453,11 +496,11 @@ const char *schErrorMsg(int errMsg) {
 	};
 
 	/*  Check and the error message and determine if error code within the error array size.    */
-	if(errMsg == SCH_OK)
+	if (errMsg == SCH_OK)
 		return "no error";
 	if (errMsg > SCH_OK)
 		return NULL;
-	else if(errMsg < SCH_ERROR_PERMISSION_DENIED)
+	else if (errMsg < SCH_ERROR_PERMISSION_DENIED)
 		return NULL;
 	else
 		return msgErr[errMsg * -1];

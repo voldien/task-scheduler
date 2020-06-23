@@ -18,62 +18,82 @@ int perform_task(struct sch_task_package_t *package){
 	printf("%d:%d\n", package->index, fib1);
 }
 
-START_TEST(create){
-	schTaskSch taskSch;
-	schTaskSch* sch = &taskSch;
+START_TEST(create) {
+	schTaskSch *sch;
 
-	int i;
+	int coreSet[] = {
+			schGetNumCPUCores(),
+			schGetNumCPUCores() / 2,
+			schGetNumCPUCores() / 4
+	};
+
+	int i, jcores;
 	const size_t numPackages = 2048;
+	const int nCores = schGetNumCPUCores();
 
-	int status = schCreateTaskPool(sch, -1, 0, numPackages);
-	ck_assert_int_eq(status, SCH_OK);
-	ck_assert_int_eq(sch->num, schGetNumCPUCores());
-	ck_assert_ptr_ne(sch->pool, NULL);
+	schAllocateTaskPool(&sch);
+	for (jcores = -1; jcores <= nCores; jcores++) {
 
-	for(i = 0; i < sch->num; i++){
-		ck_assert_int_eq(sch->pool[i].reserved, numPackages);
-		ck_assert_int_eq(sch->pool[i].size, 0);
-		ck_assert_int_eq(sch->pool[i].flag & SCH_POOL_RUNNING, 0);
+		int status = schCreateTaskPool(sch, jcores, 0, numPackages);
+		ck_assert_int_eq(status, SCH_OK);
+		ck_assert_ptr_ne(sch->pool, NULL);
 
-		ck_assert_int_eq(sch->pool[i].head, 0);
-		ck_assert_int_eq(sch->pool[i].tail, 0);
+		for (i = 0; i < sch->num; i++) {
+			ck_assert_int_eq(sch->pool[i].reserved, numPackages);
+			ck_assert_int_eq(sch->pool[i].size, 0);
 
-		ck_assert_int_eq(sch->pool[i].mutex, NULL);
-		ck_assert_int_eq(sch->pool[i].thread, NULL);
+			ck_assert_int_eq(sch->pool[i].head, 0);
+			ck_assert_int_eq(sch->pool[i].tail, 0);
+
+			ck_assert_int_eq(sch->pool[i].flag & SCH_POOL_RUNNING, 0);
+			ck_assert_int_eq(sch->pool[i].flag & SCH_FLAG_RUNNING & SCH_FLAG_INIT, 0);
+
+			ck_assert_int_eq(sch->pool[i].mutex, NULL);
+			ck_assert_int_eq(sch->pool[i].thread, NULL);
 
 
-		ck_assert_int_eq(sch->pool[i].index, i);
+			ck_assert_int_eq(sch->pool[i].index, i);
 
-		ck_assert_int_eq(sch->pool[i].init, NULL);
-		ck_assert_int_eq(sch->pool[i].deinit, NULL);
-		ck_assert_int_eq(sch->pool[i].userdata, NULL);
+			ck_assert_int_eq(sch->pool[i].init, NULL);
+			ck_assert_int_eq(sch->pool[i].deinit, NULL);
+			ck_assert_int_eq(sch->pool[i].userdata, NULL);
 
+		}
+
+		schSetInitCallBack(sch, init);
+		schSetDeInitCallBack(sch, deinit);
+		schSetSchUserData(sch, init);
+
+		/*  Check each pool.    */
+		for (i = 0; i < sch->num; i++) {
+			ck_assert_ptr_eq(sch->pool[i].init, init);
+			ck_assert_ptr_eq(sch->pool[i].deinit, deinit);
+			ck_assert_ptr_eq(sch->pool[i].userdata, init);
+		}
+
+		/*  */
+		ck_assert_int_eq(sch->flag & (SCH_FLAG_RUNNING | SCH_FLAG_NO_AFM), 0);
+		ck_assert_int_eq(sch->flag, SCH_FLAG_INIT);
+		ck_assert_ptr_ne(sch->spinlock, NULL);
+		ck_assert_ptr_ne(sch->mutex, NULL);
+		ck_assert_ptr_ne(sch->conditional, NULL);
+		ck_assert_ptr_ne(sch->barrier, NULL);
+		ck_assert_ptr_ne(sch->set, NULL);
+		ck_assert_ptr_ne(sch->dheap, NULL);
+
+		ck_assert_int_eq(schTerminateTaskSch(sch), SCH_ERROR_INVALID_STATE);
+
+		/*  Test states.    */
+		ck_assert_int_eq(sch->flag & SCH_FLAG_RUNNING, 0);
+
+		/*  */
+		ck_assert_int_eq(schReleaseTaskSch(sch), SCH_OK);
 	}
-
-	schSetInitCallBack(sch, init);
-	schSetDeInitCallBack(sch, deinit);
-	schSetSchUserData(sch, init);
-
-	/*  Check each pool.    */
-	for(i = 0; i < sch->num; i++){
-		ck_assert_ptr_eq(sch->pool[i].init, init);
-		ck_assert_ptr_eq(sch->pool[i].deinit, deinit);
-		ck_assert_ptr_eq(sch->pool[i].userdata, init);
-	}
-
-	/*  */
-	ck_assert_int_eq(sch->flag & SCH_FLAG_RUNNING, 0);
-	ck_assert_int_eq(sch->flag,  SCH_FLAG_INIT);
-	ck_assert_ptr_ne(sch->spinlock, NULL);
-	ck_assert_int_ne(sch->set, NULL);
-	ck_assert_int_ne(sch->dheap, NULL);
-
-	/*  */
-	ck_assert_int_eq(schReleaseTaskSch(sch), SCH_OK);
+	free(sch);
 }
 END_TEST
 
-START_TEST(submit){
+START_TEST(submit) {
 	schTaskSch taskSch;
 	schTaskSch* sch = &taskSch;
 
@@ -104,11 +124,80 @@ START_TEST(submit){
 	/*  Terminate first then release.   */
 	ck_assert_int_eq(schTerminateTaskSch(sch), SCH_OK);
 
+	ck_assert_int_ne(sch->flag & SCH_FLAG_RUNNING, 0);
+
 	ck_assert_int_eq(schReleaseTaskSch(sch), SCH_OK);
 }
 END_TEST
 
-START_TEST(errorCodeMsg){
+START_TEST(MissUse) {
+	schTaskSch taskSch;
+	schTaskSch* sch = &taskSch;
+
+	int i, status;
+	const size_t numPackages = -2;
+
+	status = schCreateTaskPool(sch, -1, 0, numPackages);
+	ck_assert_int_eq(status, SCH_ERROR_INVALID_ARG);
+	status = schCreateTaskPool(sch, -1, 0, numPackages);
+	ck_assert_int_eq(status, SCH_ERROR_INVALID_ARG);
+}
+END_TEST
+
+START_TEST(PrimitiveMissUse)
+{
+	schBarrier* barrier;
+	ck_assert_int_eq(schCreateBarrier(&barrier), SCH_OK);
+	ck_assert_int_eq(schInitBarrier(barrier, 0), SCH_ERROR_INVALID_ARG);
+	ck_assert_int_eq(schDeleteBarrier(barrier), SCH_OK);
+}
+END_TEST
+
+START_TEST(wait) {
+	schTaskSch taskSch;
+	schTaskSch* sch = &taskSch;
+
+	const size_t numPackages = 28;
+
+	int status = schCreateTaskPool(sch, -1, 0, numPackages);
+	ck_assert_int_eq(status, SCH_OK);
+	ck_assert_int_eq(sch->num, schGetNumCPUCores());
+
+	ck_assert_int_eq(schRunTaskSch(sch), SCH_OK);
+
+	ck_assert_int_eq(schWaitTask(sch), SCH_OK);
+	ck_assert_int_eq(schTerminateTaskSch(sch), SCH_OK);
+	ck_assert_int_eq(schReleaseTaskSch(sch), SCH_OK);
+}
+END_TEST
+
+START_TEST(Primitive) {
+	schBarrier* barrier;
+	schMutex * mutex;
+	schSpinLock* spinLock;
+	schSemaphore* semaphore;
+	schConditional* conditional;
+
+	/*  Assert Testing. */
+	ck_assert_int_eq(schCreateBarrier(&barrier), SCH_OK);
+
+	ck_assert_int_eq(schInitBarrier(barrier, 1), SCH_OK);
+	ck_assert_int_eq(schWaitBarrier(barrier), SCH_OK);
+	ck_assert_int_eq(schDeleteBarrier(barrier), SCH_OK);
+
+	ck_assert_int_eq(schCreateConditional(&conditional), SCH_OK);
+	ck_assert_int_eq(schConditionalSignal(conditional), SCH_OK);
+
+	/*  */
+	ck_assert_int_eq(schCreateMutex(&mutex), SCH_OK);
+	ck_assert_int_eq(schMutexLock(mutex), SCH_OK);
+	ck_assert_int_eq(schMutexTryLock(mutex, 0), SCH_OK);
+
+}
+END_TEST
+
+START_TEST(errorCodeMsg) {
+
 	/*  */
 	ck_assert_ptr_eq(schErrorMsg(SCH_OK + 1), NULL);
 	ck_assert_ptr_eq(schErrorMsg(SCH_ERROR_PERMISSION_DENIED - 1), NULL);
@@ -125,16 +214,28 @@ Suite* schCreateSuite(void){
 	Suite* suite = suite_create("task-scheduler");
 	TCase* testCreate = tcase_create("create");
 	TCase* testSubmit = tcase_create("submit");
+	TCase* testWait = tcase_create("Wait");
+	TCase* testMissUse = tcase_create("MissUse");
+	TCase* testPrimitiveMissUse = tcase_create("PrimitiveMissUse");
+	TCase* testPrimitive = tcase_create("Primitive");
 	TCase* testErrorMsgCodes = tcase_create("error-code-message");
 
 	/*	Link test cases with functions.	*/
 	tcase_add_test(testCreate, create);
 	tcase_add_test(testSubmit, submit);
+	tcase_add_test(testWait, wait);
+	tcase_add_test(testMissUse, MissUse);
+	tcase_add_test(testPrimitiveMissUse, PrimitiveMissUse);
+	tcase_add_test(testPrimitive, Primitive);
 	tcase_add_test(testErrorMsgCodes, errorCodeMsg);
 
 	/*	Add test cases to test suite.	*/
 	suite_add_tcase(suite, testCreate);
 	suite_add_tcase(suite, testSubmit);
+	suite_add_tcase(suite, testWait);
+	suite_add_tcase(suite, testMissUse);
+	suite_add_tcase(suite, testPrimitiveMissUse);
+	suite_add_tcase(suite, testPrimitive);
 	suite_add_tcase(suite, testErrorMsgCodes);
 
 	return suite;
