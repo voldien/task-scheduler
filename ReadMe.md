@@ -1,4 +1,5 @@
 # Task Scheduler
+[![Build Status](https://travis-ci.org/voldien/task-scheduler.svg?branch=master)](https://travis-ci.org/voldien/task-scheduler)
 The _Task Scheduler_ is a simple task scheduler library for distributing the tasks over a set of threads of cores.
 
 ## Features ##

@@ -1,0 +1,53 @@
+language: cpp
+#sudo: true
+
+dist: bionic
+
+stages:
+  - build
+
+matrix:
+  include:
+    #
+    - name: Linux GCC 8
+      os: linux
+      stage: build
+      compiler: clang
+      addons:
+        apt:
+          packages:
+            - clang-format-8
+    #
+    - os: Linux
+      stage: build
+      compiler: gcc-7
+      addons:
+        apt:
+          sources:
+            - ubuntu-toolchain-r-test
+          packages:
+            - gcc-7
+      env:
+        - CC=gcc-7
+
+# Install dependencies
+addons:
+  apt:
+    packages:
+      - cmake
+
+install:
+  - if [ "$TRAVIS_OS_NAME" = "linux" ]; then
+    fi
+
+before_script:
+  - sudo add-apt-repository ppa:ubuntu-toolchain-r/test -y
+  - sudo apt-get update -qq
+  - sudo apt-get install check libsubunit-dev
+
+# Build executable.
+script:
+  - mkdir build && cd build
+  - cmake ..
+  - cmake --build .
+  - ctest -VV
