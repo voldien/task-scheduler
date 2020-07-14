@@ -38,7 +38,7 @@ addons:
 
 install:
   - if [ "$TRAVIS_OS_NAME" = "linux" ]; then
-    fi
+  - fi
 
 before_script:
   - sudo add-apt-repository ppa:ubuntu-toolchain-r/test -y
