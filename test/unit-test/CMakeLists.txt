@@ -23,16 +23,18 @@ ELSEIF(MSVC)
 ENDIF()
 
 # Include directory for hpm declaration.
-INCLUDE_DIRECTORIES(${CMAKE_SOURCE_DIR}/../../include)
+INCLUDE_DIRECTORIES(${CMAKE_CURRENT_SOURCE_DIR}/../../include)
 # Include header directory for this program.
 INCLUDE_DIRECTORIES(${CMAKE_CURRENT_SOURCE_DIR}/include)
 
 # Source files for the hpmassert program.
 FILE(GLOB unitsrc  ${CMAKE_CURRENT_SOURCE_DIR}/*.c)
 
+# Find target for the check library.
 INCLUDE(${CMAKE_CURRENT_SOURCE_DIR}/Modules/FindCheck.cmake)
 INCLUDE_DIRECTORIES(${CHECK_INCLUDE_DIR})
 MESSAGE(STATUS "${CHECK_LIBRARIES}")
+
 # Executable hpm assert program.
 ADD_EXECUTABLE(sch-task-cunit ${unitsrc})
 TARGET_LINK_LIBRARIES(sch-task-cunit ${CHECK_LIBRARIES} pthread taskSch)
