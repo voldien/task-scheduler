@@ -51,7 +51,6 @@ Mkfile.old
 dkms.conf
 
 
-
 # CMake
 CMakeLists.txt.user
 CMakeCache.txt
@@ -71,3 +70,38 @@ cmake-build-debug/
 #
 *.cbp
 *.tpl
+
+# Byte-compiled / optimized / DLL files
+__pycache__/
+*.py[cod]
+*$py.class
+
+# doxygen
+*~
+.*sw?
+\#*
+.DS_Store
+
+*.rej
+*.orig
+
+*.pro
+/packages/rpm/doxygen.spec
+*.idb
+*.pdb
+
+/docs/doxygen_docs
+/docs/doxygen.tag
+/docs/build*
+
+# Project dependent ignore rules
+/deps/*
+/Testing/*
+/build/*
+
+# Zip file ignore.
+*zip
+
+#Ignore visual studio ide.
+.idea
+*.iml
