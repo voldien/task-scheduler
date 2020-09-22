@@ -11,6 +11,15 @@ The _Task Scheduler_ is a simple task scheduler library for distributing the tas
 ## Motivation
 The original purpose was to create a simple task scheduler that could be used for game engines for distributing the loads on the various individual game engine components such as frustum culling, animation and etc.
 
+## Installation
+The software can be easily installed with invoking the following command.
+```bash
+mkdir build && cd build
+cmake ..
+cmake --build .
+make install
+```
+
 ## Examples
 The following a simple example for creating the scheduler object, running it and releasing the resources.
 
