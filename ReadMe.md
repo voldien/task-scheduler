@@ -24,7 +24,7 @@ make install
 ## Examples
 The following a simple example for creating the scheduler object, running it and releasing the resources.
 
-```
+```c
 #include<taskSch.h>
 
 int main(int argc, const char** argv){
