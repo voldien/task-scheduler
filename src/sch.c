@@ -6,19 +6,19 @@
 #include<assert.h>
 
 /*  State functions of the pool.   */
-static void setPoolRunning(schTaskPool *pool) {
+static inline void setPoolRunning(schTaskPool *pool) {
 	atomic_fetch_xor(&pool->flag, SCH_POOL_SLEEP | SCH_FLAG_RUNNING);
 }
 
-static void setPoolIdle(schTaskPool *pool) {
+static inline void setPoolIdle(schTaskPool *pool) {
 	atomic_fetch_xor(&pool->flag, SCH_POOL_RUNNING | SCH_POOL_SLEEP);
 }
 
-static void setPoolTerminated(schTaskPool *pool) {
+static inline  void setPoolTerminated(schTaskPool *pool) {
 	atomic_fetch_xor(&pool->flag, SCH_POOL_RUNNING | SCH_POOL_SLEEP | SCH_POOL_TERMINATE);
 }
 
-static int isRunning(schTaskPool *pool) {
+static inline  int isRunning(schTaskPool *pool) {
 	return atomic_load(&pool->flag) & SCH_POOL_RUNNING;
 }
 

@@ -8,7 +8,7 @@
 #include"internal/sch.h"
 #include"internal/queue.h"
 
-static int translate_errno_to_sch_error(int errno_num) {
+static inline int translate_errno_to_sch_error(int errno_num) {
 	switch (errno_num) {
 		case ENOMEM:
 			return SCH_ERROR_NOMEM;
@@ -66,8 +66,10 @@ int schCreateTaskPool(schTaskSch *sch, int cores, unsigned int flag, unsigned in
 		return SCH_ERROR_INVALID_ARG;
 	if (cores <= 0)
 		cores = schGetNumCPUCores();
-	sch->num = (unsigned int) cores;
 	assert(sch->num > 0);
+
+	/*	*/
+	sch->num = (unsigned int) cores;
 	sch->flag = ATOMIC_VAR_INIT(flag & ~(SCH_FLAG_INIT | SCH_FLAG_RUNNING));
 
 	/*  Init state. */
@@ -230,6 +232,7 @@ schTaskPool *schGetPool(schTaskSch *sch, int index) {
 int schRunTaskSch(schTaskSch *sch) {
 	unsigned int i;
 	char buf[64] = {0};
+	const int thread_name_len = 16;
 	int status;
 
 	/*  Must have been initialized before it can start running.    */
@@ -269,11 +272,10 @@ int schRunTaskSch(schTaskSch *sch) {
 			status = SCH_ERROR_INVALID_SCH;
 			goto failed;
 		}
-		assert(sch->pool[i].thread);
 
 		/*  Create thread name. */
 		sprintf(buf, "task_schedule%d", i);
-		buf[15] = '\0';
+		buf[thread_name_len - 1] = '\0';
 
 		/*  Set thread name - Error allowed.   */
 		status = schSetThreadName(sch->pool[i].thread, buf);
@@ -290,7 +292,7 @@ int schRunTaskSch(schTaskSch *sch) {
 	atomic_fetch_or(&sch->flag, SCH_FLAG_RUNNING);    /*	Running.    */
 	return SCH_OK;
 
-failed:
+failed:	/*	On Failure - Release resource and status.	*/
 	schTerminateTaskSch(sch);
 	return status;
 }
@@ -374,10 +376,11 @@ int schSubmitTask(schTaskSch *sch, schTaskPackage *package, schTaskPool *pPool) 
 
 	schTaskPool *pool;
 
+	/*	Validate the state of the task scheduler.	*/
 	if ((sch->flag & SCH_FLAG_RUNNING) == 0 || (sch->flag & SCH_FLAG_INIT) == 0)
 		return SCH_ERROR_INVALID_STATE;
 
-	/*  Validate argument.  */
+	/*  Validate arguments.  */
 	if (package == NULL || package->callback == NULL)
 		return SCH_ERROR_INVALID_ARG;
 
@@ -388,7 +391,7 @@ int schSubmitTask(schTaskSch *sch, schTaskPackage *package, schTaskPool *pPool) 
 	else
 		pool = pPool;
 
-	/*  Full queue. */
+	/*  Check if full queue. */
 	if (pool->size >= pool->reserved)
 		return SCH_ERROR_POOL_FULL;
 
@@ -398,6 +401,7 @@ int schSubmitTask(schTaskSch *sch, schTaskPackage *package, schTaskPool *pPool) 
 	/*  Copy package and update queue.  */
 	schQueueMutexEnDeQueue(pool, 0, package);
 
+	//TODO resolve.
 	pool->dheapPriority += 1000;
 
 	/*  If pool is finished.    */

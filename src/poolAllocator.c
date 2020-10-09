@@ -90,7 +90,7 @@ int schPoolGetIndex(const SchPool *pool, const void *data) {
 	return ((const char *) data - (const char *) pool->pool) / pool->itemsize;
 }
 
-static void *sntPoolItemByIndex(SchPool *pool, unsigned int index) {
+static inline void *sntPoolItemByIndex(SchPool *pool, unsigned int index) {
 	return ((char *) pool->pool) + ((pool->itemsize + sizeof(void *)) * index + sizeof(void *));
 }
 

@@ -2,17 +2,17 @@
 #include<string.h>
 #include<limits.h>
 
-int getParentIndex(int index, int depth) {
+#define SCH_HEAP_BREATH 4
+
+static inline int getParentIndex(int index, int depth) {
 	return ((index - 1) / depth);
 }
 
-int getChildIndex(int parent, int nthChild, int depth) {
+static inline int getChildIndex(int parent, int nthChild, int depth) {
 	return (depth * parent) + (nthChild) + 1;
 }
 
-#define HEAP_BREATH 4
-
-void restoreDown(schTaskPool **arr, int len, int index, int k) {
+static inline void restoreDown(schTaskPool **arr, int len, int index, int k) {
 
 	int child[k + 1];
 	const long int MAX = LONG_MAX;
@@ -56,9 +56,9 @@ void restoreDown(schTaskPool **arr, int len, int index, int k) {
 
 void schHeapify(schTaskSch *sch) {
 	const int n = sch->num;
-	const int d = (n - 1) / HEAP_BREATH;
+	const int d = (n - 1) / SCH_HEAP_BREATH;
 
 	/*  Iterate through each depth layer.   */
 	for (int i = d; i >= 0; i--)
-		restoreDown(sch->dheap, n, i, HEAP_BREATH);
+		restoreDown(sch->dheap, n, i, SCH_HEAP_BREATH);
 }

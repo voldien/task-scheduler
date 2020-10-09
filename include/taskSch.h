@@ -71,7 +71,7 @@ extern "C"{
 #define SCH_SIGNAL_STOP     SIGSTOP
 
 /**
- * Error messages.
+ * Error codes.
  */
 #define SCH_OK                      ((int)1)        /*  No error.   */
 #define SCH_ERROR_UNKNOWN           ((int)0)        /*  Error unknown.   */
@@ -89,7 +89,7 @@ extern "C"{
 #define SCH_ERROR_PERMISSION_DENIED ((int)-12)      /*  Permission denied of the operation. */
 
 /**
- *
+ * Task function callback type.
  */
 typedef void* (*schFunc)(void* pdata);  /*  */
 
@@ -99,7 +99,7 @@ typedef void* (*schFunc)(void* pdata);  /*  */
 typedef void schSpinLock;           /*	Spinlock sync object.   */
 typedef void schMutex;              /*	Mutex (mutual exclusion) sync object. */
 typedef void schSemaphore;          /*	Semaphore sync object.  */
-typedef void schRWLock;             /*  */
+typedef void schRWLock;             /*  Read/Write lock.	*/
 typedef void schConditional;        /*  */
 typedef void schBarrier;            /*  */
 
@@ -115,7 +115,7 @@ typedef void schSignalSet;          /*  Signal set object.  */
 typedef int (*schCallback)(struct sch_task_package_t *package);
 typedef struct sch_task_package_t {
 	/*  Package data.   */
-	atomic_uint flag;          /*  Package flag.   */
+	atomic_uint flag;           /*  Package flag.   */
 	unsigned int index;         /*  Pool index. */
 	/*  User data.  */
 	schCallback callback;       /*  Function callback.  */

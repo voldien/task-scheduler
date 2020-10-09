@@ -5,7 +5,7 @@
 
 The _Task Scheduler_ is a simple task scheduler library for distributing the tasks over a set of threads of cores.
 
-## Features ##
+## Features
 * Task Scheduling with a priority queue, currently a simple version based on the average delta time.
 * Synchronization primitives used either with the task scheduler or with other multithreading components in the application.
 

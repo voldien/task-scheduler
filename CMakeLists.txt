@@ -12,7 +12,7 @@ ELSE()
     MESSAGE(STATUS "Shared libraries enabled")
 ENDIF(NOT BUILD_SHARED_LIBS)
 
-OPTION(BUILD_WITH_TEST "Enable Testing." ON)
+OPTION(BUILD_WITH_TEST "Enable Testing." OFF)
 
 # Version setup.
 SET(SCH_VERSION_MAJOR 0)
@@ -100,7 +100,11 @@ IF( UNIX )
     SET( TARGETDIR "${PROJECT_NAME}-${SCH_VERSION}")
     ADD_CUSTOM_TARGET(	distribution
             COMMAND mkdir -p ${TARGETDIR}
-            COMMAND ${CP} -r ${CMAKE_CURRENT_SOURCE_DIR}/src ${CMAKE_CURRENT_SOURCE_DIR}/test ${CMAKE_CURRENT_SOURCE_DIR}/include ${CMAKE_CURRENT_SOURCE_DIR}/CMakeLists.txt ${CMAKE_CURRENT_SOURCE_DIR}/LICENSE ${TARGETDIR}
+            COMMAND ${CP} -r ${CMAKE_CURRENT_SOURCE_DIR}/src
+            ${CMAKE_CURRENT_SOURCE_DIR}/test
+            ${CMAKE_CURRENT_SOURCE_DIR}/include
+            ${CMAKE_CURRENT_SOURCE_DIR}/CMakeLists.txt
+            ${CMAKE_CURRENT_SOURCE_DIR}/LICENSE ${TARGETDIR}
             COMMAND ${TAR} cf - ${TARGETDIR} | ${GZIP} -c > ${TARGETDIR}.tar.gz
             COMMAND ${RM} -r ${TARGETDIR} )
 
