@@ -332,7 +332,7 @@ int schSemaphoreWait(schSemaphore *pSemaphore) {
 	if (sem_wait(pSemaphore) == 0)
 		return SCH_OK;
 	else
-		pthread_error_code2sch_error_code(errno);
+		return pthread_error_code2sch_error_code(errno);
 }
 
 int schSemaphoreTryWait(schSemaphore* semaphore){
@@ -351,14 +351,14 @@ int schSemaphoreTimedWait(schSemaphore *pSemaphore, long int timeout) {
 	if (sem_timedwait(pSemaphore, &spec) == 0)
 		return SCH_OK;
 	else
-		pthread_error_code2sch_error_code(errno);
+		return pthread_error_code2sch_error_code(errno);
 }
 
 int schSemaphorePost(schSemaphore *pSemaphore) {
 	if (sem_post((sem_t *) pSemaphore) == 0)
 		return SCH_OK;
 	else
-		pthread_error_code2sch_error_code(errno);
+		return pthread_error_code2sch_error_code(errno);
 }
 
 int schSemaphoreValue(schSemaphore *pSemaphore, int *value) {

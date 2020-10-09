@@ -1,5 +1,7 @@
 # Task Scheduler
 [![Build Status](https://travis-ci.org/voldien/task-scheduler.svg?branch=master)](https://travis-ci.org/voldien/task-scheduler)
+[![License: GPL v3](https://img.shields.io/badge/License-GPLv3-blue.svg)](https://www.gnu.org/licenses/gpl-3.0)
+[![Language grade: C/C++](https://img.shields.io/lgtm/grade/cpp/g/voldien/task-scheduler.svg?logo=lgtm&logoWidth=18)](https://lgtm.com/projects/g/voldien/task-scheduler/context:cpp)
 
 The _Task Scheduler_ is a simple task scheduler library for distributing the tasks over a set of threads of cores.
 
@@ -10,10 +12,19 @@ The _Task Scheduler_ is a simple task scheduler library for distributing the tas
 ## Motivation
 The original purpose was to create a simple task scheduler that could be used for game engines for distributing the loads on the various individual game engine components such as frustum culling, animation and etc.
 
+## Installation
+The software can be easily installed with invoking the following command.
+```bash
+mkdir build && cd build
+cmake ..
+cmake --build .
+make install
+```
+
 ## Examples
 The following a simple example for creating the scheduler object, running it and releasing the resources.
 
-```
+```c
 #include<taskSch.h>
 
 int main(int argc, const char** argv){
