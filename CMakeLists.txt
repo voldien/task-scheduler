@@ -28,7 +28,7 @@ IF((CMAKE_COMPILER_IS_GNUCC OR CMAKE_COMPILER_IS_GNUCXX) AND NOT CMAKE_COMPILER_
         SET(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fPIC")
     ENDIF()
 
-    ADD_DEFINITIONS( -Wall -w -fpermissive -Wfatal-errors)
+    ADD_DEFINITIONS( -Wall -w -Wfatal-errors)
 
     IF (CMAKE_BUILD_TYPE STREQUAL "Release")
         MESSAGE(STATUS "Compile for release.")
