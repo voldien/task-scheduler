@@ -65,7 +65,7 @@ int schCreateTaskPool(schTaskSch *sch, int cores, unsigned int flag, unsigned in
 		sch->pool[i].mutex = NULL;
 
 		/*  */
-		sch->pool[i].schThread = schCurrentThread();
+		sch->pool[i].schRefThread = schCurrentThread();
 		sch->pool[i].sch = sch;
 	}
 
@@ -234,7 +234,7 @@ int schTerminateTaskSch(schTaskSch *sch) {
 			status &= schWaitThread(pool->thread);
 			status &= schDeleteThread(pool->thread);
 			pool->thread = NULL;
-			pool->schThread = NULL;
+			pool->schRefThread = NULL;
 
 			/*  */
 			if (pool->mutex)
@@ -403,7 +403,7 @@ void *schPoolExecutor(void *handle) {
 			setPoolIdle(pool);
 
 			/*	Send signal to main thread, that pool is finished.	*/
-			schRaiseThreadSignal(pool->schThread, SCH_SIGNAL_DONE);
+			schRaiseThreadSignal(pool->schRefThread, SCH_SIGNAL_DONE);
 
 			/*  Wait in till additional packages has been added and continue signal has been issued.    */
 			do {
