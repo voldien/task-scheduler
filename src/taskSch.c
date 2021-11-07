@@ -7,15 +7,18 @@
 int schCreateTaskPool(schTaskSch *sch, int cores, unsigned int flag, unsigned int maxPackagesPool) {
 	unsigned int i;
 
-	if(sch == NULL)
+	if(sch == NULL){
 		return SCH_ERROR_INVALID_SCH;
+	}
 
 	/*  Invalid argument.   */
-	if (cores > schGetNumCPUCores())
+	if (cores > schGetNumCPUCores()){
 		return SCH_ERROR_INVALID_ARG;
+	}
 
-	if (cores == -1)
+	if (cores == -1){
 		cores = schGetNumCPUCores();
+	}
 	sch->num = (unsigned int) cores;
 	sch->flag = flag & ~(SCH_FLAG_INIT | SCH_FLAG_RUNNING);
 
@@ -452,12 +455,16 @@ const char *schErrorMsg(int errMsg) {
 	};
 
 	/*  Check and the error message and determine if error code within the error array size.    */
-	if(errMsg == SCH_OK)
+	if(errMsg == SCH_OK){
 		return "no error";
-	if (errMsg > SCH_OK)
+	}
+	if (errMsg > SCH_OK){
 		return NULL;
-	else if(errMsg < SCH_ERROR_PERMISSION_DENIED)
+	}
+	else if(errMsg < SCH_ERROR_PERMISSION_DENIED){
 		return NULL;
-	else
+	}
+	else{
 		return msgErr[errMsg * -1];
+	}
 }
