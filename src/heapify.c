@@ -1,16 +1,12 @@
-#include"taskSch.h"
-#include<string.h>
-#include<limits.h>
+#include "taskSch.h"
+#include <limits.h>
+#include <string.h>
 
 #define SCH_HEAP_BREATH 4
 
-static inline int getParentIndex(int index, int depth) {
-	return ((index - 1) / depth);
-}
+static inline int getParentIndex(int index, int depth) { return ((index - 1) / depth); }
 
-static inline int getChildIndex(int parent, int nthChild, int depth) {
-	return (depth * parent) + (nthChild) + 1;
-}
+static inline int getChildIndex(int parent, int nthChild, int depth) { return (depth * parent) + (nthChild) + 1; }
 
 static inline void restoreDown(schTaskPool **arr, int len, int index, int k) {
 
@@ -21,16 +17,14 @@ static inline void restoreDown(schTaskPool **arr, int len, int index, int k) {
 
 		/*  Check for leafs.    */
 		for (int i = 1; i <= k; i++)
-			child[i] = ((k * index + i) < len) ?
-			           (k * index + i) : -1;
+			child[i] = ((k * index + i) < len) ? (k * index + i) : -1;
 
 		long int min_child = MAX;
 		int min_child_index;
 
 		/*  Iterate through each children and find the minimum.    */
 		for (int i = 1; i <= k; i++) {
-			if (child[i] != -1 &&
-			    arr[child[i]]->dheapPriority < min_child) {
+			if (child[i] != -1 && arr[child[i]]->dheapPriority < min_child) {
 				min_child_index = child[i];
 				min_child = arr[child[i]]->dheapPriority;
 			}
@@ -45,7 +39,7 @@ static inline void restoreDown(schTaskPool **arr, int len, int index, int k) {
 		schTaskPool *b = arr[min_child_index];
 
 		/*  Swap if key is the minimum. */
-		if (a->dheapPriority > b->dheapPriority){
+		if (a->dheapPriority > b->dheapPriority) {
 			arr[index] = b;
 			arr[min_child_index] = a;
 		}

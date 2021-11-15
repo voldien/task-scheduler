@@ -1,8 +1,7 @@
-#include"internal/time.h"
-#include<unistd.h>
-#include<sys/time.h>
+#include "internal/time.h"
 #include <bits/time.h>
-
+#include <sys/time.h>
+#include <unistd.h>
 
 long int schGetTime(void) {
 	struct timeval tSpec;

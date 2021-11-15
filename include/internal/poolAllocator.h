@@ -2,46 +2,45 @@
 	Task scheduler for uniform processing in user space.
 	Copyright (C) 2015  Valdemar Lindberg
 
-    This program is free software: you can redistribute it and/or modify
-    it under the terms of the GNU General Public License as published by
-    the Free Software Foundation, either version 3 of the License, or
-    (at your option) any later version.
+	This program is free software: you can redistribute it and/or modify
+	it under the terms of the GNU General Public License as published by
+	the Free Software Foundation, either version 3 of the License, or
+	(at your option) any later version.
 
-    This program is distributed in the hope that it will be useful,
-    but WITHOUT ANY WARRANTY; without even the implied warranty of
-    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-    GNU General Public License for more details.
+	This program is distributed in the hope that it will be useful,
+	but WITHOUT ANY WARRANTY; without even the implied warranty of
+	MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+	GNU General Public License for more details.
 
-    You should have received a copy of the GNU General Public License
-    along with this program.  If not, see <http://www.gnu.org/licenses/>.
+	You should have received a copy of the GNU General Public License
+	along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 */
 #ifndef _SCH_POOL_ALLOCATOR_H_
 #define _SCH_POOL_ALLOCATOR_H_ 1
 
-#include<stdio.h>
+#include <stdio.h>
 
 #ifdef __cplusplus
-extern "C"{
+extern "C" {
 #endif
 
 /**
  *	Pool node element.
  */
 typedef struct sch_pool_node_t {
-	struct sch_pool_node_t *next;    /*	Next item in the pool frame.	*/
-	void *data[];                    /*	Base pointer for the element.	*/
+	struct sch_pool_node_t *next; /*	Next item in the pool frame.	*/
+	void *data[];				  /*	Base pointer for the element.	*/
 } SchPoolNode;
 
 /**
  *	Pool allocator container.
  */
 typedef struct sch_pool_allocator_t {
-	unsigned int num;           /*	Number of allocated elements in pool.	*/
-	unsigned int itemsize;      /*	Size of each element in pool.	*/
-	SchPoolNode *pool;          /*	Pool frame.	*/
+	unsigned int num;	   /*	Number of allocated elements in pool.	*/
+	unsigned int itemsize; /*	Size of each element in pool.	*/
+	SchPoolNode *pool;	   /*	Pool frame.	*/
 } SchPool;
-
 
 /**
  *	Create Poll allocator.
@@ -51,8 +50,7 @@ typedef struct sch_pool_allocator_t {
  */
 extern SchPool *schInitPool(SchPool *pool, unsigned int num, unsigned int itemsize);
 
-extern SchPool *schPoolCreate(unsigned int num,
-                              unsigned int itemsize);
+extern SchPool *schPoolCreate(unsigned int num, unsigned int itemsize);
 
 /**
  *	Obtain the next element from pool frame.
@@ -76,8 +74,7 @@ extern void *schPoolObtain(SchPool *allocator);
  *
  *	@Return current next element in allocator.
  */
-extern void *schPoolReturn(SchPool *allocator,
-                           void *data);
+extern void *schPoolReturn(SchPool *allocator, void *data);
 
 /**
  *	Resize the current pool frame size without removing
