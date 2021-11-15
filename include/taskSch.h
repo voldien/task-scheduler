@@ -135,7 +135,7 @@ typedef struct sch_task_pool_t {
 
 	/*  Threading.  */
 	schThread* thread;          /*  Thread associated with the pool.    */
-	schThread* schThread;       /*  Scheduler thread.   */
+	schThread* schRefThread;       /*  Scheduler thread.   */
 
 	/*  Thread race condition variables.    */
 	void* mutex;                /*	Mutex.	*/  //TODO remove.
@@ -426,7 +426,7 @@ extern TASH_SCH_EXTERN int schSignalWaitTimeOut(schSignalSet* sig, long int nano
 
 /**
  * Set thread signal mask. Mask what signal
- * to listen and how to 
+ * to listen and how to
  *
  * @param signal object.
  * @param nr number of signals.
