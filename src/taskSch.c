@@ -216,8 +216,9 @@ int schTerminateTaskSch(schTaskSch *sch) {
 		return SCH_ERROR_INVALID_SCH;
 
 	/*  Not running.    */
-	if ((sch->flag & SCH_FLAG_RUNNING) == 0)
-		return SCH_ERROR_INVALID_STATE;
+	if ((sch->flag & SCH_FLAG_RUNNING) == 0){
+		return SCH_OK;
+	}
 
 	/*  Wait in till scheduler is finished. */
 	schWaitTask(sch);
