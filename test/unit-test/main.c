@@ -212,8 +212,9 @@ Suite* schCreateSuite(void){
 
 	/*	Create suite and test cases.	*/
 	Suite* suite = suite_create("task-scheduler");
-	TCase* testCreate = tcase_create("create");
-	TCase* testSubmit = tcase_create("submit");
+	TCase* testCreate = tcase_create("create_no_error");
+	TCase *testRelease = tcase_create("release_no_error");
+	TCase *testSubmit = tcase_create("submit_on_stack");
 	TCase* testWait = tcase_create("Wait");
 	TCase* testMissUse = tcase_create("MissUse");
 	TCase* testPrimitiveMissUse = tcase_create("PrimitiveMissUse");
@@ -268,6 +269,7 @@ int main(int argc, const char **argv) {
 	/*  Simple unit test.   */
 	schCreationUnitTest();
 
+	//TODO relocate.
 	schTaskSch sch;
 
 	const size_t numPackages = 250;
