@@ -1,4 +1,5 @@
 #include "taskSch.h"
+#include "internal/sch.h"
 #include <assert.h>
 #include <errno.h>
 #include <malloc.h>
@@ -165,7 +166,6 @@ void *schGetPoolUserData(schTaskSch *sch, int index) { return sch->pool[index].u
 
 schTaskPool *schGetPool(schTaskSch *sch, int index) { return &sch->pool[index]; }
 
-extern void *schPoolExecutor(void *handle);
 int schRunTaskSch(schTaskSch *sch) {
 	unsigned int i;
 	char buf[64] = {0};
@@ -416,94 +416,6 @@ static void setPoolTerminated(schTaskPool *pool) {
 	pool->flag = (pool->flag & ~(SCH_POOL_RUNNING | SCH_POOL_SLEEP)) | SCH_POOL_TERMINATE;
 }
 
-void *schPoolExecutor(void *handle) {
-
-	/*	*/
-	int signal;
-	const unsigned int SigQuit = SCH_SIGNAL_QUIT;
-	const long int timeRes = schTimeResolution();
-	long int taskInvoke;
-
-	assert(handle);
-	schTaskPool *pool = handle;
-	const unsigned int index = pool->index;
-
-	/*  Initialize thread signal mask.   */
-	const int mask[] = {SCH_SIGNAL_CONTINUE, SCH_SIGNAL_DONE, SCH_SIGNAL_RUNNING, SCH_SIGNAL_QUIT};
-	const int nrMask = sizeof(mask) / sizeof(mask[0]);
-	if (schSetSignalThreadMask(pool->set, nrMask, mask) <= 0) {
-		goto error;
-	}
-
-	/*  Wait in till all thread has been executed and is ready.   */
-	while (schSignalWait(pool->set) != SCH_SIGNAL_CONTINUE) {
-	}
-
-	/*	Initialize callback */
-	if (pool->init) {
-		pool->init(pool);
-	}
-
-	/*	Main iterative loop.	*/
-	do {
-		if (pool->size > 0) {
-			schCallback callback;
-			schTaskPackage *package;
-
-			/*  Get next package and update queue.  */
-			package = schQueueMutexEnDeQueue(pool, 1, NULL);
-
-			/*  Extract package and callback and update queue.  */
-			callback = package->callback;
-			package->index = index;
-
-			/*  Invoke task callback.   */
-			taskInvoke = schGetTime();
-			callback(package);
-			taskInvoke = schGetTime() - taskInvoke;
-
-			/*  Update pool priority queue key. */
-			pool->avergeDeque = 0;
-			pool->dheapPriority = taskInvoke;
-		} else {
-
-			/*  No tasks.   */
-			pool->dheapPriority = 0;
-
-			/*  Set pool in idle state. */
-			setPoolIdle(pool);
-
-			/*	Send signal to main thread, that pool is finished.	*/
-			schRaiseThreadSignal(pool->schRefThread, SCH_SIGNAL_DONE);
-
-			/*  Wait in till additional packages has been added and continue signal has been issued.    */
-			do {
-
-				/*  Wait in till the signal from the scheduler gives signal to continue.    */
-				signal = schSignalWait(pool->set);
-				if (signal == SigQuit) {
-					fprintf(stderr, "Quitting task schedule thread of core %d\n", pool->index);
-					goto error;
-				}
-
-			} while (signal != SCH_SIGNAL_CONTINUE);
-
-			/*	Set pool thread as running.	*/
-			setPoolRunning(pool);
-		}
-
-	} while (1); /*  */
-
-error: /*	failure.	*/
-
-	/*	clean up.	*/
-	if (pool->deinit)
-		pool->deinit(pool);
-
-	/*  Update flag status. */
-	setPoolTerminated(pool);
-	return NULL;
-}
 
 const char *schErrorMsg(int errMsg) {
 	static const char *msgErr[] = {

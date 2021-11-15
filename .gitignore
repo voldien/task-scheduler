@@ -1,16 +1,8 @@
-# Prerequisites
-*.d
-
 # Object files
 *.o
 *.ko
 *.obj
 *.elf
-
-# Linker output
-*.ilk
-*.map
-*.exp
 
 # Precompiled Headers
 *.gch
@@ -36,26 +28,24 @@
 *.x86_64
 *.hex
 
-# Debug files
-*.dSYM/
-*.su
-*.idb
-*.pdb
+# Temp files.
+*~
 
-# Kernel Module Compile Results
-*.mod*
-*.cmd
-modules.order
-Module.symvers
-Mkfile.old
-dkms.conf
+# Assembly code.
+*.s
+
+main	# sample binary files
+#
+build
+Proj
+port/android/obj
+port/android/libs
+*.tar.*
 
 
-# CMake
 CMakeLists.txt.user
 CMakeCache.txt
 CMakeFiles
-CMakeFiles-build-debug
 CMakeScripts
 Testing
 Makefile
@@ -64,44 +54,82 @@ install_manifest.txt
 compile_commands.json
 CTestTestfile.cmake
 _deps
-cmake-build-debug/
-*.cmake
-*.tcl
-#
-*.cbp
-*.tpl
 
-# Byte-compiled / optimized / DLL files
-__pycache__/
-*.py[cod]
-*$py.class
+.metadata
+bin/
+tmp/
+*.tmp
+*.bak
+*.swp
+*~.nib
+local.properties
+.settings/
+.loadpath
+.recommenders
 
-# doxygen
-*~
-.*sw?
-\#*
-.DS_Store
+# External tool builders
+.externalToolBuilders/
 
-*.rej
-*.orig
+# Locally stored "Eclipse launch configurations"
+*.launch
 
-*.pro
-/packages/rpm/doxygen.spec
-*.idb
-*.pdb
+# PyDev specific (Python IDE for Eclipse)
+*.pydevproject
 
-/docs/doxygen_docs
-/docs/doxygen.tag
-/docs/build*
+# CDT-specific (C/C++ Development Tooling)
+.cproject
 
-# Project dependent ignore rules
-/deps/*
-/Testing/*
-/build/*
+# Java annotation processor (APT)
+.factorypath
 
-# Zip file ignore.
-*zip
+# PDT-specific (PHP Development Tools)
+.buildpath
 
-#Ignore visual studio ide.
-.idea
-*.iml
+# sbteclipse plugin
+.target
+
+# Tern plugin
+.tern-project
+
+# TeXlipse plugin
+.texlipse
+
+# STS (Spring Tool Suite)
+.springBeans
+
+# Code Recommenders
+.recommenders/
+
+# Scala IDE specific (Scala & Java development for Eclipse)
+.cache-main
+.scala_dependencies
+.worksheet
+
+
+# Build results
+[Dd]ebug/
+[Dd]ebugPublic/
+[Rr]elease/
+[Rr]eleases/
+x64/
+x86/
+build/
+bld/
+[Bb]in/
+[Oo]bj/
+
+*.ide/
+*.idea/
+.project
+.cbp
+
+# Visual studio code 
+.vscode/*
+!.vscode/settings.json
+!.vscode/tasks.json
+!.vscode/launch.json
+!.vscode/extensions.json
+*.code-workspace
+
+# Local History for Visual Studio Code
+.history/

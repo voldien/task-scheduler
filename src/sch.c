@@ -1,32 +1,27 @@
-#include"taskSch.h"
-#include"internal/sch.h"
-#include<setjmp.h>
-#include<signal.h>
-#include<errno.h>
-#include<assert.h>
+#include "internal/sch.h"
+#include "taskSch.h"
+#include <assert.h>
+#include <errno.h>
+#include <setjmp.h>
+#include <signal.h>
 
 /*  State functions of the pool.   */
 static inline void setPoolRunning(schTaskPool *pool) {
 	atomic_fetch_xor(&pool->flag, SCH_POOL_SLEEP | SCH_FLAG_RUNNING);
 }
 
-static inline void setPoolIdle(schTaskPool *pool) {
-	atomic_fetch_xor(&pool->flag, SCH_POOL_RUNNING | SCH_POOL_SLEEP);
-}
+static inline void setPoolIdle(schTaskPool *pool) { atomic_fetch_xor(&pool->flag, SCH_POOL_RUNNING | SCH_POOL_SLEEP); }
 
-static inline  void setPoolTerminated(schTaskPool *pool) {
+static inline void setPoolTerminated(schTaskPool *pool) {
 	atomic_fetch_xor(&pool->flag, SCH_POOL_RUNNING | SCH_POOL_SLEEP | SCH_POOL_TERMINATE);
 }
 
-static inline  int isRunning(schTaskPool *pool) {
-	return atomic_load(&pool->flag) & SCH_POOL_RUNNING;
-}
+static inline int isRunning(schTaskPool *pool) { return atomic_load(&pool->flag) & SCH_POOL_RUNNING; }
 
 static void hdl(int sig, siginfo_t *siginfo, void *context) {
-	printf("Sending PID: %ld, UID: %ld\n",
-	       (long) siginfo->si_pid, (long) siginfo->si_uid);
+	printf("Sending PID: %ld, UID: %ld\n", (long)siginfo->si_pid, (long)siginfo->si_uid);
 
-	//siglongjmp(jmpbuf, 1);
+	// siglongjmp(jmpbuf, 1);
 }
 
 void *schPoolExecutor(void *handle) {
@@ -63,9 +58,9 @@ void *schPoolExecutor(void *handle) {
 		schConditionalWait(sch->conditional, pool->mutex);
 
 	/*  Wait in till all thread has been executed and is ready.   */
-	//while(schSignalWait(pool->set) != SCH_SIGNAL_CONTINUE){}
+	// while(schSignalWait(pool->set) != SCH_SIGNAL_CONTINUE){}
 
-	//schWaitBarrier(sch->barrier);
+	// schWaitBarrier(sch->barrier);
 
 	/*	Initialize callback */
 	if (pool->init)
@@ -100,7 +95,7 @@ void *schPoolExecutor(void *handle) {
 			/*  No tasks.   */
 			pool->dheapPriority = 0;
 
-			//schWaitBarrier(sch->barrier);
+			// schWaitBarrier(sch->barrier);
 			/*  Set pool in idle state. */
 			setPoolIdle(pool);
 			schMutexUnLock(sch->mutex);
@@ -110,8 +105,8 @@ void *schPoolExecutor(void *handle) {
 			setPoolIdle(pool);
 
 			/*	Send signal to main thread, that pool is finished.	*/
-			schRaiseThreadSignal(pool->schThread, SCH_SIGNAL_DONE);
-			//schWaitBarrier()
+			schRaiseThreadSignal(pool->schRefThread, SCH_SIGNAL_DONE);
+			// schWaitBarrier()
 
 			/*  Wait in till additional packages has been added and continue signal has been issued.    */
 			do {
@@ -119,14 +114,14 @@ void *schPoolExecutor(void *handle) {
 				/*  Wait in till the signal from the scheduler gives signal to continue.    */
 				signal = schSignalWait(pool->set);
 				switch (signal) {
-					case SIGQUIT:
-						break;
-					case SIGINT:
-						break;
-					case SIGTERM:
-						goto done;
-					default:
-						continue;
+				case SIGQUIT:
+					break;
+				case SIGINT:
+					break;
+				case SIGTERM:
+					goto done;
+				default:
+					continue;
 				}
 				if (signal == SigQuit) {
 					fprintf(stderr, "Quitting task schedule thread of core %d\n", pool->index);
@@ -139,10 +134,10 @@ void *schPoolExecutor(void *handle) {
 			setPoolRunning(pool);
 		}
 
-	} while (1);  /*  */
+	} while (1); /*  */
 
-error:      /*	failure.	*/
-done:       /*  Finished.   */
+error: /*	failure.	*/
+done:  /*  Finished.   */
 
 	/*	clean up.	*/
 	if (pool->deinit)
@@ -150,5 +145,5 @@ done:       /*  Finished.   */
 
 	/*  Update flag status. */
 	setPoolTerminated(pool);
-	return (void *) status;
+	return (void *)status;
 }
