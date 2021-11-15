@@ -1,4 +1,4 @@
-name: Task-Scheduler
+name: Task-Scheduler Windows
 on: [push,pull_request]
 
 env:
