@@ -245,10 +245,11 @@ int schBaseSignal(void) { return SIGUSR1; }
 
 int schSignalWait(schSignalSet *sig) {
 	int signal;
-	if (sigwait(sig, &signal) == 0)
+	if (sigwait(sig, &signal) == 0) {
 		return signal;
-	else
-		return -1;
+	}
+
+	return -1;
 }
 
 int schSignalWaitTimeOut(schSignalSet *sig, long int nano) {

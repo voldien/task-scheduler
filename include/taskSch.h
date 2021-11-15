@@ -2,18 +2,18 @@
 	Task scheduler for uniform processing in user space.
 	Copyright (C) 2015  Valdemar Lindberg
 
-    This program is free software: you can redistribute it and/or modify
-    it under the terms of the GNU General Public License as published by
-    the Free Software Foundation, either version 3 of the License, or
-    (at your option) any later version.
+	This program is free software: you can redistribute it and/or modify
+	it under the terms of the GNU General Public License as published by
+	the Free Software Foundation, either version 3 of the License, or
+	(at your option) any later version.
 
-    This program is distributed in the hope that it will be useful,
-    but WITHOUT ANY WARRANTY; without even the implied warranty of
-    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-    GNU General Public License for more details.
+	This program is distributed in the hope that it will be useful,
+	but WITHOUT ANY WARRANTY; without even the implied warranty of
+	MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+	GNU General Public License for more details.
 
-    You should have received a copy of the GNU General Public License
-    along with this program.  If not, see <http://www.gnu.org/licenses/>.
+	You should have received a copy of the GNU General Public License
+	along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 */
 #ifndef _CORE_TASK_SCH_H_
@@ -28,65 +28,65 @@ extern "C" {
  * support.
  */
 #ifndef TASH_SCH_EXTERN
-	#ifndef TASH_SCH_STATIC
-		#ifdef _WIN32
-			#define TASH_SCH_EXTERN __declspec(dllimport)
-		#elif defined(__GNUC__) && __GNUC__ >= 4
-			#define TASH_SCH_EXTERN __attribute__((visibility("default")))
-		#else
-			#define TASH_SCH_EXTERN
-		#endif
-	#else
-		#define TASH_SCH_EXTERN
-	#endif
+#ifndef TASH_SCH_STATIC
+#ifdef _WIN32
+#define TASH_SCH_EXTERN __declspec(dllimport)
+#elif defined(__GNUC__) && __GNUC__ >= 4
+#define TASH_SCH_EXTERN __attribute__((visibility("default")))
+#else
+#define TASH_SCH_EXTERN
+#endif
+#else
+#define TASH_SCH_EXTERN
+#endif
 #endif
 
 /**
  * Task scheduler option flags.
  */
-#define SCH_FLAG_NO_AFM     (unsigned int)0x80000000    /*  Disable affinity mapping.    */
+#define SCH_FLAG_NO_AFM (unsigned int)0x80000000 /*  Disable affinity mapping.    */
 
 /**
  * Task scheduler internal flags.
  */
-#define SCH_FLAG_INIT       (unsigned int)0x1           /*  Scheduler has been initialized.    */
-#define SCH_FLAG_RUNNING    (unsigned int)0x2           /*  Scheduler is in running mode.   */
-#define SCH_FLAG_IDLE       (unsigned int)0x4
+#define SCH_FLAG_INIT (unsigned int)0x1	   /*  Scheduler has been initialized.    */
+#define SCH_FLAG_RUNNING (unsigned int)0x2 /*  Scheduler is in running mode.   */
+#define SCH_FLAG_IDLE (unsigned int)0x4
 
 /**
  * Pool status flags.
  */
-#define SCH_POOL_TERMINATE  (unsigned int)0x1   /*  Pool has been terminated.   */
-#define SCH_POOL_RUNNING    (unsigned int)0x2   /*  Pool is in running mode.    */
-#define SCH_POOL_SLEEP      (unsigned int)0x4   /*  Pool is in sleep mode.  */
+#define SCH_POOL_TERMINATE (unsigned int)0x1 /*  Pool has been terminated.   */
+#define SCH_POOL_RUNNING (unsigned int)0x2	 /*  Pool is in running mode.    */
+#define SCH_POOL_SLEEP (unsigned int)0x4	 /*  Pool is in sleep mode.  */
 
 /**
  * Task scheduler signals.
  */
-#define SCH_SIGNAL_IDLE     (unsigned int)(schBaseSignal() + 0) /*  */
-#define SCH_SIGNAL_RUNNING  (unsigned int)(schBaseSignal() + 1) /*  */
-#define SCH_SIGNAL_DONE     (unsigned int)(schBaseSignal() + 2) /*  */
+#define SCH_SIGNAL_IDLE (unsigned int)(schBaseSignal() + 0)		/*  */
+#define SCH_SIGNAL_RUNNING (unsigned int)(schBaseSignal() + 1)	/*  */
+#define SCH_SIGNAL_DONE (unsigned int)(schBaseSignal() + 2)		/*  */
 #define SCH_SIGNAL_CONTINUE (unsigned int)(schBaseSignal() + 3) /*  */
-#define SCH_SIGNAL_QUIT     (unsigned int)(schBaseSignal() + 4) /*  */
-#define SCH_SIGNAL_STOP     SIGSTOP
+#define SCH_SIGNAL_QUIT (unsigned int)(schBaseSignal() + 4)		/*  */
+#define SCH_SIGNAL_STOP SIGSTOP
 
 /**
- * Error codes.
+ * Library Specific Error codes.
  */
-#define SCH_OK                      ((int)1)        /*  No error.   */
-#define SCH_ERROR_UNKNOWN           ((int)0)        /*  Error unknown.   */
-#define SCH_ERROR_INVALID_ARG       ((int)-1)       /*  Invalid argument.   */
-#define SCH_ERROR_INVALID_SCH       ((int)-2)       /*  Invalid scheduler object.   */
-#define SCH_ERROR_INVALID_STATE     ((int)-3)       /*  Scheduler/Pool in bad state.    */
-#define SCH_ERROR_INTERNAL          ((int)-4)       /*  Internal error. */
-#define SCH_ERROR_POOL_FULL         ((int)-5)       /*  Pool queue is full. */
-#define SCH_ERROR_SIGNAL            ((int)-6)       /*  Signal failed.  */
-#define SCH_ERROR_SYNC_OBJECT       ((int)-7)       /*  Synchronization object failed.   */
-#define SCH_ERROR_TIMEOUT           ((int)-8)       /*  Timeout.    */
-#define SCH_ERROR_BUSY              ((int)-9)       /*  Busy error. */
-#define SCH_ERROR_NOMEM             ((int)-10)      /*  No Memory.  */
-#define SCH_ERROR_LACK_OF_RESOURCES ((int)-11)      /*  There system is lacking resources.  */
-#define SCH_ERROR_PERMISSION_DENIED ((int)-12)      /*  Permission denied of the operation. */
+#define SCH_OK ((int)1)						   /*  No error.   */
+#define SCH_ERROR_UNKNOWN ((int)0)			   /*  Error unknown.   */
+#define SCH_ERROR_INVALID_ARG ((int)-1)		   /*  Invalid argument.   */
+#define SCH_ERROR_INVALID_SCH ((int)-2)		   /*  Invalid scheduler object.   */
+#define SCH_ERROR_INVALID_STATE ((int)-3)	   /*  Scheduler/Pool in bad state.    */
+#define SCH_ERROR_INTERNAL ((int)-4)		   /*  Internal error. */
+#define SCH_ERROR_POOL_FULL ((int)-5)		   /*  Pool queue is full. */
+#define SCH_ERROR_SIGNAL ((int)-6)			   /*  Signal failed.  */
+#define SCH_ERROR_SYNC_OBJECT ((int)-7)		   /*  Synchronization object failed.   */
+#define SCH_ERROR_TIMEOUT ((int)-8)			   /*  Timeout.    */
+#define SCH_ERROR_BUSY ((int)-9)			   /*  Busy error. */
+#define SCH_ERROR_NOMEM ((int)-10)			   /*  No Memory.  */
+#define SCH_ERROR_LACK_OF_RESOURCES ((int)-11) /*  There system is lacking resources.  */
+#define SCH_ERROR_PERMISSION_DENIED ((int)-12) /*  Permission denied of the operation. */
 
 /**
  * Task function callback type.
@@ -126,6 +126,8 @@ typedef struct sch_task_package_t {
 	void *end;			 /*  End pointer.    */
 	void *puser;		 /*  User data.  */
 } schTaskPackage;
+
+// TODO relocate t the source code
 
 /**
  * Pool structure.

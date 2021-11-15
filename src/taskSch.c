@@ -6,6 +6,11 @@
 #include <signal.h>
 #include <string.h>
 
+int translate_errno_to_sch_error(int errorCode) { return SCH_OK; }
+void sch_release_scheduler_resources(schTaskSch *sch) {}
+
+int schAllocateTaskPool(schTaskSch **pSch) { pSch = (schTaskSch *)malloc(sizeof(schTaskSch)); }
+
 int schCreateTaskPool(schTaskSch *sch, int cores, unsigned int flag, unsigned int maxPackagesPool) {
 	unsigned int i;
 	unsigned int status = SCH_OK;
@@ -20,6 +25,7 @@ int schCreateTaskPool(schTaskSch *sch, int cores, unsigned int flag, unsigned in
 	}
 
 	if (cores == -1) {
+		/*	Get All the cores.	*/
 		cores = schGetNumCPUCores();
 	}
 	sch->num = (unsigned int)cores;
@@ -111,7 +117,6 @@ error: /*  Failed. Release resource in correct order if allocated. */
 }
 
 int schReleaseTaskSch(schTaskSch *sch) {
-
 	int x;
 	int status = SCH_OK;
 
@@ -308,7 +313,6 @@ int schTerminateTaskSch(schTaskSch *sch) {
 }
 
 int schSubmitTask(schTaskSch *sch, schTaskPackage *package, schTaskPool *pPool) {
-
 	schTaskPool *pool;
 
 	if ((sch->flag & SCH_FLAG_RUNNING) == 0 || (sch->flag & SCH_FLAG_INIT) == 0) {
