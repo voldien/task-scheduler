@@ -9,7 +9,10 @@
 int translate_errno_to_sch_error(int errorCode) { return SCH_OK; }
 void sch_release_scheduler_resources(schTaskSch *sch) {}
 
-int schAllocateTaskPool(schTaskSch **pSch) { pSch = (schTaskSch *)malloc(sizeof(schTaskSch)); }
+int schAllocateTaskPool(schTaskSch **pSch) {
+	*pSch = (schTaskSch *)malloc(sizeof(schTaskSch));
+	return 0;
+}
 
 int schCreateTaskPool(schTaskSch *sch, int cores, unsigned int flag, unsigned int maxPackagesPool) {
 	unsigned int i;
@@ -266,11 +269,11 @@ int schTerminateTaskSch(schTaskSch *sch) {
 
 	/*  Non-initialized scheduler.  */
 	if ((sch->flag & SCH_FLAG_INIT) == 0)
-		return SCH_ERROR_INVALID_SCH;
+		return SCH_OK;
 
 	/*  Not running.    */
 	if ((sch->flag & SCH_FLAG_RUNNING) == 0)
-		return SCH_ERROR_INVALID_STATE;
+		return SCH_OK;
 
 	/*  Instantly terminate the scheduler. */
 	//	schStopTaskSch(sch, 0);
