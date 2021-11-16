@@ -18,7 +18,16 @@
 */
 #ifndef _CORE_TASK_SCH_H_
 #define _CORE_TASK_SCH_H_ 1
+#include <stdint.h>
+#include <stdlib.h>
+
+#ifdef __cplusplus
+#include <atomic>
+using namespace std;
+#else
 #include <stdatomic.h>
+#endif
+
 #ifdef __cplusplus
 extern "C" {
 #endif
