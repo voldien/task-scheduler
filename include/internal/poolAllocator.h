@@ -46,7 +46,7 @@ typedef struct sch_pool_allocator_t {
  *	Create Poll allocator.
  *	[next|data]
  *
- *	@Return non null pointer if successfully.
+ *	@return non null pointer if successfully.
  */
 extern SchPool *schInitPool(SchPool *pool, unsigned int num, unsigned int itemsize);
 
@@ -62,7 +62,7 @@ extern SchPool *schPoolCreate(unsigned int num, unsigned int itemsize);
  *
  *	Remark: The item may not be memset to 0.
  *
- *	@Return Non null pointer if pool is not full.
+ *	@return Non null pointer if pool is not full.
  */
 extern void *schPoolObtain(SchPool *allocator);
 
@@ -72,7 +72,7 @@ extern void *schPoolObtain(SchPool *allocator);
  *
  *	\allocator
  *
- *	@Return current next element in allocator.
+ *	@return current next element in allocator.
  */
 extern void *schPoolReturn(SchPool *allocator, void *data);
 
@@ -84,12 +84,12 @@ extern void *schPoolReturn(SchPool *allocator, void *data);
 extern void *schPoolResize(SchPool *allocator, unsigned int num, unsigned int itemsize);
 
 /**
- *	@Return number of nodes.
+ *	@return number of nodes.
  */
 extern unsigned int schPoolNumNodes(const SchPool *pool);
 
 /**
- *	@Return item size in bytes.
+ *	@return item size in bytes.
  */
 extern unsigned int schPoolItemSize(const SchPool *pool);
 

@@ -53,49 +53,49 @@ extern "C" {
 /**
  * Task scheduler option flags.
  */
-#define SCH_FLAG_NO_AFM (unsigned int)0x80000000 /*  Disable affinity mapping.    */
+#define SCH_FLAG_NO_AFM 0x80000000 /*  Disable affinity mapping.    */
 
 /**
  * Task scheduler internal flags.
  */
-#define SCH_FLAG_INIT (unsigned int)0x1	   /*  Scheduler has been initialized.    */
-#define SCH_FLAG_RUNNING (unsigned int)0x2 /*  Scheduler is in running mode.   */
-#define SCH_FLAG_IDLE (unsigned int)0x4
+#define SCH_FLAG_INIT 0x1	 /*  Scheduler has been initialized.    */
+#define SCH_FLAG_RUNNING 0x2 /*  Scheduler is in running mode.   */
+#define SCH_FLAG_IDLE 0x4
 
 /**
  * Pool status flags.
  */
-#define SCH_POOL_TERMINATE (unsigned int)0x1 /*  Pool has been terminated.   */
-#define SCH_POOL_RUNNING (unsigned int)0x2	 /*  Pool is in running mode.    */
-#define SCH_POOL_SLEEP (unsigned int)0x4	 /*  Pool is in sleep mode.  */
+#define SCH_POOL_TERMINATE 0x1 /*  Pool has been terminated.   */
+#define SCH_POOL_RUNNING 0x2   /*  Pool is in running mode.    */
+#define SCH_POOL_SLEEP 0x4	   /*  Pool is in sleep mode.  */
 
 /**
  * Task scheduler signals.
  */
-#define SCH_SIGNAL_IDLE (unsigned int)(schBaseSignal() + 0)		/*  */
-#define SCH_SIGNAL_RUNNING (unsigned int)(schBaseSignal() + 1)	/*  */
-#define SCH_SIGNAL_DONE (unsigned int)(schBaseSignal() + 2)		/*  */
-#define SCH_SIGNAL_CONTINUE (unsigned int)(schBaseSignal() + 3) /*  */
-#define SCH_SIGNAL_QUIT (unsigned int)(schBaseSignal() + 4)		/*  */
+#define SCH_SIGNAL_IDLE (schBaseSignal() + 0)	  /*  */
+#define SCH_SIGNAL_RUNNING (schBaseSignal() + 1)  /*  */
+#define SCH_SIGNAL_DONE (schBaseSignal() + 2)	  /*  */
+#define SCH_SIGNAL_CONTINUE (schBaseSignal() + 3) /*  */
+#define SCH_SIGNAL_QUIT (schBaseSignal() + 4)	  /*  */
 #define SCH_SIGNAL_STOP SIGSTOP
 
 /**
  * Library Specific Error codes.
  */
-#define SCH_OK ((int)1)						   /*  No error.   */
-#define SCH_ERROR_UNKNOWN ((int)0)			   /*  Error unknown.   */
-#define SCH_ERROR_INVALID_ARG ((int)-1)		   /*  Invalid argument.   */
-#define SCH_ERROR_INVALID_SCH ((int)-2)		   /*  Invalid scheduler object.   */
-#define SCH_ERROR_INVALID_STATE ((int)-3)	   /*  Scheduler/Pool in bad state.    */
-#define SCH_ERROR_INTERNAL ((int)-4)		   /*  Internal error. */
-#define SCH_ERROR_POOL_FULL ((int)-5)		   /*  Pool queue is full. */
-#define SCH_ERROR_SIGNAL ((int)-6)			   /*  Signal failed.  */
-#define SCH_ERROR_SYNC_OBJECT ((int)-7)		   /*  Synchronization object failed.   */
-#define SCH_ERROR_TIMEOUT ((int)-8)			   /*  Timeout.    */
-#define SCH_ERROR_BUSY ((int)-9)			   /*  Busy error. */
-#define SCH_ERROR_NOMEM ((int)-10)			   /*  No Memory.  */
-#define SCH_ERROR_LACK_OF_RESOURCES ((int)-11) /*  There system is lacking resources.  */
-#define SCH_ERROR_PERMISSION_DENIED ((int)-12) /*  Permission denied of the operation. */
+#define SCH_OK (1)						  /*  No error.   */
+#define SCH_ERROR_UNKNOWN (0)			  /*  Error unknown.   */
+#define SCH_ERROR_INVALID_ARG (-1)		  /*  Invalid argument.   */
+#define SCH_ERROR_INVALID_SCH (-2)		  /*  Invalid scheduler object.   */
+#define SCH_ERROR_INVALID_STATE (-3)	  /*  Scheduler/Pool in bad state.    */
+#define SCH_ERROR_INTERNAL (-4)			  /*  Internal error. */
+#define SCH_ERROR_POOL_FULL (-5)		  /*  Pool queue is full. */
+#define SCH_ERROR_SIGNAL (-6)			  /*  Signal failed.  */
+#define SCH_ERROR_SYNC_OBJECT (-7)		  /*  Synchronization object failed.   */
+#define SCH_ERROR_TIMEOUT (-8)			  /*  Timeout.    */
+#define SCH_ERROR_BUSY (-9)				  /*  Busy error. */
+#define SCH_ERROR_NOMEM (-10)			  /*  No Memory.  */
+#define SCH_ERROR_LACK_OF_RESOURCES (-11) /*  There system is lacking resources.  */
+#define SCH_ERROR_PERMISSION_DENIED (-12) /*  Permission denied of the operation. */
 
 /**
  * Task function callback type.
