@@ -20,7 +20,7 @@
 #define _SCH_INTERNAL_SCHEDULER_H_ 1
 #include "poolAllocator.h"
 #include "queue.h"
-#include "taskSch.h"
+#include "../taskSch.h"
 
 #ifdef __cplusplus
 extern "C" {

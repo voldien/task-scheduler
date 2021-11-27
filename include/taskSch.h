@@ -20,7 +20,7 @@
 #define _CORE_TASK_SCH_H_ 1
 
 /**
- * @file
+ * @file taskSch.h
  * @ingroup libtasksch
  * Main libtasksch public API header
  */
