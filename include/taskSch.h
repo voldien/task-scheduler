@@ -248,9 +248,12 @@ extern TASH_SCH_EXTERN schTaskPool *schGetPool(schTaskSch *sch, int index);
  */
 
 /**
- **==========================================================================
- *                          Scheduler functionalities.
- **==========================================================================
+ * @defgroup ltascsch_func   Scheduler functionalities.
+ * @ingroup libtasksch
+ *
+ *
+ *
+ * @{
  */
 
 /**
@@ -294,6 +297,12 @@ extern TASH_SCH_EXTERN int schSubmitTask(schTaskSch *sch, schTaskPackage *packag
  */
 extern TASH_SCH_EXTERN int schClearTask(schTaskSch *sch, schTaskPool *pool);
 
+/**
+ * @brief
+ *
+ * @param sch
+ * @return TASH_SCH_EXTERN
+ */
 extern TASH_SCH_EXTERN int schClearAllTask(schTaskSch *sch);
 
 /**
@@ -326,9 +335,16 @@ extern TASH_SCH_EXTERN int schPoolLock(schTaskPool *pool);
 extern TASH_SCH_EXTERN int schPoolMutexUnLock(schTaskPool *pool);
 
 /**
- **==========================================================================
- *                      Thread primitives
- **==========================================================================
+ * @}
+ */
+
+/**
+ * @defgroup ltascsch_thread_func Thread primitives
+ * @ingroup libtasksch
+ *
+ *
+ *
+ * @{
  */
 
 /**
@@ -378,9 +394,16 @@ extern TASH_SCH_EXTERN schThread *schCurrentThread(void);
 extern TASH_SCH_EXTERN int schRaiseThreadSignal(schThread *thread, int signal);
 
 /**
- **==========================================================================
- *                      Synchronization primitives
- **==========================================================================
+ * @}
+ */
+
+/**
+ * @defgroup ltascsch_sync_func Synchronization primitives
+ * @ingroup libtasksch
+ *
+ *
+ *
+ * @{
  */
 
 /**
@@ -584,11 +607,27 @@ extern TASH_SCH_EXTERN int schTryLockSpinLock(schSpinLock *spinLock);
 extern TASH_SCH_EXTERN int schUnlockSpinLock(schSpinLock *spinlock);
 
 /**
+ * @}
+ */
+
+/**
+ * @ingroup libtasksch
+ *
+ *
+ *
+ * @{
+ */
+
+/**
  * Get error code message.
  * @param errMsg zero or negative number.
  * @return non-null terminated string.
  */
 extern TASH_SCH_EXTERN const char *schErrorMsg(int errMsg);
+
+/**
+ * @}
+ */
 
 #ifdef __cplusplus
 }
