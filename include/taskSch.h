@@ -1,23 +1,36 @@
-/**
-	Task scheduler for uniform processing in user space.
-	Copyright (C) 2015  Valdemar Lindberg
-
-	This program is free software: you can redistribute it and/or modify
-	it under the terms of the GNU General Public License as published by
-	the Free Software Foundation, either version 3 of the License, or
-	(at your option) any later version.
-
-	This program is distributed in the hope that it will be useful,
-	but WITHOUT ANY WARRANTY; without even the implied warranty of
-	MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-	GNU General Public License for more details.
-
-	You should have received a copy of the GNU General Public License
-	along with this program.  If not, see <http://www.gnu.org/licenses/>.
-
-*/
+/*
+ *	Task scheduler for uniform processing in user space.
+ *	Copyright (C) 2015  Valdemar Lindberg
+ *
+ *	This program is free software: you can redistribute it and/or modify
+ *	it under the terms of the GNU General Public License as published by
+ *	the Free Software Foundation, either version 3 of the License, or
+ *	(at your option) any later version.
+ *
+ *	This program is distributed in the hope that it will be useful,
+ *	but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *	MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *	GNU General Public License for more details.
+ *
+ *	You should have received a copy of the GNU General Public License
+ *	along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ *
+ */
 #ifndef _CORE_TASK_SCH_H_
 #define _CORE_TASK_SCH_H_ 1
+
+/**
+ * @file
+ * @ingroup libtasksch
+ * Main libtasksch public API header
+ */
+
+/**
+ * @defgroup libtasksch
+ * Task Scheduler
+ *
+ */
+
 #include <stdint.h>
 #include <stdlib.h>
 
@@ -57,6 +70,7 @@ extern "C" {
 
 /**
  * Task scheduler internal flags.
+ *
  */
 #define SCH_FLAG_INIT 0x1	 /*  Scheduler has been initialized.    */
 #define SCH_FLAG_RUNNING 0x2 /*  Scheduler is in running mode.   */
@@ -80,8 +94,16 @@ extern "C" {
 #define SCH_SIGNAL_STOP SIGSTOP
 
 /**
+ * @defgroup ltasksch_error Error Codes
+ * @ingroup
  * Library Specific Error codes.
+ * @{
  */
+/**
+ * @brief
+ *
+ */
+typedef int schErrCode;
 #define SCH_OK (1)						  /*  No error.   */
 #define SCH_ERROR_UNKNOWN (0)			  /*  Error unknown.   */
 #define SCH_ERROR_INVALID_ARG (-1)		  /*  Invalid argument.   */
@@ -96,6 +118,9 @@ extern "C" {
 #define SCH_ERROR_NOMEM (-10)			  /*  No Memory.  */
 #define SCH_ERROR_LACK_OF_RESOURCES (-11) /*  There system is lacking resources.  */
 #define SCH_ERROR_PERMISSION_DENIED (-12) /*  Permission denied of the operation. */
+/**
+ * @}
+ */
 
 /**
  * Task function callback type.
@@ -103,7 +128,9 @@ extern "C" {
 typedef void *(*schFunc)(void *pdata); /*  */
 
 /**
- * Synchronization objects.
+ * @addtogroup synchronization_primitives Synchronization objects.
+ * @{
+ *
  */
 typedef void schSpinLock;	 /*	Spinlock sync object.   */
 typedef void schMutex;		 /*	Mutex (mutual exclusion) sync object. */
@@ -111,100 +138,56 @@ typedef void schSemaphore;	 /*	Semaphore sync object.  */
 typedef void schRWLock;		 /*  Read/Write lock.	*/
 typedef void schConditional; /*  */
 typedef void schBarrier;	 /*  */
+/**
+ * @}
+ */
 
 /**
- * Thread objects.
+ * @addtogroup thread_objects.
+ * @{
  */
 typedef void schThread;	   /*  Thread object.  */
 typedef void schSignalSet; /*  Signal set object.  */
-
 /**
- * Scheduler task structure.
+ * @}
  */
-typedef int (*schCallback)(struct sch_task_package_t *package);
-typedef struct sch_task_package_t {
-	/*  Package data.   */
-	atomic_uint flag;	/*  Package flag.   */
-	unsigned int index; /*  Pool index. */
-	/*  User data.  */
-	schCallback callback; /*  Function callback.  */
-	// TODO determine to add long support.
-	unsigned int size;	 /*  Size parameter. */
-	unsigned int offset; /*  Offset. */
-	void *begin;		 /*  Start pointer.  */
-	void *end;			 /*  End pointer.    */
-	void *puser;		 /*  User data.  */
-} schTaskPackage;
 
-// TODO relocate t the source code
 
-/**
- * Pool structure.
- */
+typedef struct sch_task_package_t schTaskPackage;
+typedef struct sch_task_scheduler_t schTaskSch;
+typedef struct sch_task_pool_t schTaskPool;
+
 typedef int (*schUserCallBack)(struct sch_task_pool_t *);
-typedef struct sch_task_pool_t {
-
-	/*  Threading.  */
-	schThread *thread;		 /*  Thread associated with the pool.    */
-	schThread *schRefThread; /*  Scheduler thread.   */
-
-	/*  Thread race condition variables.    */
-	void *mutex; /*	Mutex.	*/ // TODO remove.
-	void *set;				   /*	Thread signal.  */
-
-	/*  Task Queue.  */ // TODO consider using linked list for adding support for task migration.
-	// TODO add atomic for queue strucuture if posssible and faster than spinlock..
-	unsigned int size;		 /*  Size of number of elements. */
-	unsigned int tail;		 /*  End of the queue.   */
-	unsigned int head;		 /*  Start of the queue. */
-	unsigned int reserved;	 /*  Number of allocate task packages.   */
-	schTaskPackage *package; /*  */
-
-	/*  User and init and release functions callbacks.  */
-	const void *userdata;	/*  User data.  */
-	schUserCallBack init;	/*  Init user callback function.    */
-	schUserCallBack deinit; /*  DeInit user callback function.  */
-
-	/*  Statistics for handling next task to execute. */
-	int avergeDeque;		/*  Average package dequeue per time unit.  */
-	long int dheapPriority; /*  */
-
-	/*  State and scheduler.    */
-	void *sch;			/*  Scheduler associated with.  */
-	unsigned int index; /*  Affinity index. */
-	atomic_uint flag;	/*  Pool status flag.   */
-} schTaskPool;
+typedef int (*schCallback)(struct sch_task_package_t *package);
 
 /**
- * Task scheduler main struct container.
+ * @defgroup ltascsch_core Core functions
+ * @ingroup libtasksch
+ *
+ *
+ *
+ * @{
  */
-typedef struct sch_task_scheduler_t {
-	unsigned int num;	   /*  Number of pools.    */
-	schTaskPool *pool;	   /*  Pools.  */
-	atomic_uint flag;	   /*  State/Status Flags. */
-	schTaskPool **dheap;   /*  Priority queue. */
-	schSpinLock *spinlock; /*  Spin lock.  */
-	schMutex *mutex;
-	schConditional *conditional;
-	schBarrier *barrier;
-	schSignalSet *set; /*  Signal listening mask.  */
-} schTaskSch;
 
 /**
- * Allocate task scheduler.
+ * @brief Allocate task scheduler.
  * @param pSch valid pointer object.
  * @return non-negative if successfully.
  */
 extern TASH_SCH_EXTERN int schAllocateTaskPool(schTaskSch **pSch);
 
 /**
- * Create scheduler.
+ * Initilize task scheduler internal data structure.
+ *
+ * @see schAllocateTaskPool
+ *
  * @param sch object reference.
- * @param cores number of cores allocated. -1 will select
- * all cores.
+ * @param cores number of pool that will be allocated. -1 will select
+ * number of pools that matches the number of cores.
  * @param flag properties.
- * @param maxPackagesPool number of task on each pool.
- * @return non-negative if successfully releasing.
+ * @param maxPackagesPool Sets the max number of task on each pool can have in the queue
+ * at any given moment.
+ * @return non-negative if successfully releasing. @see
  */
 extern TASH_SCH_EXTERN int schCreateTaskPool(schTaskSch *sch, int cores, unsigned int flag,
 											 unsigned int maxPackagesPool);
@@ -260,6 +243,10 @@ extern TASH_SCH_EXTERN void *schGetPoolUserData(schTaskSch *sch, int index);
  * @return
  */
 extern TASH_SCH_EXTERN schTaskPool *schGetPool(schTaskSch *sch, int index);
+
+/**
+ * @}
+ */
 
 /**
  **==========================================================================

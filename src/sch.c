@@ -1,4 +1,5 @@
 #include "internal/sch.h"
+#include "internal/internal_structures.h"
 #include "taskSch.h"
 #include <assert.h>
 #include <errno.h>

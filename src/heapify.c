@@ -1,3 +1,4 @@
+#include "internal/internal_structures.h"
 #include "taskSch.h"
 #include <limits.h>
 #include <string.h>
