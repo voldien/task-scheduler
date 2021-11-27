@@ -12,6 +12,45 @@ ELSE()
     MESSAGE(STATUS "Shared libraries enabled")
 ENDIF(NOT BUILD_SHARED_LIBS)
 
+#############################################
+#  Extract git hash and branch information.
+#############################################
+OPTION(IGNORE_GIT_HASH "Use Git hash" OFF)
+FIND_PACKAGE(Git QUIET)
+IF(NOT IGNORE_GIT_HASH)
+  IF(GIT_FOUND)
+    # Get the current working branch
+    EXECUTE_PROCESS(
+    COMMAND git rev-parse --abbrev-ref HEAD
+    WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}
+    OUTPUT_VARIABLE GIT_BRANCH
+    OUTPUT_STRIP_TRAILING_WHITESPACE
+    ERROR_QUIET
+    )
+
+    # Get the latest abbreviated commit hash of the working branch
+    EXECUTE_PROCESS(
+    COMMAND git rev-parse --short=8 HEAD
+    WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}
+    OUTPUT_VARIABLE GIT_COMMIT_HASH
+    OUTPUT_STRIP_TRAILING_WHITESPACE
+    ERROR_QUIET
+    )
+
+    #Extract IF there is a tag associated with current commit
+    EXECUTE_PROCESS(
+    COMMAND git describe --exact-match --tags 2> /dev/null || git rev-parse --short HEAD
+    WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}
+    OUTPUT_VARIABLE GIT_TAG
+    OUTPUT_STRIP_TRAILING_WHITESPACE
+    ERROR_QUIET
+    )
+  ELSE()
+    MESSAGE(FATAL_ERROR "Git must be install on the system in order to extract meta data from GIT version control" )
+  ENDIF()
+ENDIF()
+
+
 OPTION(TASKSCH_BUILD_WITH_TEST "Enable Testing." OFF)
 
 IF(CMAKE_SOURCE_DIR STREQUAL CMAKE_CURRENT_SOURCE_DIR)
@@ -101,6 +140,8 @@ IF(TASKSCH_BUILD_WITH_TEST)
     ENABLE_TESTING()
     ADD_SUBDIRECTORY(${CMAKE_CURRENT_SOURCE_DIR}/test)
 ENDIF()
+
+ADD_SUBDIRECTORY(${CMAKE_CURRENT_SOURCE_DIR}/docs/)
 
 IF( UNIX AND SCH_STANDALONE )
     # Create distribution tarball.
