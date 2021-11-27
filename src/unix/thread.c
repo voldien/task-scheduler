@@ -4,14 +4,14 @@
 
 #include <assert.h>
 #include <errno.h>
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
-
 #include <pthread.h>
 #include <semaphore.h>
 #include <setjmp.h>
 #include <signal.h>
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+#include <sys/time.h>
 #include <unistd.h>
 
 /*  TODO add memory allocation mench.   */
@@ -28,7 +28,7 @@ static void maketimeout(struct timespec *tsp, long nanoseconds) {
 	tsp->tv_nsec += nanoseconds % 1000000000;
 }
 
-schThread *schCreateThread(int affinity, schFunc *pfunc, void *userData) {
+schThread *schCreateThread(int affinity, schFunc pfunc, void *userData) {
 
 	pthread_t t0;
 	pthread_attr_t attr;
@@ -133,6 +133,7 @@ int schInitBarrier(schBarrier *pBarrier, int count) {
 int schDeleteBarrier(schBarrier *barrier) {
 	int status = pthread_error_code2sch_error_code(pthread_barrier_destroy(barrier));
 	free(barrier);
+	return status;
 }
 
 int schWaitBarrier(schBarrier *barrier) {
@@ -164,12 +165,13 @@ int schConditionalSignal(schConditional *conditional) {
 
 int schCreateRWLock(schRWLock **pRwLock) {
 	*pRwLock = (schRWLock *)malloc(sizeof(pthread_rwlock_t));
-	return pthread_error_code2sch_error_code(pthread_rwlock_init(pRwLock, NULL));
+	return pthread_error_code2sch_error_code(pthread_rwlock_init(*pRwLock, NULL));
 }
 
 int schDeleteRWLock(schRWLock *rwLock) {
-	pthread_rwlock_destroy(rwLock);
+	int status = pthread_error_code2sch_error_code(pthread_rwlock_destroy(rwLock));
 	free(rwLock);
+	return status;
 }
 
 int schRWLockRead(schRWLock *rwLock) { return pthread_error_code2sch_error_code(pthread_rwlock_rdlock(rwLock)); }
@@ -222,7 +224,8 @@ int schGetNumCPUCores(void) {
 #define MAX_THREAD_NAME 16
 
 int schSetThreadName(schThread *thread, const char *threadName) {
-	int status = pthread_error_code2sch_error_code(pthread_getname_np((pthread_t)thread, threadName, MAX_THREAD_NAME));
+
+	int status = pthread_error_code2sch_error_code(pthread_setname_np((pthread_t)thread, threadName));
 	return status;
 }
 
@@ -322,7 +325,7 @@ int schSemaphoreTryWait(schSemaphore *semaphore) {
 	if (sem_trywait(semaphore) == 0)
 		return SCH_OK;
 	else
-		pthread_error_code2sch_error_code(errno);
+		return pthread_error_code2sch_error_code(errno);
 }
 
 int schSemaphoreTimedWait(schSemaphore *pSemaphore, long int timeout) {

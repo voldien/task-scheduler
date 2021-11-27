@@ -152,7 +152,6 @@ typedef void schSignalSet; /*  Signal set object.  */
  * @}
  */
 
-
 typedef struct sch_task_package_t schTaskPackage;
 typedef struct sch_task_scheduler_t schTaskSch;
 typedef struct sch_task_pool_t schTaskPool;
@@ -339,7 +338,7 @@ extern TASH_SCH_EXTERN int schPoolMutexUnLock(schTaskPool *pool);
  * @param userData user data associated with the function.
  * @return non-null if successfully.
  */
-extern TASH_SCH_EXTERN schThread *schCreateThread(int affinity, schFunc *pfunc, void *userData);
+extern TASH_SCH_EXTERN schThread *schCreateThread(int affinity, schFunc pfunc, void *userData);
 
 /**
  * Release thread resources.

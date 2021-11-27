@@ -361,9 +361,9 @@ int schSubmitTask(schTaskSch *sch, schTaskPackage *package, schTaskPool *pPool) 
 	return SCH_OK;
 }
 
-int schClearTask(schTaskSch *sch, schTaskPool *pool) {}
+int schClearTask(schTaskSch *sch, schTaskPool *pool) { return SCH_OK; }
 
-int schClearAllTask(schTaskSch *sch) {}
+int schClearAllTask(schTaskSch *sch) { return SCH_OK; }
 
 int schWaitTask(schTaskSch *sch) { return schWaitTaskWait(sch, -1); }
 
