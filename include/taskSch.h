@@ -26,8 +26,12 @@
  */
 
 /**
- * @defgroup libtasksch
- * Task Scheduler
+ * @defgroup libtasksch Task Scheduler
+ * @brief
+ *
+ * @{
+ * @defgroup ltasksch_error Error Codes
+ * @}
  *
  */
 
@@ -94,9 +98,9 @@ extern "C" {
 #define SCH_SIGNAL_STOP SIGSTOP
 
 /**
- * @defgroup ltasksch_error Error Codes
- * @ingroup
- * Library Specific Error codes.
+ * @addtogroup ltasksch_error
+ * @ingroup libtasksch
+ * @brief Error Codes Library Specific Error codes.
  * @{
  */
 /**
@@ -104,6 +108,7 @@ extern "C" {
  *
  */
 typedef int schErrCode;
+
 #define SCH_OK (1)						  /*  No error.   */
 #define SCH_ERROR_UNKNOWN (0)			  /*  Error unknown.   */
 #define SCH_ERROR_INVALID_ARG (-1)		  /*  Invalid argument.   */
@@ -128,7 +133,8 @@ typedef int schErrCode;
 typedef void *(*schFunc)(void *pdata); /*  */
 
 /**
- * @addtogroup synchronization_primitives Synchronization objects.
+ * @defgroup ltascsch_sync_func Synchronization objects.
+ * @ingroup libtasksch
  * @{
  *
  */
@@ -143,7 +149,9 @@ typedef void schBarrier;	 /*  */
  */
 
 /**
- * @addtogroup thread_objects.
+ * @defgroup ltascsch_thread_objects Thread Primitives
+ * @ingroup libtasksch
+ * @brief
  * @{
  */
 typedef void schThread;	   /*  Thread object.  */
@@ -162,8 +170,23 @@ typedef int (*schCallback)(struct sch_task_package_t *package);
 /**
  * @defgroup ltascsch_core Core functions
  * @ingroup libtasksch
+ * @section Info
  *
+ * @code
+ * #include<taskSch.h>
  *
+ * int main(int argc, const char** argv){
+ * 	schTaskSch sch;
+ * 	const size_t numPackages = 250;
+ * 	schCreateTaskPool(&sch, -1, SCH_FLAG_NO_AFM, numPackages);
+ *
+ * 	if(schRunTaskSch(&sch) != SCH_OK)
+ * 		return EXIT_FAILURE;
+ *
+ * 	schReleaseTaskSch(&sch);
+ * 	return EXIT_SUCCESS;
+ * }
+ * @endcode
  *
  * @{
  */
@@ -339,8 +362,7 @@ extern TASH_SCH_EXTERN int schPoolMutexUnLock(schTaskPool *pool);
  */
 
 /**
- * @defgroup ltascsch_thread_func Thread primitives
- * @ingroup libtasksch
+ * @addtogroup ltascsch_thread_objects
  *
  *
  *
@@ -398,11 +420,8 @@ extern TASH_SCH_EXTERN int schRaiseThreadSignal(schThread *thread, int signal);
  */
 
 /**
- * @defgroup ltascsch_sync_func Synchronization primitives
- * @ingroup libtasksch
- *
- *
- *
+ * @addtogroup ltascsch_sync_func
+ * Syncronization Functions
  * @{
  */
 
@@ -611,9 +630,7 @@ extern TASH_SCH_EXTERN int schUnlockSpinLock(schSpinLock *spinlock);
  */
 
 /**
- * @ingroup libtasksch
- *
- *
+ * @addtogroup ltasksch_error
  *
  * @{
  */
