@@ -92,9 +92,8 @@ jobs:
         cmake $GITHUB_WORKSPACE -DCMAKE_BUILD_TYPE=$BUILD_TYPE -DBUILD_WITH_INSTALL=OFF -DTASKSCH_BUILD_WITH_DOCS=ON
 
     - name: Upload deb packages
-      working-directory: ${{runner.workspace}}/build/docs/latex
       uses: actions/upload-artifact@v2
       with:
         name: Upload Document
-        path: user-manual-api-reference.pdf
+        path: ${{runner.workspace}}/build/docs/latex/user-manual-api-reference.pdf
 
