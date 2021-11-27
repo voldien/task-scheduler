@@ -1,10 +1,12 @@
 #include "internal/sch.h"
 #include "internal/internal_structures.h"
+#include "internal/time.h"
 #include "taskSch.h"
 #include <assert.h>
 #include <errno.h>
 #include <setjmp.h>
 #include <signal.h>
+#include <string.h>
 
 /*  State functions of the pool.   */
 static inline void setPoolRunning(schTaskPool *pool) {

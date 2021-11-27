@@ -1,6 +1,24 @@
+/*
+ *	Task scheduler for uniform processing in user space.
+ *	Copyright (C) 2015  Valdemar Lindberg
+ *
+ *	This program is free software: you can redistribute it and/or modify
+ *	it under the terms of the GNU General Public License as published by
+ *	the Free Software Foundation, either version 3 of the License, or
+ *	(at your option) any later version.
+ *
+ *	This program is distributed in the hope that it will be useful,
+ *	but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *	MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *	GNU General Public License for more details.
+ *
+ *	You should have received a copy of the GNU General Public License
+ *	along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ *
+ */
 #ifndef _TASK_SCH_INTERNAL_STRUCTURES_H_
 #define _TASK_SCH_INTERNAL_STRUCTURES_H_ 1
-#include"../taskSch.h"
+#include "../taskSch.h"
 
 #ifdef __cplusplus
 extern "C" {
@@ -9,7 +27,6 @@ extern "C" {
 /**
  * Scheduler task structure.
  */
-
 typedef struct sch_task_package_t {
 	/*  Package data.   */
 	atomic_uint flag;	/*  Package flag.   */
@@ -32,7 +49,15 @@ typedef struct sch_task_package_t {
 typedef struct sch_task_pool_t {
 
 	/*  Threading.  */
-	schThread *thread;		 /*  Thread associated with the pool.    */
+	/**
+	 * @brief
+	 *
+	 */
+	schThread *thread; /*  Thread associated with the pool.    */
+	/**
+	 * @brief
+	 *
+	 */
 	schThread *schRefThread; /*  Scheduler thread.   */
 
 	/*  Thread race condition variables.    */
@@ -63,17 +88,53 @@ typedef struct sch_task_pool_t {
 } schTaskPool;
 
 /**
- * Task scheduler main struct container.
+ * @brief Task scheduler main struct container.
  */
 typedef struct sch_task_scheduler_t {
-	unsigned int num;	   /*  Number of pools.    */
-	schTaskPool *pool;	   /*  Pools.  */
-	atomic_uint flag;	   /*  State/Status Flags. */
-	schTaskPool **dheap;   /*  Priority queue. */
+	/**
+	 * @brief
+	 *
+	 */
+	size_t num; /*  Number of pools.    */
+	/**
+	 * @brief
+	 *
+	 */
+	schTaskPool *pool; /*  Pools.  */
+	/**
+	 * @brief
+	 *
+	 */
+	atomic_uint flag; /*  State/Status Flags. */
+	/**
+	 * @brief
+	 *
+	 */
+	schTaskPool **dheap; /*  Priority queue. */
+	/**
+	 * @brief
+	 *
+	 */
 	schSpinLock *spinlock; /*  Spin lock.  */
+	/**
+	 * @brief
+	 *
+	 */
 	schMutex *mutex;
+	/**
+	 * @brief
+	 *
+	 */
 	schConditional *conditional;
+	/**
+	 * @brief
+	 *
+	 */
 	schBarrier *barrier;
+	/**
+	 * @brief
+	 *
+	 */
 	schSignalSet *set; /*  Signal listening mask.  */
 } schTaskSch;
 

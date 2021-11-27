@@ -1,5 +1,7 @@
 #include "internal/poolAllocator.h"
 #include <assert.h>
+#include <malloc.h>
+#include <string.h>
 
 SchPool *schInitPool(SchPool *alloc, unsigned int num, unsigned int itemsize) {
 	unsigned char *tmp;

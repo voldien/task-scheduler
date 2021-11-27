@@ -1,6 +1,7 @@
 #include "taskSch.h"
 #include "internal/internal_structures.h"
 #include "internal/sch.h"
+#include "internal/time.h"
 #include <assert.h>
 #include <errno.h>
 #include <malloc.h>
@@ -261,6 +262,7 @@ int schStopTaskSch(schTaskSch *sch, long int timeout) {
 		if (status != SCH_OK)
 			return SCH_ERROR_INTERNAL;
 	}
+	return SCH_OK;
 }
 
 int schTerminateTaskSch(schTaskSch *sch) {
