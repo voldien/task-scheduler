@@ -275,11 +275,9 @@ int schTerminateTaskSch(schTaskSch *sch) {
 		return SCH_OK;
 
 	/*  Not running.    */
-	if ((sch->flag & SCH_FLAG_RUNNING) == 0)
+	if ((sch->flag & SCH_FLAG_RUNNING) == 0){
 		return SCH_OK;
-
-	/*  Instantly terminate the scheduler. */
-	//	schStopTaskSch(sch, 0);
+	}
 
 	/*  Wait in till scheduler is finished with all tasks. */
 	status = schWaitTask(sch);
