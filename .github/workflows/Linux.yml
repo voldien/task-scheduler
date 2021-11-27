@@ -90,9 +90,10 @@ jobs:
       # The CMake binaries on the Github Actions machines are (as of this writing) 3.12
       run: |
         cmake $GITHUB_WORKSPACE -DCMAKE_BUILD_TYPE=$BUILD_TYPE -DBUILD_WITH_INSTALL=OFF \
-        
+
+    - name: Upload deb packages
+	  working-directory: ${{runner.workspace}}/build/docs/latex
     - uses: actions/upload-artifact@v2
       with:
-        working-directory: ${{runner.workspace}}/build/docs/latex
         name: Upload Document
         path: user-manual-api-reference.pdf
