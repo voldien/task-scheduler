@@ -93,7 +93,7 @@ jobs:
 
     - name: Upload deb packages
       uses: actions/upload-artifact@v2
-	  working-directory: ${{runner.workspace}}/build/docs/latex
+      working-directory: ${{runner.workspace}}/build/docs/latex
       with:
         name: Upload Document
         path: user-manual-api-reference.pdf
