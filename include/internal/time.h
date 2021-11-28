@@ -19,6 +19,10 @@
 #ifndef _TASK_SCH_INTERNAL_TIME_H_
 #define _TASK_SCH_INTERNAL_TIME_H_ 1
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 /**
  * Get number of CPU cores on the system.
  * @return non-negative number is successfully.
@@ -36,5 +40,9 @@ extern long int schGetTime(void);
  * @return non-negative number.
  */
 extern long int schTimeResolution(void);
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif

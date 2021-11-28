@@ -28,10 +28,21 @@
 /**
  * @defgroup libtasksch Task Scheduler
  * @brief
- *
  * @{
+ *
  * @defgroup ltasksch_error Error Codes
+ * @{
  * @}
+ *
+ * @defgroup ltasksch_threads Thread
+ * @{
+ * @}
+ *
+ * @defgroup ltasksch_syncs Thread Synchronization
+ * @{
+ * @}
+ * @}
+ *
  *
  */
 
@@ -107,22 +118,22 @@ extern "C" {
  * @brief
  *
  */
-typedef int schErrCode;
-
-#define SCH_OK (1)						  /*  No error.   */
-#define SCH_ERROR_UNKNOWN (0)			  /*  Error unknown.   */
-#define SCH_ERROR_INVALID_ARG (-1)		  /*  Invalid argument.   */
-#define SCH_ERROR_INVALID_SCH (-2)		  /*  Invalid scheduler object.   */
-#define SCH_ERROR_INVALID_STATE (-3)	  /*  Scheduler/Pool in bad state.    */
-#define SCH_ERROR_INTERNAL (-4)			  /*  Internal error. */
-#define SCH_ERROR_POOL_FULL (-5)		  /*  Pool queue is full. */
-#define SCH_ERROR_SIGNAL (-6)			  /*  Signal failed.  */
-#define SCH_ERROR_SYNC_OBJECT (-7)		  /*  Synchronization object failed.   */
-#define SCH_ERROR_TIMEOUT (-8)			  /*  Timeout.    */
-#define SCH_ERROR_BUSY (-9)				  /*  Busy error. */
-#define SCH_ERROR_NOMEM (-10)			  /*  No Memory.  */
-#define SCH_ERROR_LACK_OF_RESOURCES (-11) /*  There system is lacking resources.  */
-#define SCH_ERROR_PERMISSION_DENIED (-12) /*  Permission denied of the operation. */
+enum SchErrCode {
+	SCH_OK = 1,							 /*  No error.   */
+	SCH_ERROR_UNKNOWN = 0,				 /*  Error unknown.   */
+	SCH_ERROR_INVALID_ARG = -1,			 /*  Invalid argument.   */
+	SCH_ERROR_INVALID_SCH = (-2),		 /*  Invalid scheduler object.   */
+	SCH_ERROR_INVALID_STATE = (-3),		 /*  Scheduler/Pool in bad state.    */
+	SCH_ERROR_INTERNAL = (-4),			 /*  Internal error. */
+	SCH_ERROR_POOL_FULL = (-5),			 /*  Pool queue is full. */
+	SCH_ERROR_SIGNAL = (-6),			 /*  Signal failed.  */
+	SCH_ERROR_SYNC_OBJECT = (-7),		 /*  Synchronization object failed.   */
+	SCH_ERROR_TIMEOUT = (-8),			 /*  Timeout.    */
+	SCH_ERROR_BUSY = (-9),				 /*  Busy error. */
+	SCH_ERROR_NOMEM = (-10),			 /*  No Memory.  */
+	SCH_ERROR_LACK_OF_RESOURCES = (-11), /*  There system is lacking resources.  */
+	SCH_ERROR_PERMISSION_DENIED = (-12), /*  Permission denied of the operation. */
+};
 /**
  * @}
  */
@@ -133,8 +144,7 @@ typedef int schErrCode;
 typedef void *(*schFunc)(void *pdata); /*  */
 
 /**
- * @defgroup ltascsch_sync_func Synchronization objects.
- * @ingroup libtasksch
+ * @addtogroup ltasksch_syncs
  * @{
  *
  */
@@ -173,19 +183,6 @@ typedef int (*schCallback)(struct sch_task_package_t *package);
  * @section Info
  *
  * @code
- * #include<taskSch.h>
- *
- * int main(int argc, const char** argv){
- * 	schTaskSch sch;
- * 	const size_t numPackages = 250;
- * 	schCreateTaskPool(&sch, -1, SCH_FLAG_NO_AFM, numPackages);
- *
- * 	if(schRunTaskSch(&sch) != SCH_OK)
- * 		return EXIT_FAILURE;
- *
- * 	schReleaseTaskSch(&sch);
- * 	return EXIT_SUCCESS;
- * }
  * @endcode
  *
  * @{
@@ -225,14 +222,14 @@ extern TASH_SCH_EXTERN int schReleaseTaskSch(schTaskSch *sch);
 /**
  * Set initialization callback.
  * @param sch scheduler object.
- * @param callback non-null function pointer.
+ * @param callBack non-null function pointer.
  */
 extern TASH_SCH_EXTERN void schSetInitCallBack(schTaskSch *sch, schUserCallBack callBack);
 
 /**
  * Set user deinitialize callback.
  * @param sch scheduler object.
- * @param callback non-null function pointer.
+ * @param callBack non-null function pointer.
  */
 extern TASH_SCH_EXTERN void schSetDeInitCallBack(schTaskSch *sch, schUserCallBack callBack);
 
@@ -245,6 +242,7 @@ extern TASH_SCH_EXTERN void schSetSchUserData(schTaskSch *sch, const void *user)
 
 /**
  * Set pool user data.
+ * @param sch
  * @param index index of the pool from 0.
  * @param user pointer.
  */
@@ -362,19 +360,17 @@ extern TASH_SCH_EXTERN int schPoolMutexUnLock(schTaskPool *pool);
  */
 
 /**
- * @addtogroup ltascsch_thread_objects
- *
- *
+ * @addtogroup ltasksch_threads
  *
  * @{
  */
 
 /**
- * Create thread.
+ * Create new thread object, followed by starting it.
  * @param affinity core index.
  * @param pfunc function map to the thread.
  * @param userData user data associated with the function.
- * @return non-null if successfully.
+ * @return non-null if successfully. If NULL,
  */
 extern TASH_SCH_EXTERN schThread *schCreateThread(int affinity, schFunc pfunc, void *userData);
 
@@ -389,6 +385,7 @@ extern TASH_SCH_EXTERN int schDeleteThread(schThread *thread);
  * Wait in till thread is finished with
  * the callback entry function.
  * @param thread valid thread.
+ * @param retval
  * @return non-negative if successfully.
  */
 extern TASH_SCH_EXTERN int schWaitThread(schThread *thread, void **retval);
@@ -420,8 +417,8 @@ extern TASH_SCH_EXTERN int schRaiseThreadSignal(schThread *thread, int signal);
  */
 
 /**
- * @addtogroup ltascsch_sync_func
- * Syncronization Functions
+ * @addtogroup ltasksch_syncs
+ * @brief Syncronization Functions
  * @{
  */
 
@@ -458,7 +455,7 @@ extern TASH_SCH_EXTERN int schSignalWait(schSignalSet *sig);
  * Wait in till a signal has been issued in
  * the timeout time frame.
  * @param sig signal object.
- * @param time in nano seconds for the timeout.
+ * @param nano in nano seconds for the timeout.
  * @return received.
  */
 extern TASH_SCH_EXTERN int schSignalWaitTimeOut(schSignalSet *sig, long int nano);
@@ -467,7 +464,7 @@ extern TASH_SCH_EXTERN int schSignalWaitTimeOut(schSignalSet *sig, long int nano
  * Set thread signal mask. Mask what signal
  * to listen and how to
  *
- * @param signal object.
+ * @param set object.
  * @param nr number of signals.
  * @param signals array of valid signals.
  * @return non-negative if successfully.
@@ -599,6 +596,7 @@ extern TASH_SCH_EXTERN int schSemaphorePost(schSemaphore *pSemaphore);
 /**
  * Get current value of the semaphore.
  * @param pSemaphore valid semaphore object.
+ * @param value
  * @return non-negative if successfully.
  */
 extern TASH_SCH_EXTERN int schSemaphoreValue(schSemaphore *pSemaphore, int *value);
@@ -640,7 +638,7 @@ extern TASH_SCH_EXTERN int schUnlockSpinLock(schSpinLock *spinlock);
  * @param errMsg zero or negative number.
  * @return non-null terminated string.
  */
-extern TASH_SCH_EXTERN const char *schErrorMsg(int errMsg);
+extern TASH_SCH_EXTERN const char *schErrorMsg(enum SchErrCode errMsg);
 
 /**
  * @}

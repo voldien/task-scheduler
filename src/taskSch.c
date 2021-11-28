@@ -275,7 +275,7 @@ int schTerminateTaskSch(schTaskSch *sch) {
 		return SCH_OK;
 
 	/*  Not running.    */
-	if ((sch->flag & SCH_FLAG_RUNNING) == 0){
+	if ((sch->flag & SCH_FLAG_RUNNING) == 0) {
 		return SCH_OK;
 	}
 
@@ -424,7 +424,7 @@ static void setPoolTerminated(schTaskPool *pool) {
 	pool->flag = (pool->flag & ~(SCH_POOL_RUNNING | SCH_POOL_SLEEP)) | SCH_POOL_TERMINATE;
 }
 
-const char *schErrorMsg(int errMsg) {
+const char *schErrorMsg(enum SchErrCode errMsg) {
 	static const char *msgErr[] = {
 		"unknown error",			/*  SCH_ERROR_UNKNOWN : 0   */
 		"invalid argument",			/*  SCH_ERROR_INVALID_ARG : -1  */
@@ -447,7 +447,9 @@ const char *schErrorMsg(int errMsg) {
 	}
 	if (errMsg > SCH_OK) {
 		return NULL;
-	} else if (errMsg < SCH_ERROR_PERMISSION_DENIED) {
+	}
+
+	if (errMsg < SCH_ERROR_PERMISSION_DENIED) {
 		return NULL;
 	}
 

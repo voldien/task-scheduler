@@ -29,6 +29,7 @@ extern "C" {
 /**
  * Perform queue enqueue/deqeue that will prevent
  * race condition.
+ * @param taskPool
  * @param dequeue non-zero will perform dequeue. otherwise enqueue.
  * @param enqueue enqueue data pointer.
  * @return NULL if enqueue, otherwise data from the dequeue.

@@ -28,14 +28,15 @@ The following a simple example for creating the scheduler object, running it and
 #include<taskSch.h>
 
 int main(int argc, const char** argv){
-    schTaskSch sch;
+    schTaskSch* sch;
     const size_t numPackages = 250;
-    schCreateTaskPool(&sch, -1, SCH_FLAG_NO_AFM, numPackages);
+    schAllocateTaskPool(&sch);
+    schCreateTaskPool(sch, -1, SCH_FLAG_NO_AFM, numPackages);
 	
-    if(schRunTaskSch(&sch) != SCH_OK)
+    if(schRunTaskSch(sch) != SCH_OK)
         return EXIT_FAILURE;
         
-    schReleaseTaskSch(&sch);
+    schReleaseTaskSch(sch);
     return EXIT_SUCCESS;
 }
 

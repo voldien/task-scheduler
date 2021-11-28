@@ -29,36 +29,62 @@ extern "C" {
  */
 typedef struct sch_task_package_t {
 	/*  Package data.   */
-	atomic_uint flag;	/*  Package flag.   */
-	unsigned int index; /*  Pool index. */
-	/*  User data.  */
-	schCallback callback; /*  Function callback.  */
+	/**
+	 *
+	 */
+	atomic_uint flag; /*  Package flag.   */
+	/**
+	 * Pool index it was executed from.
+	 */
+	unsigned int index;
+	/**
+	 * Callback function that the scheduler will
+	 * execute.
+	 */
+	schCallback callback;
 	// TODO determine to add long support.
-	unsigned int size;	 /*  Size parameter. */
-	unsigned int offset; /*  Offset. */
-	void *begin;		 /*  Start pointer.  */
-	void *end;			 /*  End pointer.    */
-	void *puser;		 /*  User data.  */
+	/**
+	 * Size parameter.
+	 *
+	 */
+	size_t size;
+	/**
+	 * Offset
+	 *
+	 */
+	size_t offset;
+	/**
+	 * Start pointer.
+	 *
+	 */
+	void *begin;
+	/**
+	 * End pointer.
+	 *
+	 */
+	void *end;
+	/**
+	 * User data.
+	 *
+	 */
+	void *puser;
 } schTaskPackage;
 
-// TODO relocate t the source code
-
 /**
- * Pool structure.
+ * @brief TaskPool.
+ *
  */
 typedef struct sch_task_pool_t {
 
-	/*  Threading.  */
 	/**
-	 * @brief
+	 * Thread associated with the pool.
+	 */
+	schThread *thread;
+	/**
+	 * Reference to the scheduler thread
 	 *
 	 */
-	schThread *thread; /*  Thread associated with the pool.    */
-	/**
-	 * @brief
-	 *
-	 */
-	schThread *schRefThread; /*  Scheduler thread.   */
+	schThread *schRefThread;
 
 	/*  Thread race condition variables.    */
 	void *mutex; /*	Mutex.	*/ // TODO remove.

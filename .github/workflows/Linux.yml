@@ -95,5 +95,5 @@ jobs:
       uses: actions/upload-artifact@v2
       with:
         name: Upload Document
-        path: ${{runner.workspace}}/build/docs/latex/user-manual-api-reference.pdf
+        path: ${{runner.workspace}}/build/docs/latex/refman.pdf
 
