@@ -638,7 +638,7 @@ extern TASH_SCH_EXTERN int schUnlockSpinLock(schSpinLock *spinlock);
  * @param errMsg zero or negative number.
  * @return non-null terminated string.
  */
-extern TASH_SCH_EXTERN const char *schErrorMsg(enum SchErrCode errMsg);
+extern TASH_SCH_EXTERN const char *schErrorMsg(int errMsg);
 
 /**
  * @}

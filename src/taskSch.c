@@ -424,7 +424,7 @@ static void setPoolTerminated(schTaskPool *pool) {
 	pool->flag = (pool->flag & ~(SCH_POOL_RUNNING | SCH_POOL_SLEEP)) | SCH_POOL_TERMINATE;
 }
 
-const char *schErrorMsg(enum SchErrCode errMsg) {
+const char *schErrorMsg(int errMsg) {
 	static const char *msgErr[] = {
 		"unknown error",			/*  SCH_ERROR_UNKNOWN : 0   */
 		"invalid argument",			/*  SCH_ERROR_INVALID_ARG : -1  */
