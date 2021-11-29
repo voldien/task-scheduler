@@ -24,51 +24,7 @@
 extern "C" {
 #endif
 
-/**
- * Scheduler task structure.
- */
-typedef struct sch_task_package_t {
-	/*  Package data.   */
-	/**
-	 *
-	 */
-	atomic_uint flag; /*  Package flag.   */
-	/**
-	 * Pool index it was executed from.
-	 */
-	unsigned int index;
-	/**
-	 * Callback function that the scheduler will
-	 * execute.
-	 */
-	schCallback callback;
-	// TODO determine to add long support.
-	/**
-	 * Size parameter.
-	 *
-	 */
-	size_t size;
-	/**
-	 * Offset
-	 *
-	 */
-	size_t offset;
-	/**
-	 * Start pointer.
-	 *
-	 */
-	void *begin;
-	/**
-	 * End pointer.
-	 *
-	 */
-	void *end;
-	/**
-	 * User data.
-	 *
-	 */
-	void *puser;
-} schTaskPackage;
+
 
 /**
  * @brief TaskPool.
