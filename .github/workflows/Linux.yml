@@ -123,6 +123,11 @@ jobs:
         run: |
           cmake $GITHUB_WORKSPACE -DCMAKE_BUILD_TYPE=$BUILD_TYPE -DBUILD_WITH_INSTALL=OFF -DTASKSCH_BUILD_WITH_DOCS=ON
 
+      - name: Build
+        working-directory: ${{runner.workspace}}/build
+        shell: bash
+        # Execute the build.  You can specify a specific target with "--target <NAME>"
+        run: cmake --build . --target Doxygen
 
       - name: Deploy
         uses: JamesIves/github-pages-deploy-action@4.1.7
