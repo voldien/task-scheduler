@@ -67,7 +67,9 @@ SET(SCH_VERSION_STATE a)
 SET(SCH_VERSION ${SCH_VERSION_MAJOR}.${SCH_VERSION_MINOR}${SCH_VERSION_STATE}${SCH_VERSION_REVISION} )
 ADD_DEFINITIONS(-DSPB_VERSION="${SCH_VERSION}")
 
-# GCC compiler flags
+##############################
+# Target compiler flags.
+#############################
 IF((CMAKE_COMPILER_IS_GNUCC OR CMAKE_COMPILER_IS_GNUCXX) AND NOT CMAKE_COMPILER_IS_MINGW)
     IF (BUILD_SHARED_LIBS AND CMAKE_SIZEOF_VOID_P EQUAL 8) # -fPIC is only required
         SET(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fPIC")
@@ -114,17 +116,23 @@ ELSEIF( CMAKE_COMPILER_IS_MINGW )
     ADD_DEFINITIONS( -U__STRICT_ANSI__ )
 ENDIF()
 
+###########################
 # Source files.
+###########################
 FILE(GLOB SOURCE_FILES ${CMAKE_CURRENT_SOURCE_DIR}/src/*.c)
 FILE(GLOB HEADER_PRIVATE_FILES include/internal/internal/*.h)
 FILE(GLOB HEADER_PUBLIC_FILES ${CMAKE_CURRENT_SOURCE_DIR}/include/taskSch.h)
 IF( UNIX )
+	# Unix specific platform code (Linux,FreeBSD and other UNIX compatible)
     FILE(GLOB PLATFORM_FILES ${CMAKE_CURRENT_SOURCE_DIR}/src/unix/*.c)
 ELSEIF(WIN32)
+	# Window specific platform code.
     FILE(GLOB PLATFORM_FILES ${CMAKE_CURRENT_SOURCE_DIR}/src/windows/*.c)
 ENDIF()
 
-# Create executable target.
+################################
+# TaskSch Library Target.
+################################
 ADD_LIBRARY(taskSch ${SOURCE_FILES} ${PLATFORM_FILES} ${HEADER_PRIVATE_FILES} ${HEADER_PUBLIC_FILES})
 TARGET_INCLUDE_DIRECTORIES(taskSch PUBLIC $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>)
 
@@ -135,16 +143,24 @@ ENDIF()
 INSTALL(TARGETS taskSch DESTINATION lib)
 INSTALL(FILES ${HEADER_FILES} DESTINATION include)
 
+#############################
 # Unit testing
+#############################
 IF(TASKSCH_BUILD_WITH_TEST)
     ENABLE_TESTING()
     ADD_SUBDIRECTORY(${CMAKE_CURRENT_SOURCE_DIR}/test)
 ENDIF()
 
+#################################
+# Generate Docs
+#################################
 OPTION(TASKSCH_BUILD_WITH_DOCS "Generate Docs" ON)
-IF(TASKSCH_BUILD_WITH_DOCS)
-ADD_SUBDIRECTORY(${CMAKE_CURRENT_SOURCE_DIR}/docs/)
+	IF(TASKSCH_BUILD_WITH_DOCS)
+	ADD_SUBDIRECTORY(${CMAKE_CURRENT_SOURCE_DIR}/docs/)
 ENDIF()
+
+
+
 
 IF( UNIX AND SCH_STANDALONE )
     # Create distribution tarball.
