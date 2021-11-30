@@ -1,4 +1,4 @@
-name: Task-Scheduler Linux
+name: Generate/Deployment Documentation
 on: [push,pull_request]
 env:
   # Customize the CMake build type here (Release, Debug, RelWithDebInfo, etc.)
@@ -96,11 +96,4 @@ jobs:
       shell: bash
       # Execute the build.  You can specify a specific target with "--target <NAME>"
       run: cmake --build . --target DoxygenLatex
-
-
-    - name: Upload deb packages
-      uses: actions/upload-artifact@v2
-      with:
-        name: Upload Document
-        path: ${{runner.workspace}}/build/docs/latex/refman.pdf
 
