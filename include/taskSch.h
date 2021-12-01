@@ -174,6 +174,9 @@ typedef void schSignalSet; /*  Signal set object.  */
  * @}
  */
 
+typedef struct sch_task_scheduler_t schTaskSch;
+typedef struct sch_task_pool_t schTaskPool;
+
 typedef int (*schUserCallBack)(struct sch_task_pool_t *);
 typedef int (*schCallback)(struct sch_task_package_t *package);
 
@@ -223,8 +226,7 @@ typedef struct sch_task_package_t {
 	 */
 	void *puser;
 } schTaskPackage;
-typedef struct sch_task_scheduler_t schTaskSch;
-typedef struct sch_task_pool_t schTaskPool;
+
 
 /**
  * @defgroup ltascsch_core Core functions
@@ -438,7 +440,7 @@ extern TASH_SCH_EXTERN int schPoolMutexUnLock(schTaskPool *pool);
 /**
  * @brief Create new thread object with a custom callback entrypoint
  *
- * 
+ *
  *
  * @param affinity core index.
  * @param pfunc function map to the thread.

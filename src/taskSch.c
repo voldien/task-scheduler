@@ -1,5 +1,6 @@
 #include "taskSch.h"
 #include "internal/internal_structures.h"
+#include "internal/queue.h"
 #include "internal/sch.h"
 #include "internal/time.h"
 #include <assert.h>

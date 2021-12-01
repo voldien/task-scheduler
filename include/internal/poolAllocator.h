@@ -34,12 +34,13 @@ typedef struct sch_pool_node_t {
 } SchPoolNode;
 
 /**
- *	Pool allocator container.
+ * @brief Pool allocator container.
+ *
  */
 typedef struct sch_pool_allocator_t {
 	unsigned int num;	   /*	Number of allocated elements in pool.	*/
 	unsigned int itemsize; /*	Size of each element in pool.	*/
-	SchPoolNode *pool;	   /*	Pool frame.	*/
+	SchPoolNode *pool;	   /*	Pool buffer.	*/
 } SchPool;
 
 /**
@@ -69,7 +70,8 @@ extern SchPool *schPoolCreate(unsigned int num, unsigned int itemsize);
  *
  *	@param allocator
  *	@remark: The item may not be memset to 0.
- *	@return Non null pointer if pool is not full.
+ *	@return Non null pointer if pool is not full. if null is returned, then the pool
+ *	is empty.
  */
 extern void *schPoolObtain(SchPool *allocator);
 
@@ -92,7 +94,7 @@ extern void *schPoolReturn(SchPool *allocator, void *data);
 extern void *schPoolResize(SchPool *allocator, unsigned int num, unsigned int itemsize);
 
 /**
- * @brief
+ * @brief Get the number of nodes in the pool.
  *
  * @param pool
  * @return number of nodes.
@@ -100,21 +102,29 @@ extern void *schPoolResize(SchPool *allocator, unsigned int num, unsigned int it
 extern unsigned int schPoolNumNodes(const SchPool *pool);
 
 /**
- *	@return item size in bytes.
+ * @brief
+ *
+ * @param pool
+ * @return item size in bytes
  */
 extern unsigned int schPoolItemSize(const SchPool *pool);
 
 /**
- *	Get the node index of a valid node.
+ * @brief Get the node index of a valid node.
+ *
+ * @param pool
+ * @param data
+ * @return int
  */
 extern int schPoolGetIndex(const SchPool *pool, const void *data);
 
 /**
- *	Free pool.
+ * @brief Free pool.
  *
- *	Remark: this function will call 'free' on allocator
- *	and pool frame pointer. The allocator pointer will be
- *	invalid afterward.
+ * @remark this function will call 'free' on allocator
+ * and pool frame pointer. Thus, all the allocator pointer from schPoolObtain will be
+ * invalid afterward.
+ * @param pool valid pool object.
  */
 extern void schPoolFree(SchPool *pool);
 

@@ -1,6 +1,7 @@
 #include "internal/poolAllocator.h"
 #include <assert.h>
 #include <malloc.h>
+#include <stdint.h>
 #include <string.h>
 
 SchPool *schInitPool(SchPool *alloc, unsigned int num, unsigned int itemsize) {
@@ -14,7 +15,7 @@ SchPool *schInitPool(SchPool *alloc, unsigned int num, unsigned int itemsize) {
 	alloc->itemsize = itemsize;
 	assert(alloc->pool);
 
-	/*	Create pool chain.	*/
+	/*	Create init pool chain.	*/
 	tmp = (unsigned char *)alloc->pool;
 	for (i = 0; i < num; i++) {
 		((SchPoolNode *)tmp)->next = (SchPoolNode *)(tmp + sizeof(SchPoolNode) + itemsize);
@@ -23,6 +24,7 @@ SchPool *schInitPool(SchPool *alloc, unsigned int num, unsigned int itemsize) {
 
 	/*	Terminator of the pool.	*/
 	tmp -= itemsize + sizeof(SchPoolNode);
+	/*	Assign end item indicates the the last item in the pool chain.	*/
 	((SchPoolNode *)tmp)->next = NULL;
 
 	return alloc;
@@ -44,17 +46,18 @@ void *schPoolObtain(SchPool *allocator) {
 	SchPoolNode *tmp;
 	void *block;
 
+	/*	Check if empty.	*/
 	if (allocator->pool->next == NULL) {
 		return NULL;
 	}
 
 	/*	Get next element and assigned new next element.	*/
 	tmp = allocator->pool->next;
+	/*	Update the chain with the new next.	*/
 	allocator->pool->next = tmp->next;
 
-	/*	Get data block.	*/
+	/*	Get data block from the pool item.	*/
 	block = tmp->data;
-	memset(block, 0, allocator->itemsize);
 	return block;
 }
 
@@ -70,7 +73,6 @@ void *schPoolReturn(SchPool *allocator, void *data) {
 	tmp->next = allocator->pool->next;
 	allocator->pool->next = tmp;
 
-	memset(tmp->data, 0, allocator->itemsize);
 	return tmp;
 }
 
@@ -81,11 +83,12 @@ unsigned int schPoolNumNodes(const SchPool *pool) { return pool->num; }
 unsigned int schPoolItemSize(const SchPool *pool) { return pool->itemsize; }
 
 int schPoolGetIndex(const SchPool *pool, const void *data) {
-	return ((const char *)data - (const char *)pool->pool) / pool->itemsize;
+
+	return ((const uint8_t *)data - (const uint8_t *)pool->pool) / pool->itemsize;
 }
 
 static inline void *sntPoolItemByIndex(SchPool *pool, unsigned int index) {
-	return ((char *)pool->pool) + ((pool->itemsize + sizeof(void *)) * index + sizeof(void *));
+	return ((uint8_t *)pool->pool) + ((pool->itemsize + sizeof(void *)) * index + sizeof(void *));
 }
 
 void schPoolFree(SchPool *pool) {

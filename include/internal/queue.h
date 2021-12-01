@@ -16,8 +16,8 @@
  *	along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
  */
-#ifndef _SCH_QUEUE_H_
-#define _SCH_QUEUE_H_ 1
+#ifndef _SCH_QUEUE_STRUCTURES_H_
+#define _SCH_QUEUE_STRUCTURES_H_ 1
 #include "poolAllocator.h"
 #include <stdatomic.h>
 #ifdef __cplusplus
