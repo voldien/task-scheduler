@@ -28,6 +28,10 @@
 /**
  * @defgroup libtasksch Task Scheduler
  * @brief
+ *
+ * The main task scheduler uses a pool task architecture. That means that it create
+ * a set of task pools. Each pool can be assigned with a task that will be scheduled
+ * by the scheduler.
  * @{
  *
  * @defgroup ltasksch_error Error Codes
@@ -173,7 +177,7 @@ typedef void schSignalSet; /*  Signal set object.  */
 typedef int (*schUserCallBack)(struct sch_task_pool_t *);
 typedef int (*schCallback)(struct sch_task_package_t *package);
 
-//typedef struct sch_task_package_t schTaskPackage;
+// typedef struct sch_task_package_t schTaskPackage;
 /**
  * Scheduler task structure.
  */
@@ -221,7 +225,6 @@ typedef struct sch_task_package_t {
 } schTaskPackage;
 typedef struct sch_task_scheduler_t schTaskSch;
 typedef struct sch_task_pool_t schTaskPool;
-
 
 /**
  * @defgroup ltascsch_core Core functions
@@ -297,16 +300,18 @@ extern TASH_SCH_EXTERN void schSetSchUserData(schTaskSch *sch, const void *user)
 /**
  * Assign user data associated with the scheduler objects pools.
  * @param sch valid scheduler object.
- * @param index valid pool index, where index \in [0, nrPools -1].
+ * @param index valid pool index, where \f$ index \in [0, nrPools -1] \f$.
  * @param user valid pointer.
+ * @see schGetPoolUserData
  */
 extern TASH_SCH_EXTERN void schSetPoolUserData(schTaskSch *sch, int index, const void *user);
 
 /**
  * Get pool user data.
  * @param sch schedule object.
- * @param index valid pool index, where index \in [0, nrPools -1].
+ * @param index valid pool index, where \f$ index \in [0, nrPools -1] \f$.
  * @return non-null pointer if user pointer exists, NULL otherwise.
+ * @see schSetPoolUserData
  */
 extern TASH_SCH_EXTERN void *schGetPoolUserData(schTaskSch *sch, int index);
 
@@ -431,7 +436,10 @@ extern TASH_SCH_EXTERN int schPoolMutexUnLock(schTaskPool *pool);
  */
 
 /**
- * Create new thread object, followed by starting it.
+ * @brief Create new thread object with a custom callback entrypoint
+ *
+ * 
+ *
  * @param affinity core index.
  * @param pfunc function map to the thread.
  * @param userData user data associated with the function.
@@ -544,10 +552,21 @@ extern TASH_SCH_EXTERN int schSetSignalThreadMask(schSignalSet *set, int nr, con
 extern TASH_SCH_EXTERN int schCreateMutex(schMutex **mutex);
 
 /**
- * Create spinlock synchronize primitive
+ * @brief Creates a spinlock synchronization primitive
  * object.
+ *
+ * The Synchronization primitive works by using a thight
+ * for loop and check if still locked or if has been unlocked and can
+ * proceeded.
+ *
+ * Use this synchronization primitive when the lock is suspected to be very
+ * short or if to prevent the kernel from switching the process directly.
+ *
+ * @see schLockSpinLock
+ * @see schTryLockSpinLock
+ * @see schUnlockSpinLock
  * @param spinlock valid pointer.
- * @return non-negative if successfully.
+ * @return non-negative if successfull.
  */
 extern TASH_SCH_EXTERN int schCreateSpinLock(schSpinLock **spinlock);
 
@@ -558,9 +577,35 @@ extern TASH_SCH_EXTERN int schCreateSpinLock(schSpinLock **spinlock);
  */
 extern TASH_SCH_EXTERN int schCreateSemaphore(schSemaphore **pSemaphore);
 
+/**
+ * @brief
+ *
+ * @param pBarrier
+ * @return
+ */
 extern TASH_SCH_EXTERN int schCreateBarrier(schBarrier **pBarrier);
+/**
+ * @brief
+ *
+ * @param pBarrier
+ * @param count
+ * @return
+ */
 extern TASH_SCH_EXTERN int schInitBarrier(schBarrier *pBarrier, int count);
+
+/**
+ * @brief
+ *
+ * @param barrier
+ * @return
+ */
 extern TASH_SCH_EXTERN int schDeleteBarrier(schBarrier *barrier);
+/**
+ * @brief
+ *
+ * @param barrier
+ * @return
+ */
 extern TASH_SCH_EXTERN int schWaitBarrier(schBarrier *barrier);
 
 extern TASH_SCH_EXTERN int schCreateConditional(schConditional **pCondVariable);
@@ -626,8 +671,9 @@ extern TASH_SCH_EXTERN int schMutexUnLock(schMutex *mutexLock);
  * passing the wait function in till the schSemaphorePost.
  * function is invoked.
  * Wait in till the semaphore has been unlocked.
+ *
  * @param pSemaphore valid semaphore object.
- * @return non-negative if successfully.
+ * @return non-negative if successfull.
  */
 extern TASH_SCH_EXTERN int schSemaphoreWait(schSemaphore *pSemaphore);
 
@@ -699,7 +745,12 @@ extern TASH_SCH_EXTERN int schUnlockSpinLock(schSpinLock *spinlock);
  */
 
 /**
- * Get error code message.
+ * Get error code human readable error-message.
+ *
+ * @see SchErrCode
+ * @remark Do not call free or delete on the return character pointer.
+ * This is because the error message are stored in read only memory in the library.
+ *
  * @param errMsg zero or negative number.
  * @return non-null terminated string.
  */

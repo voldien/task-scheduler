@@ -25,12 +25,20 @@ extern "C" {
 #endif
 
 // atomic_uintptr_t
+/**
+ * @brief
+ *
+ */
 typedef struct linked_node {
 	atomic_int index;		  /*  */
 	struct linked_node *next; /*  */
 	struct linked_node *prev; /*  */
 } LinkedNode;
 
+/**
+ * @brief
+ *
+ */
 typedef struct queue_sync_double_linked_t {
 	atomic_int size;		  /*  Size of number of elements. */
 	atomic_int tail;		  /*  End of the queue.   */
@@ -41,6 +49,7 @@ typedef struct queue_sync_double_linked_t {
 	LinkedNode *nodes; /*  */ // TODO maybe remove
 	SchPool pool;			  /*  Allocator pool for all the node objects.    */
 } DLQueue;
+
 
 extern int schCreateQueue(DLQueue *DLQueue, unsigned int nr_reserved, unsigned int type_size);
 
