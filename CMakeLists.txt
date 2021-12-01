@@ -154,26 +154,7 @@ ENDIF()
 #################################
 # Generate Docs
 #################################
-OPTION(TASKSCH_BUILD_WITH_DOCS "Generate Docs" ON)
+OPTION(TASKSCH_BUILD_WITH_DOCS "Generate Docs" OFF)
 	IF(TASKSCH_BUILD_WITH_DOCS)
 	ADD_SUBDIRECTORY(${CMAKE_CURRENT_SOURCE_DIR}/docs/)
-ENDIF()
-
-
-
-
-IF( UNIX AND SCH_STANDALONE )
-    # Create distribution tarball.
-    SET( TARGETDIR "${PROJECT_NAME}-${SCH_VERSION}")
-    ADD_CUSTOM_TARGET(TARGET	distribution
-            PROPERTY OUTPUT_NAME ${TARGETDIR}
-            COMMAND mkdir -p ${TARGETDIR}
-            COMMAND ${CP} -r ${CMAKE_CURRENT_SOURCE_DIR}/src
-            ${CMAKE_CURRENT_SOURCE_DIR}/test
-            ${CMAKE_CURRENT_SOURCE_DIR}/include
-            ${CMAKE_CURRENT_SOURCE_DIR}/CMakeLists.txt
-            ${CMAKE_CURRENT_SOURCE_DIR}/LICENSE ${TARGETDIR}
-            COMMAND ${TAR} cf - ${TARGETDIR} | ${GZIP} -c > ${TARGETDIR}.tar.gz
-            COMMAND ${RM} -r ${TARGETDIR} )
-
 ENDIF()
