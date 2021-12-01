@@ -152,8 +152,8 @@ typedef void schSpinLock;	 /*	Spinlock sync object.   */
 typedef void schMutex;		 /*	Mutex (mutual exclusion) sync object. */
 typedef void schSemaphore;	 /*	Semaphore sync object.  */
 typedef void schRWLock;		 /*  Read/Write lock.	*/
-typedef void schConditional; /*  */
-typedef void schBarrier;	 /*  */
+typedef void schConditional; /*  Conditional lock.	*/
+typedef void schBarrier;	 /*  Memory Barrier.	*/
 /**
  * @}
  */
@@ -235,7 +235,11 @@ typedef struct sch_task_pool_t schTaskPool;
  */
 
 /**
- * @brief Allocate task scheduler.
+ * @brief Allocate task scheduler object. It will make sure
+ * that for any version of the library, that the size of the internal
+ * structure are of correct size.
+ *
+ * @since 0.2.0
  * @param pSch valid pointer object.
  * @return non-negative if successfully.
  */
@@ -253,6 +257,7 @@ extern TASH_SCH_EXTERN int schAllocateTaskPool(schTaskSch **pSch);
  * @param maxPackagesPool Sets the max number of task on each pool can have in the queue
  * at any given moment.
  * @return non-negative if successfully releasing. @see
+ * @since 1.0.0
  */
 extern TASH_SCH_EXTERN int schCreateTaskPool(schTaskSch *sch, int cores, unsigned int flag,
 											 unsigned int maxPackagesPool);
@@ -260,44 +265,47 @@ extern TASH_SCH_EXTERN int schCreateTaskPool(schTaskSch *sch, int cores, unsigne
 /**
  * Release all resources associated with
  * the scheduler object.
+ *
  * @param sch scheduler object.
  * @return non-negative if successfully releasing.
  */
 extern TASH_SCH_EXTERN int schReleaseTaskSch(schTaskSch *sch);
 
 /**
- * Set initialization callback.
+ * Set initialization callback that will be invoked when the scheduler starts.
+ *
  * @param sch scheduler object.
  * @param callBack non-null function pointer.
  */
 extern TASH_SCH_EXTERN void schSetInitCallBack(schTaskSch *sch, schUserCallBack callBack);
 
 /**
- * Set user deinitialize callback.
+ * Set user deinitialize callback that will be invoked when the scheduler gets terminated.
+ *
  * @param sch scheduler object.
  * @param callBack non-null function pointer.
  */
 extern TASH_SCH_EXTERN void schSetDeInitCallBack(schTaskSch *sch, schUserCallBack callBack);
 
 /**
- * Set the same user data to each pool.
+ * Assign user data associated with the scheduler object.
  * @param sch valid scheduler object.
  * @param user valid pointer.
  */
 extern TASH_SCH_EXTERN void schSetSchUserData(schTaskSch *sch, const void *user);
 
 /**
- * Set pool user data.
- * @param sch
- * @param index index of the pool from 0.
- * @param user pointer.
+ * Assign user data associated with the scheduler objects pools.
+ * @param sch valid scheduler object.
+ * @param index valid pool index, where index \in [0, nrPools -1].
+ * @param user valid pointer.
  */
 extern TASH_SCH_EXTERN void schSetPoolUserData(schTaskSch *sch, int index, const void *user);
 
 /**
  * Get pool user data.
  * @param sch schedule object.
- * @param index pool index, starting from 0.
+ * @param index valid pool index, where index \in [0, nrPools -1].
  * @return non-null pointer if user pointer exists, NULL otherwise.
  */
 extern TASH_SCH_EXTERN void *schGetPoolUserData(schTaskSch *sch, int index);
@@ -325,7 +333,9 @@ extern TASH_SCH_EXTERN schTaskPool *schGetPool(schTaskSch *sch, int index);
 
 /**
  * Start running task scheduler.
- * This will create the internal thread for each pool
+ * This will create the internal thread for each pool followed by the startup sequence.
+ *
+ * @see schSetInitCallBack for setup a custom callback before starting the pool.
  *
  * @param sch valid scheduler object.
  * @return positive if successfully. otherwise failure.
@@ -334,30 +344,38 @@ extern TASH_SCH_EXTERN int schRunTaskSch(schTaskSch *sch);
 
 /**
  * Stop all current tasks.
- * @param sch
- * @param timeout
- * @return
+ * @param sch valid scheduler object.
+ * @param timeout_nanoseconds how long it w
+ * @return non-negative if succesfull.
  */
-extern TASH_SCH_EXTERN int schStopTaskSch(schTaskSch *sch, long int timeout);
+extern TASH_SCH_EXTERN int schStopTaskSch(schTaskSch *sch, long int timeout_nanoseconds);
 
 /**
  * Terminate the scheduler.
- * @param sch valid scheduler.
- * @return non-negative if successful.
+ *
+ * @param sch valid scheduler object.
+ * @return non-negative if succesfull.
  */
 extern TASH_SCH_EXTERN int schTerminateTaskSch(schTaskSch *sch); // TODO give timeout option perhaps.
 
 /**
- * submit task packet.
+ * submit a task packet, it will be assigned accordingly to the priority queue, unless
+ * user specifies which pool it will be foced onto.
+ *
+ * @remark When overriding the pool that the task will be assigned that result in both performance lost
+ * and failure from being queue being full.
+ *
  * @param sch valid scheduler object.
- * @param package to be sumbit to the pools.
+ * @param package valid task package, that will be sumbitted to the pools.
  * @param pPool specific pool queue.
- * @return non-negative if successfully, otherwise failure.
+ * @return non-negative if successfull, otherwise failure.
  */
 extern TASH_SCH_EXTERN int schSubmitTask(schTaskSch *sch, schTaskPackage *package, schTaskPool *pPool);
 
 /**
- * Remove all tasks on a specific task pool.
+ * Remove all tasks on all of the pools on the scheduler. But if the pool argument is specified
+ * it will clear only a single specific pool.
+ *
  * @param sch
  * @param pool
  * @return
@@ -367,14 +385,15 @@ extern TASH_SCH_EXTERN int schClearTask(schTaskSch *sch, schTaskPool *pool);
 /**
  * @brief
  *
+ * @see schClearTask will be executed similar.
  * @param sch
- * @return TASH_SCH_EXTERN
+ * @return non-negative if successfull, otherwise a errorcode.
  */
 extern TASH_SCH_EXTERN int schClearAllTask(schTaskSch *sch);
 
 /**
- * Wait for all pool to finish with all
- * their tasks.
+ * Wait for all pool to finish with all their tasks.
+ *
  * @param sch valid scheduler object.
  * @return non-negative if successfully.
  */
