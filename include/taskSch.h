@@ -176,9 +176,10 @@ typedef void schSignalSet; /*  Signal set object.  */
 
 typedef struct sch_task_scheduler_t schTaskSch;
 typedef struct sch_task_pool_t schTaskPool;
+typedef struct sch_task_package_t schTaskPackage;
 
 typedef int (*schUserCallBack)(struct sch_task_pool_t *);
-typedef int (*schCallback)(struct sch_task_package_t *package);
+typedef int (*schCallback)(schTaskPackage *package);
 
 // typedef struct sch_task_package_t schTaskPackage;
 /**
@@ -226,7 +227,6 @@ typedef struct sch_task_package_t {
 	 */
 	void *puser;
 } schTaskPackage;
-
 
 /**
  * @defgroup ltascsch_core Core functions
@@ -450,7 +450,9 @@ extern TASH_SCH_EXTERN int schPoolMutexUnLock(schTaskPool *pool);
 extern TASH_SCH_EXTERN schThread *schCreateThread(int affinity, schFunc pfunc, void *userData);
 
 /**
- * Release thread resources.
+ * @brief Delete thread
+ * This will cause the system to release the thread resources.
+ *
  * @param thread valid thread.
  * @return non-negative if successfully released, otherwise a failure.
  */
@@ -475,12 +477,14 @@ extern TASH_SCH_EXTERN int schSetThreadName(schThread *thread, const char *name)
 
 /**
  * Get current thread pointer object.
+ *
  * @return non-null thread if successfully.
  */
 extern TASH_SCH_EXTERN schThread *schCurrentThread(void);
 
 /**
- * Raise signal to specified thread.
+ * Raise a specific signal to a specified thread.
+ *
  * @param thread valid thread object.
  * @param signal valid signal.
  * @return non-negative if successfully.
@@ -515,12 +519,16 @@ extern TASH_SCH_EXTERN int schDeleteSignal(schSignalSet *signal);
  * are valid for sending signal between threads and
  * that will not conflicts with the kernel specified
  * signals.
+ *
  * @return non-negative number.
  */
 extern TASH_SCH_EXTERN int schBaseSignal(void);
 
 /**
+ * @brief
  * Wait in till signal has been issued.
+ *
+ * @see
  * @param sig signal object.
  * @return signal received.
  */
@@ -529,11 +537,12 @@ extern TASH_SCH_EXTERN int schSignalWait(schSignalSet *sig);
 /**
  * Wait in till a signal has been issued in
  * the timeout time frame.
+ *
  * @param sig signal object.
- * @param nano in nano seconds for the timeout.
- * @return received.
+ * @param nanoseconds in nano seconds for the timeout.
+ * @return signal.
  */
-extern TASH_SCH_EXTERN int schSignalWaitTimeOut(schSignalSet *sig, long int nano);
+extern TASH_SCH_EXTERN int schSignalWaitTimeOut(schSignalSet *sig, long int nanoseconds);
 
 /**
  * Set thread signal mask. Mask what signal
@@ -610,15 +619,77 @@ extern TASH_SCH_EXTERN int schDeleteBarrier(schBarrier *barrier);
  */
 extern TASH_SCH_EXTERN int schWaitBarrier(schBarrier *barrier);
 
+/**
+ * @brief
+ *
+ * @param pCondVariable
+ * @return
+ */
 extern TASH_SCH_EXTERN int schCreateConditional(schConditional **pCondVariable);
+
+/**
+ * @brief
+ *
+ * @param conditional
+ * @return
+ */
 extern TASH_SCH_EXTERN int schDeleteConditional(schConditional *conditional);
+
+/**
+ * @brief
+ *
+ * @param conditional
+ * @param mutex
+ * @return
+ */
 extern TASH_SCH_EXTERN int schConditionalWait(schConditional *conditional, schMutex *mutex);
+
+/**
+ * @brief
+ *
+ * @param conditional
+ * @return
+ */
 extern TASH_SCH_EXTERN int schConditionalSignal(schConditional *conditional);
 
+/**
+ * @brief
+ *
+ * @param pRwLock
+ * @return
+ */
 extern TASH_SCH_EXTERN int schCreateRWLock(schRWLock **pRwLock);
+
+/**
+ * @brief
+ *
+ * @param rwLock
+ * @return
+ */
 extern TASH_SCH_EXTERN int schDeleteRWLock(schRWLock *rwLock);
+
+/**
+ * @brief
+ *
+ * @param rwLock
+ * @return
+ */
 extern TASH_SCH_EXTERN int schRWLockRead(schRWLock *rwLock);
+
+/**
+ * @brief
+ *
+ * @param rwLock
+ * @return
+ */
 extern TASH_SCH_EXTERN int schRWLockWrite(schRWLock *rwLock);
+
+/**
+ * @brief
+ *
+ * @param rwLock
+ * @return
+ */
 extern TASH_SCH_EXTERN int schRWLocUnLock(schRWLock *rwLock);
 
 /**

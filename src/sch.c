@@ -30,7 +30,8 @@ static void hdl(int sig, siginfo_t *siginfo, void *context) {
 void *schPoolExecutor(void *handle) {
 
 	/*	*/
-	int signal, status;
+	int signal;
+	intptr_t status;
 	const unsigned int SigQuit = SCH_SIGNAL_QUIT;
 	const long int timeRes = schTimeResolution();
 	long int taskInvoke;
