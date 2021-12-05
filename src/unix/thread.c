@@ -113,10 +113,11 @@ int schCreateSemaphore(schSemaphore **pSemaphore) {
 	*pSemaphore = (schSemaphore *)sem;
 	assert(sem);
 
-	if (sem_init(sem, 0, 0) == 0)
+	if (sem_init(sem, 0, 0) == 0) {
 		return SCH_OK;
-	else
+	} else {
 		return pthread_error_code2sch_error_code(errno);
+	}
 }
 
 int schCreateBarrier(schBarrier **pBarrier) {
@@ -138,10 +139,11 @@ int schDeleteBarrier(schBarrier *barrier) {
 
 int schWaitBarrier(schBarrier *barrier) {
 	int status = pthread_barrier_wait(barrier);
-	if (status == PTHREAD_BARRIER_SERIAL_THREAD)
+	if (status == PTHREAD_BARRIER_SERIAL_THREAD) {
 		return SCH_OK;
-	else
+	} else {
 		return pthread_error_code2sch_error_code(status);
+	}
 }
 
 int schCreateConditional(schConditional **pCondVariable) {

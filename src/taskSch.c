@@ -10,7 +10,16 @@
 #include <string.h>
 
 int translate_errno_to_sch_error(int errorCode) { return SCH_OK; }
-void sch_release_scheduler_resources(schTaskSch *sch) {}
+void sch_release_scheduler_resources(schTaskSch *sch) {
+	if (sch->pool != NULL)
+		free(sch->pool);
+	if (sch->dheap != NULL)
+		free(sch->dheap);
+	if (sch->set != NULL)
+		schDeleteSignal(sch->set);
+	if (sch->spinlock != NULL)
+		schDeleteSpinLock(sch->spinlock);
+}
 
 int schAllocateTaskPool(schTaskSch **pSch) {
 	*pSch = (schTaskSch *)malloc(sizeof(schTaskSch));
@@ -58,11 +67,9 @@ int schCreateTaskPool(schTaskSch *sch, int cores, unsigned int flag, unsigned in
 	}
 
 	/*  Create internal spinlock.   */
-	if (!schCreateSpinLock(&sch->spinlock)) {
-		free(sch->pool);
-		free(sch->dheap);
-		return SCH_ERROR_SYNC_OBJECT;
-	}
+	status = schCreateSpinLock(&sch->spinlock);
+	if (status != SCH_OK)
+		goto error;
 
 	status = schCreateMutex(&sch->mutex);
 	if (status != SCH_OK)

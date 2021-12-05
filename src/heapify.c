@@ -3,7 +3,7 @@
 #include <limits.h>
 #include <string.h>
 
-#define SCH_HEAP_BREATH 4
+#define SCH_HEAP_BREATH ( 4 )
 
 static inline int getParentIndex(int index, int depth) { return ((index - 1) / depth); }
 
@@ -17,8 +17,9 @@ static inline void restoreDown(schTaskPool **arr, int len, int index, int k) {
 	while (1) {
 
 		/*  Check for leafs.    */
-		for (int i = 1; i <= k; i++)
+		for (int i = 1; i <= k; i++) {
 			child[i] = ((k * index + i) < len) ? (k * index + i) : -1;
+		}
 
 		long int min_child = MAX;
 		int min_child_index;
@@ -32,8 +33,9 @@ static inline void restoreDown(schTaskPool **arr, int len, int index, int k) {
 		}
 
 		/*  Leaf node.  */
-		if (min_child == MAX)
+		if (min_child == MAX) {
 			break;
+		}
 
 		/*  */
 		schTaskPool *a = arr[index];

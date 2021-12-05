@@ -1,5 +1,5 @@
 /*
- *	Task scheduler for uniform processing in user space.
+ *	Task scheduler for uniform task processing in user space.
  *	Copyright (C) 2015  Valdemar Lindberg
  *
  *	This program is free software: you can redistribute it and/or modify
