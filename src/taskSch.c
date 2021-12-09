@@ -9,7 +9,14 @@
 #include <signal.h>
 #include <string.h>
 
-int translate_errno_to_sch_error(int errorCode) { return SCH_OK; }
+int translate_errno_to_sch_error(int errorCode) {
+	switch (errorCode) {
+	case ENOMEM:
+		return SCH_ERROR_NOMEM;
+	default:
+		return SCH_OK;
+	}
+}
 void sch_release_scheduler_resources(schTaskSch *sch) {
 	if (sch->pool != NULL)
 		free(sch->pool);
@@ -23,7 +30,7 @@ void sch_release_scheduler_resources(schTaskSch *sch) {
 
 int schAllocateTaskPool(schTaskSch **pSch) {
 	*pSch = (schTaskSch *)malloc(sizeof(schTaskSch));
-	return 0;
+	return translate_errno_to_sch_error(errno);
 }
 
 int schCreateTaskPool(schTaskSch *sch, int cores, unsigned int flag, unsigned int maxPackagesPool) {
