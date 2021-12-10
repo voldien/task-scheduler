@@ -1,5 +1,5 @@
 #include "internal/queue.h"
-
+#include <malloc.h>
 int schCreateQueue(DLQueue *DLQueue, unsigned int nr_reserved, unsigned int type_size) {
 	DLQueue->size = 0;
 	DLQueue->tail = 0;
@@ -10,12 +10,12 @@ int schCreateQueue(DLQueue *DLQueue, unsigned int nr_reserved, unsigned int type
 	DLQueue->data = malloc(type_size * nr_reserved);
 }
 
-int schDequeue(DLQueue *DLQueue) {}
+int schDequeue(DLQueue *DLQueue) { return 0; }
 
-int schEnqueue(DLQueue *DLQueue) {}
+int schEnqueue(DLQueue *DLQueue) { return 0; }
 
-int schClear(DLQueue *DLQueue) {}
+int schClear(DLQueue *DLQueue) { return 0; }
 
-int schQueueGetSize(DLQueue *DLQueue) {}
+int schQueueGetSize(DLQueue *DLQueue) { return 0; }
 
-int schQueueGetReserved(DLQueue *DLQueue) {}
+int schQueueGetReserved(DLQueue *DLQueue) { return 0; }

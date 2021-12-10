@@ -307,7 +307,7 @@ int schTerminateTaskSch(schTaskSch *sch) {
 			//			status &= schRaiseThreadSignal(pool->thread, SCH_SIGNAL_QUIT);
 
 			/*  Wait in till thread has terminated. */
-			status &= schWaitThread(pool->thread, &thread_status);
+			status &= schWaitThread(pool->thread, (void**)&thread_status);
 			// status &= schDeleteThread(pool->thread);
 			pool->thread = NULL;
 			pool->schRefThread = NULL;

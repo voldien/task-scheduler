@@ -55,7 +55,7 @@ typedef struct sch_task_pool_t {
 	schTaskPackage *package; /*  */
 
 	/*  User and init and release functions callbacks.  */
-	const void *userdata;	/*  User data.  */
+	void *userdata;	/*  User data.  */
 	schUserCallBack init;	/*  Init user callback function.    */
 	schUserCallBack deinit; /*  DeInit user callback function.  */
 
