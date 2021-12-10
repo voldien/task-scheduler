@@ -8,6 +8,8 @@ int schCreateQueue(DLQueue *DLQueue, unsigned int nr_reserved, unsigned int type
 	DLQueue->typeSize = type_size;
 	schInitPool(&DLQueue->pool, nr_reserved, sizeof(struct linked_node));
 	DLQueue->data = malloc(type_size * nr_reserved);
+
+	return 0;
 }
 
 int schDequeue(DLQueue *DLQueue) { return 0; }

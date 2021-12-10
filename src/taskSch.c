@@ -185,7 +185,7 @@ void schSetSchUserData(schTaskSch *sch, const void *user) {
 	}
 }
 
-void schSetPoolUserData(schTaskSch *sch, int index, const void *user) { sch->pool[index].userdata = user; }
+void schSetPoolUserData(schTaskSch *sch, int index, const void *user) { sch->pool[index].userdata = (void*)user; }
 
 void *schGetPoolUserData(schTaskSch *sch, int index) { return sch->pool[index].userdata; }
 
