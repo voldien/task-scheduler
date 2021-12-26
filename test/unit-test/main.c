@@ -1,4 +1,5 @@
 #include"taskSch.h"
+#include"internal/internal_structures.h"
 #include<stdio.h>
 #include<check.h>
 #include<stdlib.h>
