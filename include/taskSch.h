@@ -573,6 +573,16 @@ extern TASH_SCH_EXTERN int schCreateMutex(schMutex **mutex);
  * Use this synchronization primitive when the lock is suspected to be very
  * short or if to prevent the kernel from switching the process directly.
  *
+ * @code
+ * schSpinLock* spinlock;
+ * schCreateSpinLock(&spinlock);
+ * schLockSpinLock(spinlock);
+ * ... compute something....
+ * schUnlockSpinLockspinlock);
+ * schDeleteSpinLock(spinlock);
+ *
+ * @code
+ *
  * @see schLockSpinLock
  * @see schTryLockSpinLock
  * @see schUnlockSpinLock
@@ -583,16 +593,28 @@ extern TASH_SCH_EXTERN int schCreateSpinLock(schSpinLock **spinlock);
 
 /**
  * Create semaphore object.
+ *
+ * @code
+ *
+ * @code
+ *
+ * @see schDeleteSemaphore
  * @param pSemaphore valid pointer.
  * @return non-negative if successfully.
  */
 extern TASH_SCH_EXTERN int schCreateSemaphore(schSemaphore **pSemaphore);
 
 /**
- * @brief
+ * @brief Create Memory barrier
  *
- * @param pBarrier
- * @return
+ * @code
+ *
+ * @code
+ *
+ * @see schDeleteBarrier
+ * @see schInitBarrier
+ * @param pBarrier valid pointer.
+ * @return non-negative if successfully.
  */
 extern TASH_SCH_EXTERN int schCreateBarrier(schBarrier **pBarrier);
 /**

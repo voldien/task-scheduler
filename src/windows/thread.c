@@ -7,42 +7,113 @@
 #include <stdlib.h>
 #include <string.h>
 
-#define _MULTI_THREADED
-#define _GNU_SOURCE
-#define __USE_GNU
+#include <strsafe.h>
+#include <tchar.h>
+#include <windows.h>
+#include <winerror.h>
 
-#include <pthread.h>
-#include <signal.h>
-#include <unistd.h>
+static int window_error_code2sch_error_code(DWORD error) {}
 
-void *schCreateThread(int affinity, void *pfunc, void *userData) { return 0; }
+schThread *schCreateThread(int affinity, schFunc pfunc, void *userData) {
 
-int schDeleteThread(void *thread) { return 0; }
+	DWORD dwThreadIdArray;
+	schThread *thread = CreateThread(NULL,	   // default security attributes
+									 0,		   // use default stack size
+									 pfunc,	   // thread function name
+									 userData, // argument to thread function
+									 0,		   // use default creation flags
+									 NULL);	   // returns the thread identifier
+}
 
-int schWaitThread(void *thread) { return 0; }
+int schDeleteThread(schThread *thread) { ExitThread(thread); }
 
-void *schCurrentThread() { return NULL; }
+int schWaitThread(schThread *thread, void **retval) {
+	return pthread_error_code2sch_error_code(pthread_join((pthread_t)thread, retval));
+}
 
-int schCreateMutex(void **mutex) { return 0; }
+schThread *schCurrentThread(void) { return (schThread *)GetCurrentThread(); }
 
-int schDeleteMutex(void *mutex) { return 0; }
+int schCreateMutex(schMutex **mutex) {
+	// HANDLE mutex = CreateMutexA()
+}
 
-int schGetNumCPUCores(void) { return 0; }
+int schCreateSpinLock(schSpinLock **spinlock) {}
 
-int schSetThreadName(void *thread, const char *threadName) { return 0; }
+int schCreateSemaphore(schSemaphore **pSemaphore) {
+	// CreateSemaphoreA()
+}
 
-int schRaiseThreadSignal(void *thread, int signal) { return 0; }
+int schCreateBarrier(schBarrier **pBarrier) {
+	*pBarrier = (schBarrier *)malloc(sizeof(pthread_barrier_t));
+	memset(*pBarrier, 0, sizeof(pthread_barrier_t));
+	// pthread_barrier_init()
+	return SCH_OK;
+}
 
-void *schCreateSignal(void) { return NULL; }
+int schInitBarrier(schBarrier *pBarrier, int count) {}
 
-int schBaseSignal(void) { return 0; }
+int schDeleteBarrier(schBarrier *barrier) {}
 
-int schSignalWait(void *sig) { return 0; }
+int schWaitBarrier(schBarrier *barrier) {}
 
-int schSignalWaitTimeOut(void *sig, long int time) { return 0; }
+int schCreateConditional(schConditional **pCondVariable) {}
 
-int schSetSignalThreadMask(void *set, int nr, const int *signals) { return 0; }
+int schDeleteConditional(schConditional *conditional) {}
 
-void schPoolLock(schTaskPool *pool) {}
+int schConditionalWait(schConditional *conditional, schMutex *mutex) {}
 
-void schPoolUnLock(schTaskPool *pool) {}
+int schConditionalSignal(schConditional *conditional) {}
+
+int schCreateRWLock(schRWLock **pRwLock) {}
+
+int schDeleteRWLock(schRWLock *rwLock) {}
+
+int schRWLockRead(schRWLock *rwLock) {}
+int schRWLockWrite(schRWLock *rwLock) {}
+int schRWLocUnLock(schRWLock *rwLock) {}
+
+int schDeleteMutex(schMutex *mutex) {}
+
+int schDeleteSpinLock(schSpinLock *spinlock) {}
+
+int schDeleteSemaphore(schSemaphore *pSemaphore) { CloseHandle(pSemaphore); }
+
+int schLockSpinLock(schSpinLock *spinlock) {}
+
+int schTryLockSpinLock(schSpinLock *spinLock) {}
+
+int schUnlockSpinLock(schSpinLock *spinlock) {}
+
+int schGetNumCPUCores(void) {}
+
+int schSetThreadName(schThread *thread, const char *threadName) {}
+
+int schRaiseThreadSignal(schThread *thread, int signal) {}
+
+schSignalSet *schCreateSignal(void) {}
+
+int schDeleteSignal(schSignalSet *signal) {}
+
+int schBaseSignal(void) { return SIGUSR1; }
+
+int schSignalWait(schSignalSet *sig) {}
+
+int schSignalWaitTimeOut(schSignalSet *sig, long int nano) {}
+
+int schSetSignalThreadMask(schSignalSet *set, int nr, const int *signals) {}
+
+int schMutexLock(schMutex *mutex) {}
+
+int schMutexTryLock(schMutex *mutex, long int timeout) {}
+
+int schMutexUnLock(schMutex *mutex) {}
+
+int schSemaphoreWait(schSemaphore *pSemaphore) {}
+
+int schSemaphoreTryWait(schSemaphore *semaphore) {}
+
+int schSemaphoreTimedWait(schSemaphore *pSemaphore, long int timeout) {}
+
+int schSemaphorePost(schSemaphore *pSemaphore) {
+
+	int schSemaphoreValue(schSemaphore * pSemaphore, int *value) {}
