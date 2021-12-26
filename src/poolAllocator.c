@@ -85,7 +85,7 @@ unsigned int schPoolItemSize(const SchPool *pool) { return pool->itemsize; }
 int schPoolGetIndex(const SchPool *pool, const void *data) {
 
 	const uint8_t *offset = ((const uint8_t *)data - (const uint8_t *)pool->pool);
-	return ((uint32_t)offset) / pool->itemsize;
+	return ((uintptr_t)offset) / pool->itemsize;
 }
 
 static inline void *sntPoolItemByIndex(SchPool *pool, unsigned int index) {
