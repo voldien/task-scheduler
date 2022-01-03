@@ -203,7 +203,7 @@ START_TEST(errorCodeMsg) {
 	ck_assert_ptr_eq(schErrorMsg(SCH_OK + 1), NULL);
 	ck_assert_ptr_eq(schErrorMsg(SCH_ERROR_PERMISSION_DENIED - 1), NULL);
 
-	for(int i = SCH_ERROR_PERMISSION_DENIED; i < SCH_OK; i++){
+	for (int i = SCH_ERROR_PERMISSION_DENIED; i < SCH_ERROR_UNKNOWN; i++) {
 		ck_assert_ptr_ne(schErrorMsg(i), NULL);
 	}
 }
@@ -230,6 +230,15 @@ Suite* schCreateSuite(void){
 	tcase_add_test(testPrimitiveMissUse, PrimitiveMissUse);
 	tcase_add_test(testPrimitive, Primitive);
 	tcase_add_test(testErrorMsgCodes, errorCodeMsg);
+
+	tcase_set_timeout(testCreate, 5);
+	tcase_set_timeout(testRelease, 5);
+	tcase_set_timeout(testSubmit, 5);
+	tcase_set_timeout(testWait, 5);
+	tcase_set_timeout(testMissUse, 5);
+	tcase_set_timeout(testPrimitiveMissUse, 5);
+	tcase_set_timeout(testPrimitive, 5);
+	tcase_set_timeout(testErrorMsgCodes, 5);
 
 	/*	Add test cases to test suite.	*/
 	suite_add_tcase(suite, testCreate);
@@ -268,30 +277,35 @@ void schCreationUnitTest(void) {
 int main(int argc, const char **argv) {
 
 	/*  Simple unit test.   */
-	schCreationUnitTest();
+	//schCreationUnitTest();
 
 	//TODO relocate.
-	schTaskSch sch;
+	schTaskSch* sch;
 
 	const size_t numPackages = 250;
 
-	schCreateTaskPool(&sch, -1, 0, numPackages);
+	if(schAllocateTaskPool(&sch) != SCH_OK)
+		return EXIT_FAILURE;
 
-	if(schRunTaskSch(&sch) != SCH_OK)
+	if(schCreateTaskPool(sch, -1, 0, numPackages) != SCH_OK)
+		return EXIT_FAILURE;
+
+	if(schRunTaskSch(sch) != SCH_OK)
 		return EXIT_FAILURE;
 	long int t = schGetTime();
 
 	schTaskPackage package = {NULL};
 	package.callback = perform_task;
 	for(int i = 0; i < numPackages; i++)
-		schSubmitTask(&sch, &package, NULL);
+		schSubmitTask(sch, &package, NULL);
 
-	schWaitTask(&sch);
+	schWaitTask(sch);
 
 	for(int i = 0; i < numPackages; i++)
-		schSubmitTask(&sch, &package, NULL);
+		schSubmitTask(sch, &package, NULL);
 
-	schReleaseTaskSch(&sch);
+	if (schReleaseTaskSch(sch) != SCH_OK)
+		return EXIT_FAILURE;
 	t = schGetTime() - t;
 	printf("time: %f seconds for %d tasks.\n", (float)t / (float)schTimeResolution(), numPackages);
 

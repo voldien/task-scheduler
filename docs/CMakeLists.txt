@@ -3,6 +3,7 @@ FIND_PACKAGE( Doxygen )
 IF(DOXYGEN_FOUND)
     MESSAGE(STATUS "Doxygen found: ${DOXYGEN_EXECUTABLE} -- ${DOXYGEN_VERSION}")
 
+	# Set Doxygen input and output files.
 	SET(DOXYGEN_INPUT_DIR ${PROJECT_SOURCE_DIR}/include)
 	SET(DOXYGEN_OUTPUT_DIR ${CMAKE_CURRENT_BINARY_DIR}/doxygen)
 	SET(DOXYGEN_OUTPUT_LATEX_DIR ${CMAKE_CURRENT_BINARY_DIR}/latex)
@@ -10,6 +11,7 @@ IF(DOXYGEN_FOUND)
 	SET(DOXYFILE_IN ${CMAKE_CURRENT_SOURCE_DIR}/Doxyfile.in)
 	SET(DOXYFILE_OUT ${CMAKE_CURRENT_BINARY_DIR}/Doxyfile)
 
+	# Find Latex Executables.
 	FIND_PACKAGE(LATEX)
 	IF(LATEX_FOUND)
 		IF(LUALATEX_FOUND)
@@ -25,7 +27,7 @@ IF(DOXYGEN_FOUND)
 		MESSAGE(ERROR "No latex tools found!")
 	ENDIF()
 
-	#
+	# Set Latex PDF, header,footer, style source files.
 	SET(LATEX_DOCUMENT ${DOXYGEN_OUTPUT_LATEX_DIR}/refman.pdf)
 	SET(LATEX_HEADER ${CMAKE_CURRENT_SOURCE_DIR}/header.tex)
 	SET(LATEX_FOOTER ${CMAKE_CURRENT_SOURCE_DIR}/footer.tex)
@@ -33,24 +35,30 @@ IF(DOXYGEN_FOUND)
 	SET(LATEX_EXTRA_FILES "${CMAKE_CURRENT_SOURCE_DIR}/front-page.png ${CMAKE_CURRENT_SOURCE_DIR}/frontpage.tex ${CMAKE_CURRENT_SOURCE_DIR}/backcoverpage.tex"
 	)
 
+	# Generate DoxyFile from the input file.
 	CONFIGURE_FILE(${DOXYFILE_IN} ${DOXYFILE_OUT} @ONLY)
 
+	# Create Output directory.
 	FILE(MAKE_DIRECTORY ${DOXYGEN_OUTPUT_DIR})
 
 
+	# Command for generating doc from Doxygen config file.
 	ADD_CUSTOM_COMMAND(OUTPUT ${DOXYGEN_INDEX_FILE}
 					COMMAND ${DOXYGEN_EXECUTABLE} ${DOXYFILE_OUT}
 					MAIN_DEPENDENCY ${DOXYFILE_OUT} ${DOXYFILE_IN}
 					COMMENT "Generating TaskScheduler Doxygen documentation"
 					VERBATIM)
 
+	# Command for generating Latex PDF file.
 	ADD_CUSTOM_COMMAND( OUTPUT ${LATEX_DOCUMENT}
 					COMMAND make -C ${DOXYGEN_OUTPUT_LATEX_DIR}
 					MAIN_DEPENDENCY ${DOXYFILE_OUT} ${LATEX_HEADER} ${LATEX_FOOTER}
 					COMMENT "Generating TaskScheduler Latex documentation"
 	)
 
+	# Create CMake Target for generating doc.
 	ADD_CUSTOM_TARGET(Doxygen ALL DEPENDS ${DOXYGEN_INDEX_FILE})
+	# Create CMake Target for generating PDF.
 	ADD_CUSTOM_TARGET(DoxygenLatex ALL DEPENDS ${LATEX_DOCUMENT} Doxygen)
 
 ENDIF()

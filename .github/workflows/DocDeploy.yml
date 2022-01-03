@@ -2,7 +2,7 @@ name: Task-Scheduler Linux
 on:
   push:
     branches:
-      - main
+      - master
 jobs:
   build-and-deploy:
     runs-on: ubuntu-latest

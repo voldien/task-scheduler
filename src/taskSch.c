@@ -185,7 +185,7 @@ void schSetSchUserData(schTaskSch *sch, const void *user) {
 	}
 }
 
-void schSetPoolUserData(schTaskSch *sch, int index, const void *user) { sch->pool[index].userdata = (void*)user; }
+void schSetPoolUserData(schTaskSch *sch, int index, const void *user) { sch->pool[index].userdata = (void *)user; }
 
 void *schGetPoolUserData(schTaskSch *sch, int index) { return sch->pool[index].userdata; }
 
@@ -211,7 +211,7 @@ int schRunTaskSch(schTaskSch *sch) {
 		return SCH_ERROR_INTERNAL;
 
 	// TODO improve status error
-	schInitBarrier(sch->barrier, sch->num);
+	// schInitBarrier(sch->barrier, sch->num);
 
 	/*  Iterate through each pool and perform final allocation.  */
 	for (i = 0; i < sch->num; i++) {
@@ -307,7 +307,7 @@ int schTerminateTaskSch(schTaskSch *sch) {
 			//			status &= schRaiseThreadSignal(pool->thread, SCH_SIGNAL_QUIT);
 
 			/*  Wait in till thread has terminated. */
-			status &= schWaitThread(pool->thread, (void**)&thread_status);
+			status &= schWaitThread(pool->thread, (void **)&thread_status);
 			// status &= schDeleteThread(pool->thread);
 			pool->thread = NULL;
 			pool->schRefThread = NULL;
@@ -380,7 +380,7 @@ int schClearAllTask(schTaskSch *sch) { return SCH_OK; }
 
 int schWaitTask(schTaskSch *sch) { return schWaitTaskWait(sch, -1); }
 
-int schWaitTaskWait(schTaskSch *sch, long wait) {
+int schWaitTaskWait(schTaskSch *sch, long int wait) {
 	int i;
 
 	/*  Check if valid scheduler.   */
@@ -389,6 +389,7 @@ int schWaitTaskWait(schTaskSch *sch, long wait) {
 	}
 
 	/*  */ // TODO add support for wait utilization.
+	
 	schMutexLock(sch->mutex);
 	while (!(sch->flag & SCH_FLAG_RUNNING)) {
 		schConditionalWait(sch->conditional, sch->mutex);
@@ -397,14 +398,17 @@ int schWaitTaskWait(schTaskSch *sch, long wait) {
 
 	/*  Iterate through each pool.  */
 	for (i = 0; i < sch->num; i++) {
-		if (sch->pool[i].flag & SCH_POOL_SLEEP && sch->pool[i].size <= 0)
+		if ((sch->pool[i].flag & SCH_POOL_SLEEP) && sch->pool[i].size <= 0)
 			continue;
 		else {
 			/*  Wait and check every milliseconds reset. */
-			if (schSignalWaitTimeOut(sch->set, (long int)1E7L) < 0) {
+			int errSig = schSignalWaitTimeOut(sch->set, (long int)1E4L);
+			if (errSig < 0) {
+				// TODO handle error message.
 				fprintf(stderr, "signal wait failed: %s", strerror(errno));
 			}
-			i = -1;
+			/*	Go back to the previous pool.	*/
+			i--;
 		}
 	}
 	return SCH_OK;

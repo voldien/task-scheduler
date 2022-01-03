@@ -13,8 +13,10 @@ static inline void setPoolRunning(schTaskPool *pool) {
 	atomic_fetch_xor(&pool->flag, SCH_POOL_SLEEP | SCH_FLAG_RUNNING);
 }
 
+/*	*/
 static inline void setPoolIdle(schTaskPool *pool) { atomic_fetch_xor(&pool->flag, SCH_POOL_RUNNING | SCH_POOL_SLEEP); }
 
+/*	*/
 static inline void setPoolTerminated(schTaskPool *pool) {
 	atomic_fetch_xor(&pool->flag, SCH_POOL_RUNNING | SCH_POOL_SLEEP | SCH_POOL_TERMINATE);
 }
@@ -119,7 +121,7 @@ void *schPoolExecutor(void *handle) {
 				signal = schSignalWait(pool->set);
 				switch (signal) {
 				case SIGQUIT:
-					break;
+					goto done;
 				case SIGINT:
 					break;
 				case SIGTERM:

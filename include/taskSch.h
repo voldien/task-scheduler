@@ -88,12 +88,12 @@ extern "C" {
 #define SCH_FLAG_NO_AFM 0x80000000 /*  Disable affinity mapping.    */
 
 /**
- * Task scheduler internal flags.
+ * Task scheduler internal state flags.
  *
  */
-#define SCH_FLAG_INIT 0x1	 /*  Scheduler has been initialized.    */
-#define SCH_FLAG_RUNNING 0x2 /*  Scheduler is in running mode.   */
-#define SCH_FLAG_IDLE 0x4
+#define SCH_FLAG_INIT 0x1	 	/*  Scheduler has been initialized.    */
+#define SCH_FLAG_RUNNING 0x2 	/*  Scheduler is in running mode.   */
+#define SCH_FLAG_IDLE 0x4		/*	Scheduler is running, but waiting for tasks.	*/
 
 /**
  * Pool status flags.
@@ -181,34 +181,29 @@ typedef struct sch_task_package_t schTaskPackage;
 typedef int (*schUserCallBack)(struct sch_task_pool_t *);
 typedef int (*schCallback)(schTaskPackage *package);
 
-// typedef struct sch_task_package_t schTaskPackage;
 /**
  * Scheduler task structure.
  */
 typedef struct sch_task_package_t {
-	/*  Package data.   */
 	/**
-	 *
+	 * Package flag.
 	 */
-	atomic_uint flag; /*  Package flag.   */
+	atomic_uint flag; /*     */
 	/**
-	 * Pool index it was executed from.
+	 * The pool index it being executed from.
 	 */
 	unsigned int index;
 	/**
 	 * Callback function that the scheduler will
-	 * execute.
+	 * be invoked.
 	 */
 	schCallback callback;
-	// TODO determine to add long support.
 	/**
 	 * Size parameter.
-	 *
 	 */
 	size_t size;
 	/**
 	 * Offset
-	 *
 	 */
 	size_t offset;
 	/**
@@ -223,7 +218,6 @@ typedef struct sch_task_package_t {
 	void *end;
 	/**
 	 * User data.
-	 *
 	 */
 	void *puser;
 } schTaskPackage;
@@ -233,7 +227,14 @@ typedef struct sch_task_package_t {
  * @ingroup libtasksch
  * @section Info
  *
+ * Example code for how to create, start, submit
+ * task, finally release
  * @code
+ * schTaskSch* sch;
+ * schAllocateTaskPool(&sch);
+ * schCreateTaskPool(sch);
+ *
+ * schReleaseTaskSch(sch);
  * @endcode
  *
  * @{
@@ -251,7 +252,7 @@ typedef struct sch_task_package_t {
 extern TASH_SCH_EXTERN int schAllocateTaskPool(schTaskSch **pSch);
 
 /**
- * Initilize task scheduler internal data structure.
+ * @brief Initilize task scheduler internal data structure.
  *
  * @see schAllocateTaskPool
  *
@@ -268,7 +269,7 @@ extern TASH_SCH_EXTERN int schCreateTaskPool(schTaskSch *sch, int cores, unsigne
 											 unsigned int maxPackagesPool);
 
 /**
- * Release all resources associated with
+ * @brief Release all resources associated with
  * the scheduler object.
  *
  * @param sch scheduler object.
@@ -277,7 +278,7 @@ extern TASH_SCH_EXTERN int schCreateTaskPool(schTaskSch *sch, int cores, unsigne
 extern TASH_SCH_EXTERN int schReleaseTaskSch(schTaskSch *sch);
 
 /**
- * Set initialization callback that will be invoked when the scheduler starts.
+ * @brief Set initialization callback that will be invoked when the scheduler starts.
  *
  * @param sch scheduler object.
  * @param callBack non-null function pointer.
@@ -285,7 +286,7 @@ extern TASH_SCH_EXTERN int schReleaseTaskSch(schTaskSch *sch);
 extern TASH_SCH_EXTERN void schSetInitCallBack(schTaskSch *sch, schUserCallBack callBack);
 
 /**
- * Set user deinitialize callback that will be invoked when the scheduler gets terminated.
+ * @brief Set user deinitialize callback that will be invoked when the scheduler gets terminated.
  *
  * @param sch scheduler object.
  * @param callBack non-null function pointer.
@@ -293,14 +294,14 @@ extern TASH_SCH_EXTERN void schSetInitCallBack(schTaskSch *sch, schUserCallBack 
 extern TASH_SCH_EXTERN void schSetDeInitCallBack(schTaskSch *sch, schUserCallBack callBack);
 
 /**
- * Assign user data associated with the scheduler object.
+ * @brief Assign user data associated with the scheduler object.
  * @param sch valid scheduler object.
  * @param user valid pointer.
  */
 extern TASH_SCH_EXTERN void schSetSchUserData(schTaskSch *sch, const void *user);
 
 /**
- * Assign user data associated with the scheduler objects pools.
+ * @brief Assign user data associated with the scheduler objects pools.
  * @param sch valid scheduler object.
  * @param index valid pool index, where \f$ index \in [0, nrPools -1] \f$.
  * @param user valid pointer.
@@ -309,7 +310,7 @@ extern TASH_SCH_EXTERN void schSetSchUserData(schTaskSch *sch, const void *user)
 extern TASH_SCH_EXTERN void schSetPoolUserData(schTaskSch *sch, int index, const void *user);
 
 /**
- * Get pool user data.
+ * @brief Get pool user data.
  * @param sch schedule object.
  * @param index valid pool index, where \f$ index \in [0, nrPools -1] \f$.
  * @return non-null pointer if user pointer exists, NULL otherwise.
@@ -318,10 +319,10 @@ extern TASH_SCH_EXTERN void schSetPoolUserData(schTaskSch *sch, int index, const
 extern TASH_SCH_EXTERN void *schGetPoolUserData(schTaskSch *sch, int index);
 
 /**
- * Get scheduler pool by index.
+ * @brief Get scheduler pool by index.
  * @param sch
  * @param index
- * @return
+ * @return non-null if the index is valid.
  */
 extern TASH_SCH_EXTERN schTaskPool *schGetPool(schTaskSch *sch, int index);
 
@@ -410,10 +411,10 @@ extern TASH_SCH_EXTERN int schWaitTask(schTaskSch *sch);
  * Wait for all pool to finish with all
  * their tasks.
  * @param sch valid scheduler object.
- * @param wait time in nano seconds.
+ * @param wait_nanoseconds time in nano seconds.
  * @return non-negative if successfully.
  */
-extern TASH_SCH_EXTERN int schWaitTaskWait(schTaskSch *sch, long wait);
+extern TASH_SCH_EXTERN int schWaitTaskWait(schTaskSch *sch, long int wait_nanoseconds);
 
 /**
  * Lock current task pool in current function
@@ -581,7 +582,7 @@ extern TASH_SCH_EXTERN int schCreateMutex(schMutex **mutex);
  * schUnlockSpinLockspinlock);
  * schDeleteSpinLock(spinlock);
  *
- * @code
+ * @endcode
  *
  * @see schLockSpinLock
  * @see schTryLockSpinLock
@@ -596,7 +597,7 @@ extern TASH_SCH_EXTERN int schCreateSpinLock(schSpinLock **spinlock);
  *
  * @code
  *
- * @code
+ * @endcode
  *
  * @see schDeleteSemaphore
  * @param pSemaphore valid pointer.
@@ -609,7 +610,7 @@ extern TASH_SCH_EXTERN int schCreateSemaphore(schSemaphore **pSemaphore);
  *
  * @code
  *
- * @code
+ * @endcode
  *
  * @see schDeleteBarrier
  * @see schInitBarrier
@@ -622,7 +623,7 @@ extern TASH_SCH_EXTERN int schCreateBarrier(schBarrier **pBarrier);
  *
  * @param pBarrier
  * @param count
- * @return
+ * @return non-negative if successfully.
  */
 extern TASH_SCH_EXTERN int schInitBarrier(schBarrier *pBarrier, int count);
 
@@ -630,14 +631,14 @@ extern TASH_SCH_EXTERN int schInitBarrier(schBarrier *pBarrier, int count);
  * @brief
  *
  * @param barrier
- * @return
+ * @return non-negative if successfully.
  */
 extern TASH_SCH_EXTERN int schDeleteBarrier(schBarrier *barrier);
 /**
- * @brief
+ * @brief Wait for the barrier to finish.
  *
  * @param barrier
- * @return
+ * @return non-negative if successfully.
  */
 extern TASH_SCH_EXTERN int schWaitBarrier(schBarrier *barrier);
 
@@ -645,7 +646,7 @@ extern TASH_SCH_EXTERN int schWaitBarrier(schBarrier *barrier);
  * @brief
  *
  * @param pCondVariable
- * @return
+ * @return non-negative if successfully.
  */
 extern TASH_SCH_EXTERN int schCreateConditional(schConditional **pCondVariable);
 
@@ -653,7 +654,7 @@ extern TASH_SCH_EXTERN int schCreateConditional(schConditional **pCondVariable);
  * @brief
  *
  * @param conditional
- * @return
+ * @return non-negative if successfully.
  */
 extern TASH_SCH_EXTERN int schDeleteConditional(schConditional *conditional);
 
@@ -662,7 +663,7 @@ extern TASH_SCH_EXTERN int schDeleteConditional(schConditional *conditional);
  *
  * @param conditional
  * @param mutex
- * @return
+ * @return non-negative if successfully.
  */
 extern TASH_SCH_EXTERN int schConditionalWait(schConditional *conditional, schMutex *mutex);
 
@@ -670,7 +671,7 @@ extern TASH_SCH_EXTERN int schConditionalWait(schConditional *conditional, schMu
  * @brief
  *
  * @param conditional
- * @return
+ * @return non-negative if successfully.
  */
 extern TASH_SCH_EXTERN int schConditionalSignal(schConditional *conditional);
 
@@ -678,7 +679,7 @@ extern TASH_SCH_EXTERN int schConditionalSignal(schConditional *conditional);
  * @brief
  *
  * @param pRwLock
- * @return
+ * @return non-negative if successfully.
  */
 extern TASH_SCH_EXTERN int schCreateRWLock(schRWLock **pRwLock);
 
@@ -686,7 +687,7 @@ extern TASH_SCH_EXTERN int schCreateRWLock(schRWLock **pRwLock);
  * @brief
  *
  * @param rwLock
- * @return
+ * @return non-negative if successfully.
  */
 extern TASH_SCH_EXTERN int schDeleteRWLock(schRWLock *rwLock);
 
@@ -694,7 +695,7 @@ extern TASH_SCH_EXTERN int schDeleteRWLock(schRWLock *rwLock);
  * @brief
  *
  * @param rwLock
- * @return
+ * @return non-negative if successfully.
  */
 extern TASH_SCH_EXTERN int schRWLockRead(schRWLock *rwLock);
 
@@ -702,7 +703,7 @@ extern TASH_SCH_EXTERN int schRWLockRead(schRWLock *rwLock);
  * @brief
  *
  * @param rwLock
- * @return
+ * @return non-negative if successfully.
  */
 extern TASH_SCH_EXTERN int schRWLockWrite(schRWLock *rwLock);
 
@@ -710,33 +711,34 @@ extern TASH_SCH_EXTERN int schRWLockWrite(schRWLock *rwLock);
  * @brief
  *
  * @param rwLock
- * @return
+ * @return non-negative if successfully.
  */
 extern TASH_SCH_EXTERN int schRWLocUnLock(schRWLock *rwLock);
 
 /**
- * Release resources associated with the mutex object.
+ * @brief Release resources associated with the mutex object.
+ *
  * @param mutex valid mutex object pointer.
  * @return non-negative if successfully.
  */
 extern TASH_SCH_EXTERN int schDeleteMutex(schMutex *mutex);
 
 /**
- * Release spinlock resources.
+ * @brief Release spinlock resources.
  * @param spinlock valid spinlock pointer.
  * @return non-negative if successfully.
  */
 extern TASH_SCH_EXTERN int schDeleteSpinLock(schSpinLock *spinlock);
 
 /**
- * Delete semaphore.
+ * @brief Delete semaphore.
  * @param pSemaphore valid pointer.
  * @return non-negative if successfully.
  */
 extern TASH_SCH_EXTERN int schDeleteSemaphore(schSemaphore *pSemaphore);
 
 /**
- * Lock mutex and wait initill it has been unlocked for the
+ * @brief Lock mutex and wait initill it has been unlocked for the
  * thread to use the mutex.
  * @param mutexLock valid mutex pointer.
  * @return non-negative if successfully.
@@ -744,7 +746,7 @@ extern TASH_SCH_EXTERN int schDeleteSemaphore(schSemaphore *pSemaphore);
 extern TASH_SCH_EXTERN int schMutexLock(schMutex *mutexLock);
 
 /**
- * Attempt to lock the mutex. If the wait time exceeds the timeout
+ * @brief Attempt to lock the mutex. If the wait time exceeds the timeout
  * it will return with the status of timeout.
  * @param mutex valid mutex pointer object.
  * @param timeout number of nanoseconds that it will wait.
@@ -753,13 +755,15 @@ extern TASH_SCH_EXTERN int schMutexLock(schMutex *mutexLock);
 extern TASH_SCH_EXTERN int schMutexTryLock(schMutex *mutex, long int timeout);
 
 /**
- * Unlock mutex.
+ * @brief Unlock mutex.
  * @param mutexLock valid mutex pointer.
  * @return non-negative if successfully.
  */
 extern TASH_SCH_EXTERN int schMutexUnLock(schMutex *mutexLock);
 
 /**
+ * @brief Wait for semaphore to be unlocked.
+ *
  * If the counter is it will block and wait for the
  * schSemaphorePost function to be wait. Otherwise it
  * will continue execution while blocking any other thread

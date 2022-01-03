@@ -1,4 +1,5 @@
 # Task Scheduler
+
 [![Build Status](https://travis-ci.org/voldien/task-scheduler.svg?branch=master)](https://travis-ci.org/voldien/task-scheduler)
 [![License: GPL v3](https://img.shields.io/badge/License-GPLv3-blue.svg)](https://www.gnu.org/licenses/gpl-3.0)
 [![Language grade: C/C++](https://img.shields.io/lgtm/grade/cpp/g/voldien/task-scheduler.svg?logo=lgtm&logoWidth=18)](https://lgtm.com/projects/g/voldien/task-scheduler/context:cpp)
@@ -7,8 +8,8 @@ The _Task Scheduler_ is a simple task scheduler library for distributing the tas
 
 ## Features
 
-* Task Scheduling with a priority queue, currently a simple version based on the average delta time.
-* Synchronization primitives used either with the task scheduler or with other multithreading components in the application.
+* **Task Scheduling** - with a priority queue, currently a simple version based on the average delta time.
+* **Synchronization primitives** - used either with the task scheduler or with other multithreading components in the application.
 
 ## Motivation
 
@@ -35,6 +36,18 @@ cmake .. -DCMAKE_BUILD_TYPE=Debug
 cmake --build .
 ```
 
+## Integration with CMake
+
+The idea is to be able to integrate this library with another project easily. With CMake, it basically requires 2 lines. One for adding the project and the second for adding it as a dependent linked library target.
+
+```cmake
+ADD_SUBDIRECTORY(task-scheduler EXCLUDE_FROM_ALL)
+```
+
+```cmake
+TARGET_LINK_LIBRARIES(myTarget PUBLIC taskSch)
+```
+
 ## Examples
 
 The following a simple example for creating the scheduler object, running it and releasing the resources.
@@ -45,19 +58,25 @@ The following a simple example for creating the scheduler object, running it and
 int main(int argc, const char** argv){
     schTaskSch* sch;
     const size_t numPackages = 250;
+
+    // Allocate memory for the internal structure.
     schAllocateTaskPool(&sch);
+
+    // Create the task pool and its internal structure.
     schCreateTaskPool(sch, -1, SCH_FLAG_NO_AFM, numPackages);
 
+    // Start running the scheduler, if failed exit
     if(schRunTaskSch(sch) != SCH_OK)
         return EXIT_FAILURE;
         
+    // Release scheduler internal structures
     schReleaseTaskSch(sch);
     return EXIT_SUCCESS;
 }
 
 ```
 
-The following line demonstrates how to compile it and link the program:
+The following line demonstrates how to compile it and link the program, using gcc:
 
 ```bash
 gcc *.c -o task-sch-example -ltaskSch
