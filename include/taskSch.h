@@ -72,7 +72,7 @@ extern "C" {
 #ifndef TASH_SCH_STATIC
 #ifdef _WIN32
 #define TASH_SCH_EXTERN __declspec(dllimport)
-#elif defined(__GNUC__) && __GNUC__ >= 4
+#elif defined(__GNUC__) && __GNUC__ >= 4 || __clang__
 #define TASH_SCH_EXTERN __attribute__((visibility("default")))
 #else
 #define TASH_SCH_EXTERN
