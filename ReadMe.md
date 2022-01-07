@@ -3,6 +3,7 @@
 [![Build Status](https://travis-ci.org/voldien/task-scheduler.svg?branch=master)](https://travis-ci.org/voldien/task-scheduler)
 [![License: GPL v3](https://img.shields.io/badge/License-GPLv3-blue.svg)](https://www.gnu.org/licenses/gpl-3.0)
 [![Language grade: C/C++](https://img.shields.io/lgtm/grade/cpp/g/voldien/task-scheduler.svg?logo=lgtm&logoWidth=18)](https://lgtm.com/projects/g/voldien/task-scheduler/context:cpp)
+[![GitHub release](https://img.shields.io/github/release/voldien/task-scheduler.svg)](https://github.com/voldien/task-scheduler/releases)
 
 The _Task Scheduler_ is a simple task scheduler library for distributing the tasks over a set of threads of cores.
 
