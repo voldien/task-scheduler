@@ -16,6 +16,13 @@
 <link href="search/search.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="search/searchdata.js"></script>
 <script type="text/javascript" src="search/search.js"></script>
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Config({
+    extensions: ["tex2jax.js"],
+    jax: ["input/TeX","output/HTML-CSS"],
+});
+</script>
+<script type="text/javascript" async="async" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js"></script>
 <link href="doxygen.css" rel="stylesheet" type="text/css" />
 <link href="doxygen-awesome.css" rel="stylesheet" type="text/css"/>
 </head>
@@ -28,7 +35,7 @@
   <td id="projectlogo"><img alt="Logo" src="logo.png"/></td>
   <td id="projectalign" style="padding-left: 0.5em;">
    <div id="projectname">Task Scheduler
-   &#160;<span id="projectnumber">8fe097dd</span>
+   &#160;<span id="projectnumber">3d2d7233</span>
    </div>
   </td>
  </tr>
@@ -88,24 +95,36 @@ $(document).ready(function(){initNavTree('index.html',''); initResizable(); });
 <div class="title">Task Scheduler </div>  </div>
 </div><!--header-->
 <div class="contents">
-<div class="textblock"><p><a href="https://travis-ci.org/voldien/task-scheduler"><object type="image/svg+xml" data="https://travis-ci.org/voldien/task-scheduler.svg?branch=master" style="pointer-events: none;">Build Status</object></a> <a href="https://www.gnu.org/licenses/gpl-3.0"><object type="image/svg+xml" data="https://img.shields.io/badge/License-GPLv3-blue.svg" style="pointer-events: none;">License: GPL v3</object></a> <a href="https://lgtm.com/projects/g/voldien/task-scheduler/context:cpp"><object type="image/svg+xml" data="https://img.shields.io/lgtm/grade/cpp/g/voldien/task-scheduler.svg?logo=lgtm&amp;logoWidth=18" style="pointer-events: none;">Language grade: C/C++</object></a></p>
+<div class="textblock"><p><a href="https://travis-ci.org/voldien/task-scheduler"><object type="image/svg+xml" data="https://travis-ci.org/voldien/task-scheduler.svg?branch=master" style="pointer-events: none;">Build Status</object></a> <a href="https://www.gnu.org/licenses/gpl-3.0"><object type="image/svg+xml" data="https://img.shields.io/badge/License-GPLv3-blue.svg" style="pointer-events: none;">License: GPL v3</object></a> <a href="https://lgtm.com/projects/g/voldien/task-scheduler/context:cpp"><object type="image/svg+xml" data="https://img.shields.io/lgtm/grade/cpp/g/voldien/task-scheduler.svg?logo=lgtm&amp;logoWidth=18" style="pointer-events: none;">Language grade: C/C++</object></a> <a href="https://github.com/voldien/task-scheduler/releases"><object type="image/svg+xml" data="https://img.shields.io/github/release/voldien/task-scheduler.svg" style="pointer-events: none;">GitHub release</object></a></p>
 <p>The <em>Task Scheduler</em> is a simple task scheduler library for distributing the tasks over a set of threads of cores.</p>
 <h1><a class="anchor" id="autotoc_md1"></a>
 Features</h1>
 <ul>
-<li>Task Scheduling with a priority queue, currently a simple version based on the average delta time.</li>
-<li>Synchronization primitives used either with the task scheduler or with other multithreading components in the application.</li>
+<li><b>Task Scheduling</b> - with a priority queue, currently a simple version based on the average delta time.</li>
+<li><b>Synchronization primitives</b> - used either with the task scheduler or with other multithreading components in the application.</li>
 </ul>
 <h1><a class="anchor" id="autotoc_md2"></a>
 Motivation</h1>
 <p>The original purpose was to create a simple task scheduler that could be used for game engines for distributing the loads on the various individual game engine components such as frustum culling, animation and etc.</p>
 <h1><a class="anchor" id="autotoc_md3"></a>
 Installation</h1>
-<p>The software can be easily installed with invoking the following command. </p><div class="fragment"><div class="line">mkdir build &amp;&amp; cd build</div>
+<p>The software can be easily installed with invoking the following command.</p>
+<div class="fragment"><div class="line">mkdir build &amp;&amp; cd build</div>
 <div class="line">cmake ..</div>
 <div class="line">cmake --build .</div>
 <div class="line">make install</div>
 </div><!-- fragment --><h1><a class="anchor" id="autotoc_md4"></a>
+Development Build</h1>
+<p>For building for development, the following commands can be used.</p>
+<div class="fragment"><div class="line">mkdir build &amp;&amp; cd build</div>
+<div class="line">cmake .. -DCMAKE_BUILD_TYPE=Debug</div>
+<div class="line">cmake --build .</div>
+</div><!-- fragment --><h1><a class="anchor" id="autotoc_md5"></a>
+Integration with CMake</h1>
+<p>The idea is to be able to integrate this library with another project easily. With CMake, it basically requires 2 lines. One for adding the project and the second for adding it as a dependent linked library target.</p>
+<div class="fragment"><div class="line">ADD_SUBDIRECTORY(task-scheduler EXCLUDE_FROM_ALL)</div>
+</div><!-- fragment --><div class="fragment"><div class="line">TARGET_LINK_LIBRARIES(myTarget PUBLIC taskSch)</div>
+</div><!-- fragment --><h1><a class="anchor" id="autotoc_md6"></a>
 Examples</h1>
 <p>The following a simple example for creating the scheduler object, running it and releasing the resources.</p>
 <div class="fragment"><div class="line"><span class="preprocessor">#include&lt;<a class="code" href="taskSch_8h.html">taskSch.h</a>&gt;</span></div>
@@ -113,37 +132,45 @@ Examples</h1>
 <div class="line"><span class="keywordtype">int</span> main(<span class="keywordtype">int</span> argc, <span class="keyword">const</span> <span class="keywordtype">char</span>** argv){</div>
 <div class="line">    <a class="code" href="structsch__task__scheduler__t.html">schTaskSch</a>* sch;</div>
 <div class="line">    <span class="keyword">const</span> <span class="keywordtype">size_t</span> numPackages = 250;</div>
+<div class="line"> </div>
+<div class="line">    <span class="comment">// Allocate memory for the internal structure.</span></div>
 <div class="line">    <a class="code" href="group__ltascsch__core.html#gabd34839b555f2988a896baa935a4bfeb">schAllocateTaskPool</a>(&amp;sch);</div>
+<div class="line"> </div>
+<div class="line">    <span class="comment">// Create the task pool and its internal structure.</span></div>
 <div class="line">    <a class="code" href="group__ltascsch__core.html#ga11a73e6e1a7ef8cb1838efa22af81b42">schCreateTaskPool</a>(sch, -1, <a class="code" href="taskSch_8h.html#a082050c40aadfceef23531e863cc4da8">SCH_FLAG_NO_AFM</a>, numPackages);</div>
-<div class="line">    </div>
+<div class="line"> </div>
+<div class="line">    <span class="comment">// Start running the scheduler, if failed exit</span></div>
 <div class="line">    <span class="keywordflow">if</span>(<a class="code" href="group__ltascsch__func.html#ga0735b55f25724b923e174c5e84a60849">schRunTaskSch</a>(sch) != SCH_OK)</div>
 <div class="line">        <span class="keywordflow">return</span> EXIT_FAILURE;</div>
 <div class="line">        </div>
+<div class="line">    <span class="comment">// Release scheduler internal structures</span></div>
 <div class="line">    <a class="code" href="group__ltascsch__core.html#gaf2a489521c94690bb98bca1b46800456">schReleaseTaskSch</a>(sch);</div>
 <div class="line">    <span class="keywordflow">return</span> EXIT_SUCCESS;</div>
 <div class="line">}</div>
-</div><!-- fragment --><p>The following line demonstrates how to compile it and link the program: </p><div class="fragment"><div class="line">gcc *.c -o task-sch-example -ltaskSch</div>
-</div><!-- fragment --><h1><a class="anchor" id="autotoc_md5"></a>
+</div><!-- fragment --><p>The following line demonstrates how to compile it and link the program, using gcc:</p>
+<div class="fragment"><div class="line">gcc *.c -o task-sch-example -ltaskSch</div>
+</div><!-- fragment --><h1><a class="anchor" id="autotoc_md7"></a>
 Unit Testing</h1>
-<p>The unit testing program for asserting the behavior of the program requires a set of Dependencies, see the following. </p><div class="fragment"><div class="line">apt-get install check libsubunit-dev</div>
+<p>The unit testing program for asserting the behavior of the program requires a set of Dependencies, see the following.</p>
+<div class="fragment"><div class="line">apt-get install check libsubunit-dev</div>
 </div><!-- fragment --><p>The only dependency is the pthread for Unix machines.</p>
-<h1><a class="anchor" id="autotoc_md6"></a>
+<h1><a class="anchor" id="autotoc_md8"></a>
 License</h1>
-<p>This project is licensed under the GPL+3 License - see the [LICENSE](LICENSE) file for details </p>
+<p>This project is licensed under the GPL+3 License - see the [LICENSE](LICENSE) file for more details. </p>
 </div></div><!-- PageDoc -->
 </div><!-- contents -->
 </div><!-- doc-content -->
-<div class="ttc" id="agroup__ltascsch__core_html_gaf2a489521c94690bb98bca1b46800456"><div class="ttname"><a href="group__ltascsch__core.html#gaf2a489521c94690bb98bca1b46800456">schReleaseTaskSch</a></div><div class="ttdeci">TASH_SCH_EXTERN int schReleaseTaskSch(schTaskSch *sch)</div></div>
-<div class="ttc" id="agroup__ltascsch__core_html_gabd34839b555f2988a896baa935a4bfeb"><div class="ttname"><a href="group__ltascsch__core.html#gabd34839b555f2988a896baa935a4bfeb">schAllocateTaskPool</a></div><div class="ttdeci">TASH_SCH_EXTERN int schAllocateTaskPool(schTaskSch **pSch)</div><div class="ttdoc">Allocate task scheduler.</div></div>
+<div class="ttc" id="agroup__ltascsch__core_html_gaf2a489521c94690bb98bca1b46800456"><div class="ttname"><a href="group__ltascsch__core.html#gaf2a489521c94690bb98bca1b46800456">schReleaseTaskSch</a></div><div class="ttdeci">TASH_SCH_EXTERN int schReleaseTaskSch(schTaskSch *sch)</div><div class="ttdoc">Release all resources associated with the scheduler object.</div></div>
+<div class="ttc" id="agroup__ltascsch__core_html_gabd34839b555f2988a896baa935a4bfeb"><div class="ttname"><a href="group__ltascsch__core.html#gabd34839b555f2988a896baa935a4bfeb">schAllocateTaskPool</a></div><div class="ttdeci">TASH_SCH_EXTERN int schAllocateTaskPool(schTaskSch **pSch)</div><div class="ttdoc">Allocate task scheduler object. It will make sure that for any version of the library,...</div></div>
 <div class="ttc" id="ataskSch_8h_html"><div class="ttname"><a href="taskSch_8h.html">taskSch.h</a></div></div>
 <div class="ttc" id="astructsch__task__scheduler__t_html"><div class="ttname"><a href="structsch__task__scheduler__t.html">sch_task_scheduler_t</a></div><div class="ttdoc">Task scheduler main struct container.</div><div class="ttdef"><b>Definition:</b> internal_structures.h:75</div></div>
 <div class="ttc" id="agroup__ltascsch__func_html_ga0735b55f25724b923e174c5e84a60849"><div class="ttname"><a href="group__ltascsch__func.html#ga0735b55f25724b923e174c5e84a60849">schRunTaskSch</a></div><div class="ttdeci">TASH_SCH_EXTERN int schRunTaskSch(schTaskSch *sch)</div></div>
-<div class="ttc" id="agroup__ltascsch__core_html_ga11a73e6e1a7ef8cb1838efa22af81b42"><div class="ttname"><a href="group__ltascsch__core.html#ga11a73e6e1a7ef8cb1838efa22af81b42">schCreateTaskPool</a></div><div class="ttdeci">TASH_SCH_EXTERN int schCreateTaskPool(schTaskSch *sch, int cores, unsigned int flag, unsigned int maxPackagesPool)</div></div>
-<div class="ttc" id="ataskSch_8h_html_a082050c40aadfceef23531e863cc4da8"><div class="ttname"><a href="taskSch_8h.html#a082050c40aadfceef23531e863cc4da8">SCH_FLAG_NO_AFM</a></div><div class="ttdeci">#define SCH_FLAG_NO_AFM</div><div class="ttdef"><b>Definition:</b> taskSch.h:84</div></div>
+<div class="ttc" id="agroup__ltascsch__core_html_ga11a73e6e1a7ef8cb1838efa22af81b42"><div class="ttname"><a href="group__ltascsch__core.html#ga11a73e6e1a7ef8cb1838efa22af81b42">schCreateTaskPool</a></div><div class="ttdeci">TASH_SCH_EXTERN int schCreateTaskPool(schTaskSch *sch, int cores, unsigned int flag, unsigned int maxPackagesPool)</div><div class="ttdoc">Initilize task scheduler internal data structure.</div></div>
+<div class="ttc" id="ataskSch_8h_html_a082050c40aadfceef23531e863cc4da8"><div class="ttname"><a href="taskSch_8h.html#a082050c40aadfceef23531e863cc4da8">SCH_FLAG_NO_AFM</a></div><div class="ttdeci">#define SCH_FLAG_NO_AFM</div><div class="ttdef"><b>Definition:</b> taskSch.h:88</div></div>
 <!-- start footer part -->
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
-    <li class="footer">Generated on Mon Nov 29 2021 13:17:46 for Task Scheduler by
+    <li class="footer">Generated on Fri Jan 7 2022 05:26:18 for Task Scheduler by
     <a href="http://www.doxygen.org/index.html">
     <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.8.17 </li>
   </ul>

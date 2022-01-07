@@ -26,9 +26,11 @@ var NAVTREE =
     [ "Features", "index.html#autotoc_md1", null ],
     [ "Motivation", "index.html#autotoc_md2", null ],
     [ "Installation", "index.html#autotoc_md3", null ],
-    [ "Examples", "index.html#autotoc_md4", null ],
-    [ "Unit Testing", "index.html#autotoc_md5", null ],
-    [ "License", "index.html#autotoc_md6", null ],
+    [ "Development Build", "index.html#autotoc_md4", null ],
+    [ "Integration with CMake", "index.html#autotoc_md5", null ],
+    [ "Examples", "index.html#autotoc_md6", null ],
+    [ "Unit Testing", "index.html#autotoc_md7", null ],
+    [ "License", "index.html#autotoc_md8", null ],
     [ "Modules", "modules.html", "modules" ],
     [ "Data Structures", "annotated.html", [
       [ "Data Structures", "annotated.html", "annotated_dup" ],
@@ -42,6 +44,7 @@ var NAVTREE =
       [ "All", "globals.html", null ],
       [ "Functions", "globals_func.html", null ],
       [ "Typedefs", "globals_type.html", null ],
+      [ "Enumerations", "globals_enum.html", null ],
       [ "Macros", "globals_defs.html", null ]
     ] ]
   ] ]

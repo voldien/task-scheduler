@@ -16,6 +16,13 @@
 <link href="search/search.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="search/searchdata.js"></script>
 <script type="text/javascript" src="search/search.js"></script>
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Config({
+    extensions: ["tex2jax.js"],
+    jax: ["input/TeX","output/HTML-CSS"],
+});
+</script>
+<script type="text/javascript" async="async" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js"></script>
 <link href="doxygen.css" rel="stylesheet" type="text/css" />
 <link href="doxygen-awesome.css" rel="stylesheet" type="text/css"/>
 </head>
@@ -28,7 +35,7 @@
   <td id="projectlogo"><img alt="Logo" src="logo.png"/></td>
   <td id="projectalign" style="padding-left: 0.5em;">
    <div id="projectname">Task Scheduler
-   &#160;<span id="projectnumber">8fe097dd</span>
+   &#160;<span id="projectnumber">3d2d7233</span>
    </div>
   </td>
  </tr>
@@ -89,7 +96,7 @@ $(document).ready(function(){initNavTree('internal__structures_8h_source.html','
 </div><!--header-->
 <div class="contents">
 <div class="fragment"><div class="line"><a name="l00001"></a><span class="lineno">    1</span>&#160;<span class="comment">/*</span></div>
-<div class="line"><a name="l00002"></a><span class="lineno">    2</span>&#160;<span class="comment"> *  Task scheduler for uniform processing in user space.</span></div>
+<div class="line"><a name="l00002"></a><span class="lineno">    2</span>&#160;<span class="comment"> *  Task scheduler for uniform task processing in user space.</span></div>
 <div class="line"><a name="l00003"></a><span class="lineno">    3</span>&#160;<span class="comment"> *  Copyright (C) 2015  Valdemar Lindberg</span></div>
 <div class="line"><a name="l00004"></a><span class="lineno">    4</span>&#160;<span class="comment"> *</span></div>
 <div class="line"><a name="l00005"></a><span class="lineno">    5</span>&#160;<span class="comment"> *  This program is free software: you can redistribute it and/or modify</span></div>
@@ -134,7 +141,7 @@ $(document).ready(function(){initNavTree('internal__structures_8h_source.html','
 <div class="line"><a name="l00055"></a><span class="lineno">   55</span>&#160;    <a class="code" href="taskSch_8h.html#structsch__task__package__t">schTaskPackage</a> *package; <span class="comment">/*  */</span></div>
 <div class="line"><a name="l00056"></a><span class="lineno">   56</span>&#160; </div>
 <div class="line"><a name="l00057"></a><span class="lineno">   57</span>&#160;    <span class="comment">/*  User and init and release functions callbacks.  */</span></div>
-<div class="line"><a name="l00058"></a><span class="lineno">   58</span>&#160;    <span class="keyword">const</span> <span class="keywordtype">void</span> *userdata;   <span class="comment">/*  User data.  */</span></div>
+<div class="line"><a name="l00058"></a><span class="lineno">   58</span>&#160;    <span class="keywordtype">void</span> *userdata; <span class="comment">/*  User data.  */</span></div>
 <div class="line"><a name="l00059"></a><span class="lineno">   59</span>&#160;    schUserCallBack init;   <span class="comment">/*  Init user callback function.    */</span></div>
 <div class="line"><a name="l00060"></a><span class="lineno">   60</span>&#160;    schUserCallBack deinit; <span class="comment">/*  DeInit user callback function.  */</span></div>
 <div class="line"><a name="l00061"></a><span class="lineno">   61</span>&#160; </div>
@@ -169,14 +176,14 @@ $(document).ready(function(){initNavTree('internal__structures_8h_source.html','
 </div><!-- doc-content -->
 <div class="ttc" id="astructsch__task__pool__t_html_aa8b25aff8b6d598670b50987a7152b7b"><div class="ttname"><a href="structsch__task__pool__t.html#aa8b25aff8b6d598670b50987a7152b7b">sch_task_pool_t::thread</a></div><div class="ttdeci">schThread * thread</div><div class="ttdef"><b>Definition:</b> internal_structures.h:38</div></div>
 <div class="ttc" id="astructsch__task__scheduler__t_html"><div class="ttname"><a href="structsch__task__scheduler__t.html">sch_task_scheduler_t</a></div><div class="ttdoc">Task scheduler main struct container.</div><div class="ttdef"><b>Definition:</b> internal_structures.h:75</div></div>
-<div class="ttc" id="ataskSch_8h_html_structsch__task__package__t"><div class="ttname"><a href="taskSch_8h.html#structsch__task__package__t">sch_task_package_t</a></div><div class="ttdef"><b>Definition:</b> taskSch.h:180</div></div>
+<div class="ttc" id="ataskSch_8h_html_structsch__task__package__t"><div class="ttname"><a href="taskSch_8h.html#structsch__task__package__t">sch_task_package_t</a></div><div class="ttdef"><b>Definition:</b> taskSch.h:188</div></div>
 <div class="ttc" id="astructsch__task__pool__t_html"><div class="ttname"><a href="structsch__task__pool__t.html">sch_task_pool_t</a></div><div class="ttdoc">TaskPool.</div><div class="ttdef"><b>Definition:</b> internal_structures.h:33</div></div>
 <div class="ttc" id="astructsch__task__pool__t_html_a8a32838c57ce56676191917a0934fa17"><div class="ttname"><a href="structsch__task__pool__t.html#a8a32838c57ce56676191917a0934fa17">sch_task_pool_t::schRefThread</a></div><div class="ttdeci">schThread * schRefThread</div><div class="ttdef"><b>Definition:</b> internal_structures.h:43</div></div>
 <!-- start footer part -->
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
     <li class="navelem"><a class="el" href="dir_e62b80d9c07425f9ab99cde6c041e5b9.html">task-scheduler</a></li><li class="navelem"><a class="el" href="dir_520250c7c0c84345b376eee5f738d93b.html">include</a></li><li class="navelem"><a class="el" href="dir_394abebdfb312828b667896893cd99e6.html">internal</a></li><li class="navelem"><b>internal_structures.h</b></li>
-    <li class="footer">Generated on Mon Nov 29 2021 13:17:46 for Task Scheduler by
+    <li class="footer">Generated on Fri Jan 7 2022 05:26:18 for Task Scheduler by
     <a href="http://www.doxygen.org/index.html">
     <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.8.17 </li>
   </ul>

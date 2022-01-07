@@ -16,6 +16,13 @@
 <link href="search/search.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="search/searchdata.js"></script>
 <script type="text/javascript" src="search/search.js"></script>
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Config({
+    extensions: ["tex2jax.js"],
+    jax: ["input/TeX","output/HTML-CSS"],
+});
+</script>
+<script type="text/javascript" async="async" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js"></script>
 <link href="doxygen.css" rel="stylesheet" type="text/css" />
 <link href="doxygen-awesome.css" rel="stylesheet" type="text/css"/>
 </head>
@@ -28,7 +35,7 @@
   <td id="projectlogo"><img alt="Logo" src="logo.png"/></td>
   <td id="projectalign" style="padding-left: 0.5em;">
    <div id="projectname">Task Scheduler
-   &#160;<span id="projectnumber">8fe097dd</span>
+   &#160;<span id="projectnumber">3d2d7233</span>
    </div>
   </td>
  </tr>
@@ -90,7 +97,7 @@ $(document).ready(function(){initNavTree('modules.html',''); initResizable(); })
 <div class="contents">
 <div class="textblock">Here is a list of all modules:</div><div class="directory">
 <div class="levels">[detail level <span onclick="javascript:toggleLevel(1);">1</span><span onclick="javascript:toggleLevel(2);">2</span>]</div><table class="directory">
-<tr id="row_0_" class="even"><td class="entry"><span style="width:0px;display:inline-block;">&#160;</span><span id="arr_0_" class="arrow" onclick="toggleFolder('0_')">&#9660;</span><a class="el" href="group__libtasksch.html" target="_self">Task Scheduler</a></td><td class="desc"></td></tr>
+<tr id="row_0_" class="even"><td class="entry"><span style="width:0px;display:inline-block;">&#160;</span><span id="arr_0_" class="arrow" onclick="toggleFolder('0_')">&#9660;</span><a class="el" href="group__libtasksch.html" target="_self">Task Scheduler</a></td><td class="desc">The main task scheduler uses a pool task architecture. That means that it create a set of task pools. Each pool can be assigned with a task that will be scheduled by the scheduler </td></tr>
 <tr id="row_0_0_"><td class="entry"><span style="width:32px;display:inline-block;">&#160;</span><a class="el" href="group__ltasksch__error.html" target="_self">Error Codes</a></td><td class="desc">Error Codes Library Specific Error codes </td></tr>
 <tr id="row_0_1_" class="even"><td class="entry"><span style="width:32px;display:inline-block;">&#160;</span><a class="el" href="group__ltasksch__threads.html" target="_self">Thread</a></td><td class="desc"></td></tr>
 <tr id="row_0_2_"><td class="entry"><span style="width:32px;display:inline-block;">&#160;</span><a class="el" href="group__ltasksch__syncs.html" target="_self">Thread Synchronization</a></td><td class="desc">Syncronization Functions </td></tr>
@@ -104,7 +111,7 @@ $(document).ready(function(){initNavTree('modules.html',''); initResizable(); })
 <!-- start footer part -->
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
-    <li class="footer">Generated on Mon Nov 29 2021 13:17:46 for Task Scheduler by
+    <li class="footer">Generated on Fri Jan 7 2022 05:26:18 for Task Scheduler by
     <a href="http://www.doxygen.org/index.html">
     <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.8.17 </li>
   </ul>

@@ -16,6 +16,13 @@
 <link href="search/search.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="search/searchdata.js"></script>
 <script type="text/javascript" src="search/search.js"></script>
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Config({
+    extensions: ["tex2jax.js"],
+    jax: ["input/TeX","output/HTML-CSS"],
+});
+</script>
+<script type="text/javascript" async="async" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js"></script>
 <link href="doxygen.css" rel="stylesheet" type="text/css" />
 <link href="doxygen-awesome.css" rel="stylesheet" type="text/css"/>
 </head>
@@ -28,7 +35,7 @@
   <td id="projectlogo"><img alt="Logo" src="logo.png"/></td>
   <td id="projectalign" style="padding-left: 0.5em;">
    <div id="projectname">Task Scheduler
-   &#160;<span id="projectnumber">8fe097dd</span>
+   &#160;<span id="projectnumber">3d2d7233</span>
    </div>
   </td>
  </tr>
@@ -103,30 +110,67 @@ Functions</h2></td></tr>
 <tr class="memitem:ga79b4197ae4135b49c8347e3971da16f2"><td class="memItemLeft" align="right" valign="top"><a class="el" href="taskSch_8h.html#a5634adcb30ab0bcef934ac5609fc9274">TASH_SCH_EXTERN</a> int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__ltasksch__syncs.html#ga79b4197ae4135b49c8347e3971da16f2">schBaseSignal</a> (void)</td></tr>
 <tr class="separator:ga79b4197ae4135b49c8347e3971da16f2"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ga404bbafe8aaa6f57104686fbfef1785a"><td class="memItemLeft" align="right" valign="top"><a class="el" href="taskSch_8h.html#a5634adcb30ab0bcef934ac5609fc9274">TASH_SCH_EXTERN</a> int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__ltasksch__syncs.html#ga404bbafe8aaa6f57104686fbfef1785a">schSignalWait</a> (schSignalSet *sig)</td></tr>
+<tr class="memdesc:ga404bbafe8aaa6f57104686fbfef1785a"><td class="mdescLeft">&#160;</td><td class="mdescRight">Wait in till signal has been issued.  <a href="group__ltasksch__syncs.html#ga404bbafe8aaa6f57104686fbfef1785a">More...</a><br /></td></tr>
 <tr class="separator:ga404bbafe8aaa6f57104686fbfef1785a"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:gaabe4a8fc79e59f8ee9ca5edef0cfd7a4"><td class="memItemLeft" align="right" valign="top"><a class="el" href="taskSch_8h.html#a5634adcb30ab0bcef934ac5609fc9274">TASH_SCH_EXTERN</a> int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__ltasksch__syncs.html#gaabe4a8fc79e59f8ee9ca5edef0cfd7a4">schSignalWaitTimeOut</a> (schSignalSet *sig, long int nano)</td></tr>
-<tr class="separator:gaabe4a8fc79e59f8ee9ca5edef0cfd7a4"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga8370226c54eeee4939b66a7af159de34"><td class="memItemLeft" align="right" valign="top"><a class="el" href="taskSch_8h.html#a5634adcb30ab0bcef934ac5609fc9274">TASH_SCH_EXTERN</a> int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__ltasksch__syncs.html#ga8370226c54eeee4939b66a7af159de34">schSignalWaitTimeOut</a> (schSignalSet *sig, long int nanoseconds)</td></tr>
+<tr class="separator:ga8370226c54eeee4939b66a7af159de34"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:gaf577bc28f2ca2d66611c47bffce88b1b"><td class="memItemLeft" align="right" valign="top"><a class="el" href="taskSch_8h.html#a5634adcb30ab0bcef934ac5609fc9274">TASH_SCH_EXTERN</a> int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__ltasksch__syncs.html#gaf577bc28f2ca2d66611c47bffce88b1b">schSetSignalThreadMask</a> (schSignalSet *set, int nr, const int *signals)</td></tr>
 <tr class="separator:gaf577bc28f2ca2d66611c47bffce88b1b"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:gafff7abf6c0aaf71f2709f26a88fde2ea"><td class="memItemLeft" align="right" valign="top"><a class="el" href="taskSch_8h.html#a5634adcb30ab0bcef934ac5609fc9274">TASH_SCH_EXTERN</a> int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__ltasksch__syncs.html#gafff7abf6c0aaf71f2709f26a88fde2ea">schCreateMutex</a> (schMutex **mutex)</td></tr>
 <tr class="separator:gafff7abf6c0aaf71f2709f26a88fde2ea"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ga3145ec3268bb298ab7ff700e3ea051b1"><td class="memItemLeft" align="right" valign="top"><a class="el" href="taskSch_8h.html#a5634adcb30ab0bcef934ac5609fc9274">TASH_SCH_EXTERN</a> int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__ltasksch__syncs.html#ga3145ec3268bb298ab7ff700e3ea051b1">schCreateSpinLock</a> (schSpinLock **spinlock)</td></tr>
+<tr class="memdesc:ga3145ec3268bb298ab7ff700e3ea051b1"><td class="mdescLeft">&#160;</td><td class="mdescRight">Creates a spinlock synchronization primitive object.  <a href="group__ltasksch__syncs.html#ga3145ec3268bb298ab7ff700e3ea051b1">More...</a><br /></td></tr>
 <tr class="separator:ga3145ec3268bb298ab7ff700e3ea051b1"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ga934c634ff675889d38c97e95062462f6"><td class="memItemLeft" align="right" valign="top"><a class="el" href="taskSch_8h.html#a5634adcb30ab0bcef934ac5609fc9274">TASH_SCH_EXTERN</a> int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__ltasksch__syncs.html#ga934c634ff675889d38c97e95062462f6">schCreateSemaphore</a> (schSemaphore **pSemaphore)</td></tr>
 <tr class="separator:ga934c634ff675889d38c97e95062462f6"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:gaa939797fc9360f05379e9fe2a69bf975"><td class="memItemLeft" align="right" valign="top"><a class="el" href="taskSch_8h.html#a5634adcb30ab0bcef934ac5609fc9274">TASH_SCH_EXTERN</a> int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__ltasksch__syncs.html#gaa939797fc9360f05379e9fe2a69bf975">schCreateBarrier</a> (schBarrier **pBarrier)</td></tr>
+<tr class="memdesc:gaa939797fc9360f05379e9fe2a69bf975"><td class="mdescLeft">&#160;</td><td class="mdescRight">Create Memory barrier.  <a href="group__ltasksch__syncs.html#gaa939797fc9360f05379e9fe2a69bf975">More...</a><br /></td></tr>
+<tr class="separator:gaa939797fc9360f05379e9fe2a69bf975"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga3a00ccedf778d999d1b531f6ed724eb4"><td class="memItemLeft" align="right" valign="top"><a class="el" href="taskSch_8h.html#a5634adcb30ab0bcef934ac5609fc9274">TASH_SCH_EXTERN</a> int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__ltasksch__syncs.html#ga3a00ccedf778d999d1b531f6ed724eb4">schInitBarrier</a> (schBarrier *pBarrier, int count)</td></tr>
+<tr class="separator:ga3a00ccedf778d999d1b531f6ed724eb4"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga61d0e8bd395fb56c91cc68002bd27b88"><td class="memItemLeft" align="right" valign="top"><a class="el" href="taskSch_8h.html#a5634adcb30ab0bcef934ac5609fc9274">TASH_SCH_EXTERN</a> int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__ltasksch__syncs.html#ga61d0e8bd395fb56c91cc68002bd27b88">schDeleteBarrier</a> (schBarrier *barrier)</td></tr>
+<tr class="separator:ga61d0e8bd395fb56c91cc68002bd27b88"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga78904e8b70a6483efdab8e6330a81003"><td class="memItemLeft" align="right" valign="top"><a class="el" href="taskSch_8h.html#a5634adcb30ab0bcef934ac5609fc9274">TASH_SCH_EXTERN</a> int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__ltasksch__syncs.html#ga78904e8b70a6483efdab8e6330a81003">schWaitBarrier</a> (schBarrier *barrier)</td></tr>
+<tr class="memdesc:ga78904e8b70a6483efdab8e6330a81003"><td class="mdescLeft">&#160;</td><td class="mdescRight">Wait for the barrier to finish.  <a href="group__ltasksch__syncs.html#ga78904e8b70a6483efdab8e6330a81003">More...</a><br /></td></tr>
+<tr class="separator:ga78904e8b70a6483efdab8e6330a81003"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:gaa512cb0791f9256675994602bf73a7c2"><td class="memItemLeft" align="right" valign="top"><a class="el" href="taskSch_8h.html#a5634adcb30ab0bcef934ac5609fc9274">TASH_SCH_EXTERN</a> int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__ltasksch__syncs.html#gaa512cb0791f9256675994602bf73a7c2">schCreateConditional</a> (schConditional **pCondVariable)</td></tr>
+<tr class="separator:gaa512cb0791f9256675994602bf73a7c2"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga5351351baa939d84eca0c54e47274fa7"><td class="memItemLeft" align="right" valign="top"><a class="el" href="taskSch_8h.html#a5634adcb30ab0bcef934ac5609fc9274">TASH_SCH_EXTERN</a> int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__ltasksch__syncs.html#ga5351351baa939d84eca0c54e47274fa7">schDeleteConditional</a> (schConditional *conditional)</td></tr>
+<tr class="separator:ga5351351baa939d84eca0c54e47274fa7"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga37e0309b8047bcc04630956a2f0324cb"><td class="memItemLeft" align="right" valign="top"><a class="el" href="taskSch_8h.html#a5634adcb30ab0bcef934ac5609fc9274">TASH_SCH_EXTERN</a> int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__ltasksch__syncs.html#ga37e0309b8047bcc04630956a2f0324cb">schConditionalWait</a> (schConditional *conditional, schMutex *mutex)</td></tr>
+<tr class="separator:ga37e0309b8047bcc04630956a2f0324cb"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga59f9798669c46c7a2ff0c7c73d399fbb"><td class="memItemLeft" align="right" valign="top"><a class="el" href="taskSch_8h.html#a5634adcb30ab0bcef934ac5609fc9274">TASH_SCH_EXTERN</a> int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__ltasksch__syncs.html#ga59f9798669c46c7a2ff0c7c73d399fbb">schConditionalSignal</a> (schConditional *conditional)</td></tr>
+<tr class="separator:ga59f9798669c46c7a2ff0c7c73d399fbb"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga6d4d6091c4e2067cd77c13df985b37f0"><td class="memItemLeft" align="right" valign="top"><a class="el" href="taskSch_8h.html#a5634adcb30ab0bcef934ac5609fc9274">TASH_SCH_EXTERN</a> int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__ltasksch__syncs.html#ga6d4d6091c4e2067cd77c13df985b37f0">schCreateRWLock</a> (schRWLock **pRwLock)</td></tr>
+<tr class="separator:ga6d4d6091c4e2067cd77c13df985b37f0"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:gab6113dad40d9c5e750cefcbed514cb88"><td class="memItemLeft" align="right" valign="top"><a class="el" href="taskSch_8h.html#a5634adcb30ab0bcef934ac5609fc9274">TASH_SCH_EXTERN</a> int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__ltasksch__syncs.html#gab6113dad40d9c5e750cefcbed514cb88">schDeleteRWLock</a> (schRWLock *rwLock)</td></tr>
+<tr class="separator:gab6113dad40d9c5e750cefcbed514cb88"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:gae7be8e78c9478c846d9af1827411d7f0"><td class="memItemLeft" align="right" valign="top"><a class="el" href="taskSch_8h.html#a5634adcb30ab0bcef934ac5609fc9274">TASH_SCH_EXTERN</a> int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__ltasksch__syncs.html#gae7be8e78c9478c846d9af1827411d7f0">schRWLockRead</a> (schRWLock *rwLock)</td></tr>
+<tr class="separator:gae7be8e78c9478c846d9af1827411d7f0"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga30b658e549f6babbf9ee35e80f444577"><td class="memItemLeft" align="right" valign="top"><a class="el" href="taskSch_8h.html#a5634adcb30ab0bcef934ac5609fc9274">TASH_SCH_EXTERN</a> int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__ltasksch__syncs.html#ga30b658e549f6babbf9ee35e80f444577">schRWLockWrite</a> (schRWLock *rwLock)</td></tr>
+<tr class="separator:ga30b658e549f6babbf9ee35e80f444577"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga30f0fee40d8ac0489e5626493c1df927"><td class="memItemLeft" align="right" valign="top"><a class="el" href="taskSch_8h.html#a5634adcb30ab0bcef934ac5609fc9274">TASH_SCH_EXTERN</a> int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__ltasksch__syncs.html#ga30f0fee40d8ac0489e5626493c1df927">schRWLocUnLock</a> (schRWLock *rwLock)</td></tr>
+<tr class="separator:ga30f0fee40d8ac0489e5626493c1df927"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ga851fe8076b4eb713353d75e2aa4cb5cf"><td class="memItemLeft" align="right" valign="top"><a class="el" href="taskSch_8h.html#a5634adcb30ab0bcef934ac5609fc9274">TASH_SCH_EXTERN</a> int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__ltasksch__syncs.html#ga851fe8076b4eb713353d75e2aa4cb5cf">schDeleteMutex</a> (schMutex *mutex)</td></tr>
+<tr class="memdesc:ga851fe8076b4eb713353d75e2aa4cb5cf"><td class="mdescLeft">&#160;</td><td class="mdescRight">Release resources associated with the mutex object.  <a href="group__ltasksch__syncs.html#ga851fe8076b4eb713353d75e2aa4cb5cf">More...</a><br /></td></tr>
 <tr class="separator:ga851fe8076b4eb713353d75e2aa4cb5cf"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ga5e5cf3d3e77093b0ea3f4d3b09d057b9"><td class="memItemLeft" align="right" valign="top"><a class="el" href="taskSch_8h.html#a5634adcb30ab0bcef934ac5609fc9274">TASH_SCH_EXTERN</a> int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__ltasksch__syncs.html#ga5e5cf3d3e77093b0ea3f4d3b09d057b9">schDeleteSpinLock</a> (schSpinLock *spinlock)</td></tr>
+<tr class="memdesc:ga5e5cf3d3e77093b0ea3f4d3b09d057b9"><td class="mdescLeft">&#160;</td><td class="mdescRight">Release spinlock resources.  <a href="group__ltasksch__syncs.html#ga5e5cf3d3e77093b0ea3f4d3b09d057b9">More...</a><br /></td></tr>
 <tr class="separator:ga5e5cf3d3e77093b0ea3f4d3b09d057b9"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ga4f0f4f018a3f63e5204e2cc96cd3e8e9"><td class="memItemLeft" align="right" valign="top"><a class="el" href="taskSch_8h.html#a5634adcb30ab0bcef934ac5609fc9274">TASH_SCH_EXTERN</a> int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__ltasksch__syncs.html#ga4f0f4f018a3f63e5204e2cc96cd3e8e9">schDeleteSemaphore</a> (schSemaphore *pSemaphore)</td></tr>
+<tr class="memdesc:ga4f0f4f018a3f63e5204e2cc96cd3e8e9"><td class="mdescLeft">&#160;</td><td class="mdescRight">Delete semaphore.  <a href="group__ltasksch__syncs.html#ga4f0f4f018a3f63e5204e2cc96cd3e8e9">More...</a><br /></td></tr>
 <tr class="separator:ga4f0f4f018a3f63e5204e2cc96cd3e8e9"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:gacbac98983cf91df4f05e151bdd68207c"><td class="memItemLeft" align="right" valign="top"><a class="el" href="taskSch_8h.html#a5634adcb30ab0bcef934ac5609fc9274">TASH_SCH_EXTERN</a> int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__ltasksch__syncs.html#gacbac98983cf91df4f05e151bdd68207c">schMutexLock</a> (schMutex *mutexLock)</td></tr>
+<tr class="memdesc:gacbac98983cf91df4f05e151bdd68207c"><td class="mdescLeft">&#160;</td><td class="mdescRight">Lock mutex and wait initill it has been unlocked for the thread to use the mutex.  <a href="group__ltasksch__syncs.html#gacbac98983cf91df4f05e151bdd68207c">More...</a><br /></td></tr>
 <tr class="separator:gacbac98983cf91df4f05e151bdd68207c"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:gaaa7dc54c9de7420c4e1bb7bacbf5838f"><td class="memItemLeft" align="right" valign="top"><a class="el" href="taskSch_8h.html#a5634adcb30ab0bcef934ac5609fc9274">TASH_SCH_EXTERN</a> int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__ltasksch__syncs.html#gaaa7dc54c9de7420c4e1bb7bacbf5838f">schMutexTryLock</a> (schMutex *mutex, long int timeout)</td></tr>
+<tr class="memdesc:gaaa7dc54c9de7420c4e1bb7bacbf5838f"><td class="mdescLeft">&#160;</td><td class="mdescRight">Attempt to lock the mutex. If the wait time exceeds the timeout it will return with the status of timeout.  <a href="group__ltasksch__syncs.html#gaaa7dc54c9de7420c4e1bb7bacbf5838f">More...</a><br /></td></tr>
 <tr class="separator:gaaa7dc54c9de7420c4e1bb7bacbf5838f"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:gadf3db8f1ee92f0a26dbc7c1c2cacb4c8"><td class="memItemLeft" align="right" valign="top"><a class="el" href="taskSch_8h.html#a5634adcb30ab0bcef934ac5609fc9274">TASH_SCH_EXTERN</a> int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__ltasksch__syncs.html#gadf3db8f1ee92f0a26dbc7c1c2cacb4c8">schMutexUnLock</a> (schMutex *mutexLock)</td></tr>
+<tr class="memdesc:gadf3db8f1ee92f0a26dbc7c1c2cacb4c8"><td class="mdescLeft">&#160;</td><td class="mdescRight">Unlock mutex.  <a href="group__ltasksch__syncs.html#gadf3db8f1ee92f0a26dbc7c1c2cacb4c8">More...</a><br /></td></tr>
 <tr class="separator:gadf3db8f1ee92f0a26dbc7c1c2cacb4c8"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:gaf936edf6999a96f0ba1449a5da2fdb1c"><td class="memItemLeft" align="right" valign="top"><a class="el" href="taskSch_8h.html#a5634adcb30ab0bcef934ac5609fc9274">TASH_SCH_EXTERN</a> int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__ltasksch__syncs.html#gaf936edf6999a96f0ba1449a5da2fdb1c">schSemaphoreWait</a> (schSemaphore *pSemaphore)</td></tr>
+<tr class="memdesc:gaf936edf6999a96f0ba1449a5da2fdb1c"><td class="mdescLeft">&#160;</td><td class="mdescRight">Wait for semaphore to be unlocked.  <a href="group__ltasksch__syncs.html#gaf936edf6999a96f0ba1449a5da2fdb1c">More...</a><br /></td></tr>
 <tr class="separator:gaf936edf6999a96f0ba1449a5da2fdb1c"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:gabd5ced4b3ffce51b84fbd3689cef53ae"><td class="memItemLeft" align="right" valign="top"><a class="el" href="taskSch_8h.html#a5634adcb30ab0bcef934ac5609fc9274">TASH_SCH_EXTERN</a> int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__ltasksch__syncs.html#gabd5ced4b3ffce51b84fbd3689cef53ae">schSemaphoreTryWait</a> (schSemaphore *semaphore)</td></tr>
 <tr class="separator:gabd5ced4b3ffce51b84fbd3689cef53ae"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -161,7 +205,8 @@ Functions</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
-<p>Allocate signal object. </p><dl class="section return"><dt>Returns</dt><dd>non-null if successfully. </dd></dl>
+<p>Allocate signal object. </p><dl class="section since"><dt>Since</dt><dd>0.1.0 </dd></dl>
+<dl class="section return"><dt>Returns</dt><dd>non-null if successfully. </dd></dl>
 
 </div>
 </div>
@@ -180,7 +225,8 @@ Functions</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
-<p>Release signal resources. </p><dl class="params"><dt>Parameters</dt><dd>
+<p>Release signal resources. </p><dl class="section since"><dt>Since</dt><dd>0.1.0 </dd></dl>
+<dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramname">signal</td><td>valid signal pointer. </td></tr>
   </table>
@@ -205,7 +251,9 @@ Functions</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
-<p>Get the base signal number that are valid for sending signal between threads and that will not conflicts with the kernel specified signals. </p><dl class="section return"><dt>Returns</dt><dd>non-negative number. </dd></dl>
+<p>Get the base signal number that are valid for sending signal between threads and that will not conflicts with the kernel specified signals.</p>
+<dl class="section since"><dt>Since</dt><dd>0.1.0 </dd></dl>
+<dl class="section return"><dt>Returns</dt><dd>non-negative number. </dd></dl>
 
 </div>
 </div>
@@ -224,7 +272,11 @@ Functions</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
-<p>Wait in till signal has been issued. </p><dl class="params"><dt>Parameters</dt><dd>
+
+<p>Wait in till signal has been issued. </p>
+<dl class="section see"><dt>See also</dt><dd></dd></dl>
+<dl class="section since"><dt>Since</dt><dd>0.1.0 </dd></dl>
+<dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramname">sig</td><td>signal object. </td></tr>
   </table>
@@ -234,8 +286,8 @@ Functions</h2></td></tr>
 
 </div>
 </div>
-<a id="gaabe4a8fc79e59f8ee9ca5edef0cfd7a4"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#gaabe4a8fc79e59f8ee9ca5edef0cfd7a4">&#9670;&nbsp;</a></span>schSignalWaitTimeOut()</h2>
+<a id="ga8370226c54eeee4939b66a7af159de34"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ga8370226c54eeee4939b66a7af159de34">&#9670;&nbsp;</a></span>schSignalWaitTimeOut()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -250,7 +302,7 @@ Functions</h2></td></tr>
           <td class="paramkey"></td>
           <td></td>
           <td class="paramtype">long int&#160;</td>
-          <td class="paramname"><em>nano</em>&#160;</td>
+          <td class="paramname"><em>nanoseconds</em>&#160;</td>
         </tr>
         <tr>
           <td></td>
@@ -259,14 +311,16 @@ Functions</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
-<p>Wait in till a signal has been issued in the timeout time frame. </p><dl class="params"><dt>Parameters</dt><dd>
+<p>Wait in till a signal has been issued in the timeout time frame.</p>
+<dl class="section since"><dt>Since</dt><dd>0.1.0 </dd></dl>
+<dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramname">sig</td><td>signal object. </td></tr>
-    <tr><td class="paramname">nano</td><td>in nano seconds for the timeout. </td></tr>
+    <tr><td class="paramname">nanoseconds</td><td>in nano seconds for the timeout. </td></tr>
   </table>
   </dd>
 </dl>
-<dl class="section return"><dt>Returns</dt><dd>received. </dd></dl>
+<dl class="section return"><dt>Returns</dt><dd>signal. </dd></dl>
 
 </div>
 </div>
@@ -302,6 +356,7 @@ Functions</h2></td></tr>
       </table>
 </div><div class="memdoc">
 <p>Set thread signal mask. Mask what signal to listen and how to</p>
+<dl class="section since"><dt>Since</dt><dd>0.1.0 </dd></dl>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramname">set</td><td>object. </td></tr>
@@ -329,7 +384,9 @@ Functions</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
-<p>Create mutex pointer. </p><dl class="params"><dt>Parameters</dt><dd>
+<p>Create mutex pointer.</p>
+<dl class="section since"><dt>Since</dt><dd>0.1.0 </dd></dl>
+<dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramname">mutex</td><td>non-null pointer to mutex pointer. </td></tr>
   </table>
@@ -354,13 +411,29 @@ Functions</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
-<p>Create spinlock synchronize primitive object. </p><dl class="params"><dt>Parameters</dt><dd>
+
+<p>Creates a spinlock synchronization primitive object. </p>
+<p>The Synchronization primitive works by using a thight for loop and check if still locked or if has been unlocked and can proceeded.</p>
+<p>Use this synchronization primitive when the lock is suspected to be very short or if to prevent the kernel from switching the process directly.</p>
+<div class="fragment"><div class="line">schSpinLock* spinlock;</div>
+<div class="line"><a class="code" href="group__ltasksch__syncs.html#ga3145ec3268bb298ab7ff700e3ea051b1">schCreateSpinLock</a>(&amp;spinlock);</div>
+<div class="line"><a class="code" href="group__ltasksch__syncs.html#ga8cfb0089ecdf890e6fdaea8aeee06487">schLockSpinLock</a>(spinlock);</div>
+<div class="line">... compute something....</div>
+<div class="line">schUnlockSpinLockspinlock);</div>
+<div class="line"><a class="code" href="group__ltasksch__syncs.html#ga5e5cf3d3e77093b0ea3f4d3b09d057b9">schDeleteSpinLock</a>(spinlock);</div>
+</div><!-- fragment --><dl class="section since"><dt>Since</dt><dd>0.1.1 </dd></dl>
+<dl class="section see"><dt>See also</dt><dd><a class="el" href="group__ltasksch__syncs.html#ga8cfb0089ecdf890e6fdaea8aeee06487">schLockSpinLock</a> </dd>
+<dd>
+<a class="el" href="group__ltasksch__syncs.html#ga632710989184bccb5b632ee3c3511da2">schTryLockSpinLock</a> </dd>
+<dd>
+<a class="el" href="group__ltasksch__syncs.html#gab849a94e955133ad9d64704e9fab9308">schUnlockSpinLock</a> </dd></dl>
+<dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramname">spinlock</td><td>valid pointer. </td></tr>
   </table>
   </dd>
 </dl>
-<dl class="section return"><dt>Returns</dt><dd>non-negative if successfully. </dd></dl>
+<dl class="section return"><dt>Returns</dt><dd>non-negative if successfull. </dd></dl>
 
 </div>
 </div>
@@ -379,9 +452,379 @@ Functions</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
-<p>Create semaphore object. </p><dl class="params"><dt>Parameters</dt><dd>
+<p>Create semaphore object.</p>
+<div class="fragment"></div><!-- fragment --> <dl class="section since"><dt>Since</dt><dd>0.1.1 </dd></dl>
+<dl class="section see"><dt>See also</dt><dd><a class="el" href="group__ltasksch__syncs.html#ga4f0f4f018a3f63e5204e2cc96cd3e8e9" title="Delete semaphore.">schDeleteSemaphore</a> </dd></dl>
+<dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramname">pSemaphore</td><td>valid pointer. </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>non-negative if successfully. </dd></dl>
+
+</div>
+</div>
+<a id="gaa939797fc9360f05379e9fe2a69bf975"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#gaa939797fc9360f05379e9fe2a69bf975">&#9670;&nbsp;</a></span>schCreateBarrier()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="taskSch_8h.html#a5634adcb30ab0bcef934ac5609fc9274">TASH_SCH_EXTERN</a> int schCreateBarrier </td>
+          <td>(</td>
+          <td class="paramtype">schBarrier **&#160;</td>
+          <td class="paramname"><em>pBarrier</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Create Memory barrier. </p>
+<div class="fragment"></div><!-- fragment --><dl class="section see"><dt>See also</dt><dd><a class="el" href="group__ltasksch__syncs.html#ga61d0e8bd395fb56c91cc68002bd27b88">schDeleteBarrier</a> </dd>
+<dd>
+<a class="el" href="group__ltasksch__syncs.html#ga3a00ccedf778d999d1b531f6ed724eb4">schInitBarrier</a></dd></dl>
+<dl class="section since"><dt>Since</dt><dd>0.1.1 </dd></dl>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">pBarrier</td><td>valid pointer. </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>non-negative if successfully. </dd></dl>
+
+</div>
+</div>
+<a id="ga3a00ccedf778d999d1b531f6ed724eb4"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ga3a00ccedf778d999d1b531f6ed724eb4">&#9670;&nbsp;</a></span>schInitBarrier()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="taskSch_8h.html#a5634adcb30ab0bcef934ac5609fc9274">TASH_SCH_EXTERN</a> int schInitBarrier </td>
+          <td>(</td>
+          <td class="paramtype">schBarrier *&#160;</td>
+          <td class="paramname"><em>pBarrier</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">int&#160;</td>
+          <td class="paramname"><em>count</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<dl class="section since"><dt>Since</dt><dd>0.1.1 </dd></dl>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">pBarrier</td><td></td></tr>
+    <tr><td class="paramname">count</td><td></td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>non-negative if successfully. </dd></dl>
+
+</div>
+</div>
+<a id="ga61d0e8bd395fb56c91cc68002bd27b88"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ga61d0e8bd395fb56c91cc68002bd27b88">&#9670;&nbsp;</a></span>schDeleteBarrier()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="taskSch_8h.html#a5634adcb30ab0bcef934ac5609fc9274">TASH_SCH_EXTERN</a> int schDeleteBarrier </td>
+          <td>(</td>
+          <td class="paramtype">schBarrier *&#160;</td>
+          <td class="paramname"><em>barrier</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<dl class="section since"><dt>Since</dt><dd>0.1.1 </dd></dl>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">barrier</td><td></td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>non-negative if successfully. </dd></dl>
+
+</div>
+</div>
+<a id="ga78904e8b70a6483efdab8e6330a81003"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ga78904e8b70a6483efdab8e6330a81003">&#9670;&nbsp;</a></span>schWaitBarrier()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="taskSch_8h.html#a5634adcb30ab0bcef934ac5609fc9274">TASH_SCH_EXTERN</a> int schWaitBarrier </td>
+          <td>(</td>
+          <td class="paramtype">schBarrier *&#160;</td>
+          <td class="paramname"><em>barrier</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Wait for the barrier to finish. </p>
+<dl class="section since"><dt>Since</dt><dd>0.1.1 </dd></dl>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">barrier</td><td></td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>non-negative if successfully. </dd></dl>
+
+</div>
+</div>
+<a id="gaa512cb0791f9256675994602bf73a7c2"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#gaa512cb0791f9256675994602bf73a7c2">&#9670;&nbsp;</a></span>schCreateConditional()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="taskSch_8h.html#a5634adcb30ab0bcef934ac5609fc9274">TASH_SCH_EXTERN</a> int schCreateConditional </td>
+          <td>(</td>
+          <td class="paramtype">schConditional **&#160;</td>
+          <td class="paramname"><em>pCondVariable</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<dl class="section since"><dt>Since</dt><dd>0.1.1 </dd></dl>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">pCondVariable</td><td></td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>non-negative if successfully. </dd></dl>
+
+</div>
+</div>
+<a id="ga5351351baa939d84eca0c54e47274fa7"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ga5351351baa939d84eca0c54e47274fa7">&#9670;&nbsp;</a></span>schDeleteConditional()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="taskSch_8h.html#a5634adcb30ab0bcef934ac5609fc9274">TASH_SCH_EXTERN</a> int schDeleteConditional </td>
+          <td>(</td>
+          <td class="paramtype">schConditional *&#160;</td>
+          <td class="paramname"><em>conditional</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<dl class="section since"><dt>Since</dt><dd>0.1.1 </dd></dl>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">conditional</td><td></td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>non-negative if successfully. </dd></dl>
+
+</div>
+</div>
+<a id="ga37e0309b8047bcc04630956a2f0324cb"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ga37e0309b8047bcc04630956a2f0324cb">&#9670;&nbsp;</a></span>schConditionalWait()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="taskSch_8h.html#a5634adcb30ab0bcef934ac5609fc9274">TASH_SCH_EXTERN</a> int schConditionalWait </td>
+          <td>(</td>
+          <td class="paramtype">schConditional *&#160;</td>
+          <td class="paramname"><em>conditional</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">schMutex *&#160;</td>
+          <td class="paramname"><em>mutex</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<dl class="section since"><dt>Since</dt><dd>0.1.1 </dd></dl>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">conditional</td><td></td></tr>
+    <tr><td class="paramname">mutex</td><td></td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>non-negative if successfully. </dd></dl>
+
+</div>
+</div>
+<a id="ga59f9798669c46c7a2ff0c7c73d399fbb"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ga59f9798669c46c7a2ff0c7c73d399fbb">&#9670;&nbsp;</a></span>schConditionalSignal()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="taskSch_8h.html#a5634adcb30ab0bcef934ac5609fc9274">TASH_SCH_EXTERN</a> int schConditionalSignal </td>
+          <td>(</td>
+          <td class="paramtype">schConditional *&#160;</td>
+          <td class="paramname"><em>conditional</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<dl class="section since"><dt>Since</dt><dd>0.1.1 </dd></dl>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">conditional</td><td></td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>non-negative if successfully. </dd></dl>
+
+</div>
+</div>
+<a id="ga6d4d6091c4e2067cd77c13df985b37f0"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ga6d4d6091c4e2067cd77c13df985b37f0">&#9670;&nbsp;</a></span>schCreateRWLock()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="taskSch_8h.html#a5634adcb30ab0bcef934ac5609fc9274">TASH_SCH_EXTERN</a> int schCreateRWLock </td>
+          <td>(</td>
+          <td class="paramtype">schRWLock **&#160;</td>
+          <td class="paramname"><em>pRwLock</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<dl class="section since"><dt>Since</dt><dd>0.1.1 </dd></dl>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">pRwLock</td><td></td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>non-negative if successfully. </dd></dl>
+
+</div>
+</div>
+<a id="gab6113dad40d9c5e750cefcbed514cb88"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#gab6113dad40d9c5e750cefcbed514cb88">&#9670;&nbsp;</a></span>schDeleteRWLock()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="taskSch_8h.html#a5634adcb30ab0bcef934ac5609fc9274">TASH_SCH_EXTERN</a> int schDeleteRWLock </td>
+          <td>(</td>
+          <td class="paramtype">schRWLock *&#160;</td>
+          <td class="paramname"><em>rwLock</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<dl class="section since"><dt>Since</dt><dd>0.1.1 </dd></dl>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">rwLock</td><td></td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>non-negative if successfully. </dd></dl>
+
+</div>
+</div>
+<a id="gae7be8e78c9478c846d9af1827411d7f0"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#gae7be8e78c9478c846d9af1827411d7f0">&#9670;&nbsp;</a></span>schRWLockRead()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="taskSch_8h.html#a5634adcb30ab0bcef934ac5609fc9274">TASH_SCH_EXTERN</a> int schRWLockRead </td>
+          <td>(</td>
+          <td class="paramtype">schRWLock *&#160;</td>
+          <td class="paramname"><em>rwLock</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<dl class="section since"><dt>Since</dt><dd>0.1.1 </dd></dl>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">rwLock</td><td></td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>non-negative if successfully. </dd></dl>
+
+</div>
+</div>
+<a id="ga30b658e549f6babbf9ee35e80f444577"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ga30b658e549f6babbf9ee35e80f444577">&#9670;&nbsp;</a></span>schRWLockWrite()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="taskSch_8h.html#a5634adcb30ab0bcef934ac5609fc9274">TASH_SCH_EXTERN</a> int schRWLockWrite </td>
+          <td>(</td>
+          <td class="paramtype">schRWLock *&#160;</td>
+          <td class="paramname"><em>rwLock</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<dl class="section since"><dt>Since</dt><dd>0.1.1 </dd></dl>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">rwLock</td><td></td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>non-negative if successfully. </dd></dl>
+
+</div>
+</div>
+<a id="ga30f0fee40d8ac0489e5626493c1df927"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ga30f0fee40d8ac0489e5626493c1df927">&#9670;&nbsp;</a></span>schRWLocUnLock()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="taskSch_8h.html#a5634adcb30ab0bcef934ac5609fc9274">TASH_SCH_EXTERN</a> int schRWLocUnLock </td>
+          <td>(</td>
+          <td class="paramtype">schRWLock *&#160;</td>
+          <td class="paramname"><em>rwLock</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<dl class="section since"><dt>Since</dt><dd>0.1.1 </dd></dl>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">rwLock</td><td></td></tr>
   </table>
   </dd>
 </dl>
@@ -404,7 +847,10 @@ Functions</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
-<p>Release resources associated with the mutex object. </p><dl class="params"><dt>Parameters</dt><dd>
+
+<p>Release resources associated with the mutex object. </p>
+<dl class="section since"><dt>Since</dt><dd>0.1.1 </dd></dl>
+<dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramname">mutex</td><td>valid mutex object pointer. </td></tr>
   </table>
@@ -429,7 +875,10 @@ Functions</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
-<p>Release spinlock resources. </p><dl class="params"><dt>Parameters</dt><dd>
+
+<p>Release spinlock resources. </p>
+<dl class="section since"><dt>Since</dt><dd>0.1.1 </dd></dl>
+<dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramname">spinlock</td><td>valid spinlock pointer. </td></tr>
   </table>
@@ -454,7 +903,10 @@ Functions</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
-<p>Delete semaphore. </p><dl class="params"><dt>Parameters</dt><dd>
+
+<p>Delete semaphore. </p>
+<dl class="section since"><dt>Since</dt><dd>0.1.1 </dd></dl>
+<dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramname">pSemaphore</td><td>valid pointer. </td></tr>
   </table>
@@ -479,7 +931,10 @@ Functions</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
-<p>Lock mutex and wait initill it has been unlocked for the thread to use the mutex. </p><dl class="params"><dt>Parameters</dt><dd>
+
+<p>Lock mutex and wait initill it has been unlocked for the thread to use the mutex. </p>
+<dl class="section since"><dt>Since</dt><dd>0.1.1 </dd></dl>
+<dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramname">mutexLock</td><td>valid mutex pointer. </td></tr>
   </table>
@@ -514,7 +969,10 @@ Functions</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
-<p>Attempt to lock the mutex. If the wait time exceeds the timeout it will return with the status of timeout. </p><dl class="params"><dt>Parameters</dt><dd>
+
+<p>Attempt to lock the mutex. If the wait time exceeds the timeout it will return with the status of timeout. </p>
+<dl class="section since"><dt>Since</dt><dd>0.1.1 </dd></dl>
+<dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramname">mutex</td><td>valid mutex pointer object. </td></tr>
     <tr><td class="paramname">timeout</td><td>number of nanoseconds that it will wait. </td></tr>
@@ -540,7 +998,10 @@ Functions</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
-<p>Unlock mutex. </p><dl class="params"><dt>Parameters</dt><dd>
+
+<p>Unlock mutex. </p>
+<dl class="section since"><dt>Since</dt><dd>0.1.1 </dd></dl>
+<dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramname">mutexLock</td><td>valid mutex pointer. </td></tr>
   </table>
@@ -565,13 +1026,17 @@ Functions</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
-<p>If the counter is it will block and wait for the schSemaphorePost function to be wait. Otherwise it will continue execution while blocking any other thread passing the wait function in till the schSemaphorePost. function is invoked. Wait in till the semaphore has been unlocked. </p><dl class="params"><dt>Parameters</dt><dd>
+
+<p>Wait for semaphore to be unlocked. </p>
+<p>If the counter is it will block and wait for the schSemaphorePost function to be wait. Otherwise it will continue execution while blocking any other thread passing the wait function in till the schSemaphorePost. function is invoked. Wait in till the semaphore has been unlocked.</p>
+<dl class="section since"><dt>Since</dt><dd>0.1.1 </dd></dl>
+<dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramname">pSemaphore</td><td>valid semaphore object. </td></tr>
   </table>
   </dd>
 </dl>
-<dl class="section return"><dt>Returns</dt><dd>non-negative if successfully. </dd></dl>
+<dl class="section return"><dt>Returns</dt><dd>non-negative if successfull. </dd></dl>
 
 </div>
 </div>
@@ -590,7 +1055,9 @@ Functions</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
-<p>Similar to schSemaphoreWait execpet it won't be blocking if blocked by other semaphore and will return status that it is timed out. </p><dl class="params"><dt>Parameters</dt><dd>
+<p>Similar to schSemaphoreWait execpet it won't be blocking if blocked by other semaphore and will return status that it is timed out.</p>
+<dl class="section since"><dt>Since</dt><dd>0.1.1 </dd></dl>
+<dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramname">semaphore</td><td>valid semaphore object. </td></tr>
   </table>
@@ -625,7 +1092,9 @@ Functions</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
-<p>Wait for the semaphore has been unlocked for a explicit duration of time in nanoseconds. </p><dl class="params"><dt>Parameters</dt><dd>
+<p>Wait for the semaphore has been unlocked for a explicit duration of time in nanoseconds.</p>
+<dl class="section since"><dt>Since</dt><dd>0.1.1 </dd></dl>
+<dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramname">pSemaphore</td><td>valid semaphore object. </td></tr>
     <tr><td class="paramname">timeout</td><td>non-negative time in nanoseconds. </td></tr>
@@ -651,7 +1120,9 @@ Functions</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
-<p>Function will decrease the counter and let next first waiting semaphore continue while looking the remaining waiting semaphore. </p><dl class="params"><dt>Parameters</dt><dd>
+<p>Function will decrease the counter and let next first waiting semaphore continue while looking the remaining waiting semaphore.</p>
+<dl class="section since"><dt>Since</dt><dd>0.1.1 </dd></dl>
+<dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramname">pSemaphore</td><td>valid semaphore object. </td></tr>
   </table>
@@ -686,7 +1157,9 @@ Functions</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
-<p>Get current value of the semaphore. </p><dl class="params"><dt>Parameters</dt><dd>
+<p>Get current value of the semaphore.</p>
+<dl class="section since"><dt>Since</dt><dd>0.1.1 </dd></dl>
+<dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramname">pSemaphore</td><td>valid semaphore object. </td></tr>
     <tr><td class="paramname">value</td><td></td></tr>
@@ -712,7 +1185,9 @@ Functions</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
-<p>Lock spinlock. </p><dl class="params"><dt>Parameters</dt><dd>
+<p>Lock spinlock.</p>
+<dl class="section since"><dt>Since</dt><dd>0.1.1 </dd></dl>
+<dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramname">spinlock</td><td>valid spinlock pointer. </td></tr>
   </table>
@@ -737,7 +1212,9 @@ Functions</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
-<p>Attempt to lock the spinlock. If failed it will return directly rather than wait. </p><dl class="params"><dt>Parameters</dt><dd>
+<p>Attempt to lock the spinlock. If failed it will return directly rather than wait.</p>
+<dl class="section since"><dt>Since</dt><dd>0.1.1 </dd></dl>
+<dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramname">spinLock</td><td>valid spinlock pointer object. </td></tr>
   </table>
@@ -762,7 +1239,9 @@ Functions</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
-<p>Unlock spinlock. </p><dl class="params"><dt>Parameters</dt><dd>
+<p>Unlock spinlock.</p>
+<dl class="section since"><dt>Since</dt><dd>0.1.1 </dd></dl>
+<dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramname">spinlock</td><td>valid spinlock pointer. </td></tr>
   </table>
@@ -774,10 +1253,13 @@ Functions</h2></td></tr>
 </div>
 </div><!-- contents -->
 </div><!-- doc-content -->
+<div class="ttc" id="agroup__ltasksch__syncs_html_ga3145ec3268bb298ab7ff700e3ea051b1"><div class="ttname"><a href="group__ltasksch__syncs.html#ga3145ec3268bb298ab7ff700e3ea051b1">schCreateSpinLock</a></div><div class="ttdeci">TASH_SCH_EXTERN int schCreateSpinLock(schSpinLock **spinlock)</div><div class="ttdoc">Creates a spinlock synchronization primitive object.</div></div>
+<div class="ttc" id="agroup__ltasksch__syncs_html_ga5e5cf3d3e77093b0ea3f4d3b09d057b9"><div class="ttname"><a href="group__ltasksch__syncs.html#ga5e5cf3d3e77093b0ea3f4d3b09d057b9">schDeleteSpinLock</a></div><div class="ttdeci">TASH_SCH_EXTERN int schDeleteSpinLock(schSpinLock *spinlock)</div><div class="ttdoc">Release spinlock resources.</div></div>
+<div class="ttc" id="agroup__ltasksch__syncs_html_ga8cfb0089ecdf890e6fdaea8aeee06487"><div class="ttname"><a href="group__ltasksch__syncs.html#ga8cfb0089ecdf890e6fdaea8aeee06487">schLockSpinLock</a></div><div class="ttdeci">TASH_SCH_EXTERN int schLockSpinLock(schSpinLock *spinlock)</div></div>
 <!-- start footer part -->
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
-    <li class="footer">Generated on Mon Nov 29 2021 13:17:46 for Task Scheduler by
+    <li class="footer">Generated on Fri Jan 7 2022 05:26:18 for Task Scheduler by
     <a href="http://www.doxygen.org/index.html">
     <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.8.17 </li>
   </ul>

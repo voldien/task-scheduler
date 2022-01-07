@@ -16,6 +16,13 @@
 <link href="search/search.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="search/searchdata.js"></script>
 <script type="text/javascript" src="search/search.js"></script>
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Config({
+    extensions: ["tex2jax.js"],
+    jax: ["input/TeX","output/HTML-CSS"],
+});
+</script>
+<script type="text/javascript" async="async" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js"></script>
 <link href="doxygen.css" rel="stylesheet" type="text/css" />
 <link href="doxygen-awesome.css" rel="stylesheet" type="text/css"/>
 </head>
@@ -28,7 +35,7 @@
   <td id="projectlogo"><img alt="Logo" src="logo.png"/></td>
   <td id="projectalign" style="padding-left: 0.5em;">
    <div id="projectname">Task Scheduler
-   &#160;<span id="projectnumber">8fe097dd</span>
+   &#160;<span id="projectnumber">3d2d7233</span>
    </div>
   </td>
  </tr>
@@ -85,6 +92,7 @@ $(document).ready(function(){initNavTree('group__ltasksch__error.html',''); init
 
 <div class="header">
   <div class="summary">
+<a href="#enum-members">Enumerations</a> &#124;
 <a href="#func-members">Functions</a>  </div>
   <div class="headertitle">
 <div class="title">Error Codes<div class="ingroups"><a class="el" href="group__libtasksch.html">Task Scheduler</a></div></div>  </div>
@@ -94,6 +102,12 @@ $(document).ready(function(){initNavTree('group__ltasksch__error.html',''); init
 <p>Error Codes Library Specific Error codes.  
 <a href="#details">More...</a></p>
 <table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="enum-members"></a>
+Enumerations</h2></td></tr>
+<tr class="memitem:gac74496a1b765a48352f49a306966c65d"><td class="memItemLeft" align="right" valign="top">enum &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__ltasksch__error.html#gac74496a1b765a48352f49a306966c65d">SchErrCode</a> </td></tr>
+<tr class="memdesc:gac74496a1b765a48352f49a306966c65d"><td class="mdescLeft">&#160;</td><td class="mdescRight">Set of valid error codes. Anything equal to one or greater is considered as a success.  <a href="group__ltasksch__error.html#gac74496a1b765a48352f49a306966c65d">More...</a><br /></td></tr>
+<tr class="separator:gac74496a1b765a48352f49a306966c65d"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="func-members"></a>
 Functions</h2></td></tr>
 <tr class="memitem:ga75fd9e616a22f20fe63e7781fa0172a9"><td class="memItemLeft" align="right" valign="top">const <a class="el" href="taskSch_8h.html#a5634adcb30ab0bcef934ac5609fc9274">TASH_SCH_EXTERN</a> char *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__ltasksch__error.html#ga75fd9e616a22f20fe63e7781fa0172a9">schErrorMsg</a> (int errMsg)</td></tr>
@@ -101,6 +115,23 @@ Functions</h2></td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <p>Error Codes Library Specific Error codes. </p>
+<h2 class="groupheader">Enumeration Type Documentation</h2>
+<a id="gac74496a1b765a48352f49a306966c65d"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#gac74496a1b765a48352f49a306966c65d">&#9670;&nbsp;</a></span>SchErrCode</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">enum <a class="el" href="group__ltasksch__error.html#gac74496a1b765a48352f49a306966c65d">SchErrCode</a></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Set of valid error codes. Anything equal to one or greater is considered as a success. </p>
+
+</div>
+</div>
 <h2 class="groupheader">Function Documentation</h2>
 <a id="ga75fd9e616a22f20fe63e7781fa0172a9"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#ga75fd9e616a22f20fe63e7781fa0172a9">&#9670;&nbsp;</a></span>schErrorMsg()</h2>
@@ -117,7 +148,11 @@ Functions</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
-<p>Get error code message. </p><dl class="params"><dt>Parameters</dt><dd>
+<p>Get error code human readable error-message.</p>
+<dl class="section see"><dt>See also</dt><dd><a class="el" href="group__ltasksch__error.html#gac74496a1b765a48352f49a306966c65d" title="Set of valid error codes. Anything equal to one or greater is considered as a success.">SchErrCode</a> </dd></dl>
+<dl class="section remark"><dt>Remarks</dt><dd>Do not call free or delete on the return character pointer. This is because the error message are stored in read only memory in the library.</dd></dl>
+<dl class="section since"><dt>Since</dt><dd>0.1.0 </dd></dl>
+<dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramname">errMsg</td><td>zero or negative number. </td></tr>
   </table>
@@ -132,7 +167,7 @@ Functions</h2></td></tr>
 <!-- start footer part -->
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
-    <li class="footer">Generated on Mon Nov 29 2021 13:17:46 for Task Scheduler by
+    <li class="footer">Generated on Fri Jan 7 2022 05:26:18 for Task Scheduler by
     <a href="http://www.doxygen.org/index.html">
     <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.8.17 </li>
   </ul>

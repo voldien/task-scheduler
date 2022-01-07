@@ -16,6 +16,13 @@
 <link href="search/search.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="search/searchdata.js"></script>
 <script type="text/javascript" src="search/search.js"></script>
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Config({
+    extensions: ["tex2jax.js"],
+    jax: ["input/TeX","output/HTML-CSS"],
+});
+</script>
+<script type="text/javascript" async="async" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js"></script>
 <link href="doxygen.css" rel="stylesheet" type="text/css" />
 <link href="doxygen-awesome.css" rel="stylesheet" type="text/css"/>
 </head>
@@ -28,7 +35,7 @@
   <td id="projectlogo"><img alt="Logo" src="logo.png"/></td>
   <td id="projectalign" style="padding-left: 0.5em;">
    <div id="projectname">Task Scheduler
-   &#160;<span id="projectnumber">8fe097dd</span>
+   &#160;<span id="projectnumber">3d2d7233</span>
    </div>
   </td>
  </tr>
@@ -88,6 +95,7 @@ $(document).ready(function(){initNavTree('taskSch_8h.html',''); initResizable();
 <a href="#nested-classes">Data Structures</a> &#124;
 <a href="#define-members">Macros</a> &#124;
 <a href="#typedef-members">Typedefs</a> &#124;
+<a href="#enum-members">Enumerations</a> &#124;
 <a href="#func-members">Functions</a>  </div>
   <div class="headertitle">
 <div class="title">taskSch.h File Reference<div class="ingroups"><a class="el" href="group__libtasksch.html">Task Scheduler</a></div></div>  </div>
@@ -118,7 +126,7 @@ Data Structures</h2></td></tr>
 Macros</h2></td></tr>
 <tr class="memitem:a5634adcb30ab0bcef934ac5609fc9274"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="taskSch_8h.html#a5634adcb30ab0bcef934ac5609fc9274">TASH_SCH_EXTERN</a></td></tr>
 <tr class="separator:a5634adcb30ab0bcef934ac5609fc9274"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a082050c40aadfceef23531e863cc4da8"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="taskSch_8h.html#a082050c40aadfceef23531e863cc4da8">SCH_FLAG_NO_AFM</a>&#160;&#160;&#160;0x80000000 /*  Disable affinity mapping.    */</td></tr>
+<tr class="memitem:a082050c40aadfceef23531e863cc4da8"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="taskSch_8h.html#a082050c40aadfceef23531e863cc4da8">SCH_FLAG_NO_AFM</a>&#160;&#160;&#160;0x80000000 /*  Disable affinity mapping one to one between core and task pools.    */</td></tr>
 <tr class="separator:a082050c40aadfceef23531e863cc4da8"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ae31fd317025ee32a28f885295ed9b814"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="taskSch_8h.html#ae31fd317025ee32a28f885295ed9b814">SCH_FLAG_INIT</a>&#160;&#160;&#160;0x1	 /*  Scheduler has been initialized.    */</td></tr>
 <tr class="separator:ae31fd317025ee32a28f885295ed9b814"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -134,31 +142,45 @@ Typedefs</h2></td></tr>
 <tr class="memitem:a5d2da4c5a687058f1cfe882b86453e6e"><td class="memItemLeft" align="right" valign="top">typedef struct <a class="el" href="taskSch_8h.html#structsch__task__package__t">sch_task_package_t</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="taskSch_8h.html#a5d2da4c5a687058f1cfe882b86453e6e">schTaskPackage</a></td></tr>
 <tr class="separator:a5d2da4c5a687058f1cfe882b86453e6e"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="enum-members"></a>
+Enumerations</h2></td></tr>
+<tr class="memitem:gac74496a1b765a48352f49a306966c65d"><td class="memItemLeft" align="right" valign="top">enum &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__ltasksch__error.html#gac74496a1b765a48352f49a306966c65d">SchErrCode</a> </td></tr>
+<tr class="memdesc:gac74496a1b765a48352f49a306966c65d"><td class="mdescLeft">&#160;</td><td class="mdescRight">Set of valid error codes. Anything equal to one or greater is considered as a success.  <a href="group__ltasksch__error.html#gac74496a1b765a48352f49a306966c65d">More...</a><br /></td></tr>
+<tr class="separator:gac74496a1b765a48352f49a306966c65d"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="func-members"></a>
 Functions</h2></td></tr>
 <tr class="memitem:gabd34839b555f2988a896baa935a4bfeb"><td class="memItemLeft" align="right" valign="top"><a class="el" href="taskSch_8h.html#a5634adcb30ab0bcef934ac5609fc9274">TASH_SCH_EXTERN</a> int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__ltascsch__core.html#gabd34839b555f2988a896baa935a4bfeb">schAllocateTaskPool</a> (<a class="el" href="structsch__task__scheduler__t.html">schTaskSch</a> **pSch)</td></tr>
-<tr class="memdesc:gabd34839b555f2988a896baa935a4bfeb"><td class="mdescLeft">&#160;</td><td class="mdescRight">Allocate task scheduler.  <a href="group__ltascsch__core.html#gabd34839b555f2988a896baa935a4bfeb">More...</a><br /></td></tr>
+<tr class="memdesc:gabd34839b555f2988a896baa935a4bfeb"><td class="mdescLeft">&#160;</td><td class="mdescRight">Allocate task scheduler object. It will make sure that for any version of the library, that the size of the internal structure are of correct size.  <a href="group__ltascsch__core.html#gabd34839b555f2988a896baa935a4bfeb">More...</a><br /></td></tr>
 <tr class="separator:gabd34839b555f2988a896baa935a4bfeb"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ga11a73e6e1a7ef8cb1838efa22af81b42"><td class="memItemLeft" align="right" valign="top"><a class="el" href="taskSch_8h.html#a5634adcb30ab0bcef934ac5609fc9274">TASH_SCH_EXTERN</a> int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__ltascsch__core.html#ga11a73e6e1a7ef8cb1838efa22af81b42">schCreateTaskPool</a> (<a class="el" href="structsch__task__scheduler__t.html">schTaskSch</a> *sch, int cores, unsigned int flag, unsigned int maxPackagesPool)</td></tr>
+<tr class="memdesc:ga11a73e6e1a7ef8cb1838efa22af81b42"><td class="mdescLeft">&#160;</td><td class="mdescRight">Initilize task scheduler internal data structure.  <a href="group__ltascsch__core.html#ga11a73e6e1a7ef8cb1838efa22af81b42">More...</a><br /></td></tr>
 <tr class="separator:ga11a73e6e1a7ef8cb1838efa22af81b42"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:gaf2a489521c94690bb98bca1b46800456"><td class="memItemLeft" align="right" valign="top"><a class="el" href="taskSch_8h.html#a5634adcb30ab0bcef934ac5609fc9274">TASH_SCH_EXTERN</a> int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__ltascsch__core.html#gaf2a489521c94690bb98bca1b46800456">schReleaseTaskSch</a> (<a class="el" href="structsch__task__scheduler__t.html">schTaskSch</a> *sch)</td></tr>
+<tr class="memdesc:gaf2a489521c94690bb98bca1b46800456"><td class="mdescLeft">&#160;</td><td class="mdescRight">Release all resources associated with the scheduler object.  <a href="group__ltascsch__core.html#gaf2a489521c94690bb98bca1b46800456">More...</a><br /></td></tr>
 <tr class="separator:gaf2a489521c94690bb98bca1b46800456"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ga0e642e87053329490e7085a383b396ca"><td class="memItemLeft" align="right" valign="top"><a class="el" href="taskSch_8h.html#a5634adcb30ab0bcef934ac5609fc9274">TASH_SCH_EXTERN</a> void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__ltascsch__core.html#ga0e642e87053329490e7085a383b396ca">schSetInitCallBack</a> (<a class="el" href="structsch__task__scheduler__t.html">schTaskSch</a> *sch, schUserCallBack callBack)</td></tr>
+<tr class="memdesc:ga0e642e87053329490e7085a383b396ca"><td class="mdescLeft">&#160;</td><td class="mdescRight">Set initialization callback that will be invoked when the scheduler starts.  <a href="group__ltascsch__core.html#ga0e642e87053329490e7085a383b396ca">More...</a><br /></td></tr>
 <tr class="separator:ga0e642e87053329490e7085a383b396ca"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ga3d2659f8929cf2d91e51a6f229cb4ea3"><td class="memItemLeft" align="right" valign="top"><a class="el" href="taskSch_8h.html#a5634adcb30ab0bcef934ac5609fc9274">TASH_SCH_EXTERN</a> void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__ltascsch__core.html#ga3d2659f8929cf2d91e51a6f229cb4ea3">schSetDeInitCallBack</a> (<a class="el" href="structsch__task__scheduler__t.html">schTaskSch</a> *sch, schUserCallBack callBack)</td></tr>
+<tr class="memdesc:ga3d2659f8929cf2d91e51a6f229cb4ea3"><td class="mdescLeft">&#160;</td><td class="mdescRight">Set user deinitialize callback that will be invoked when the scheduler gets terminated.  <a href="group__ltascsch__core.html#ga3d2659f8929cf2d91e51a6f229cb4ea3">More...</a><br /></td></tr>
 <tr class="separator:ga3d2659f8929cf2d91e51a6f229cb4ea3"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ga94f2b79d9b603568ab898f60978b4131"><td class="memItemLeft" align="right" valign="top"><a class="el" href="taskSch_8h.html#a5634adcb30ab0bcef934ac5609fc9274">TASH_SCH_EXTERN</a> void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__ltascsch__core.html#ga94f2b79d9b603568ab898f60978b4131">schSetSchUserData</a> (<a class="el" href="structsch__task__scheduler__t.html">schTaskSch</a> *sch, const void *user)</td></tr>
+<tr class="memdesc:ga94f2b79d9b603568ab898f60978b4131"><td class="mdescLeft">&#160;</td><td class="mdescRight">Assign user data associated with the scheduler object.  <a href="group__ltascsch__core.html#ga94f2b79d9b603568ab898f60978b4131">More...</a><br /></td></tr>
 <tr class="separator:ga94f2b79d9b603568ab898f60978b4131"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ga41ebffb3a3ce9b6ac596550a1447179b"><td class="memItemLeft" align="right" valign="top"><a class="el" href="taskSch_8h.html#a5634adcb30ab0bcef934ac5609fc9274">TASH_SCH_EXTERN</a> void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__ltascsch__core.html#ga41ebffb3a3ce9b6ac596550a1447179b">schSetPoolUserData</a> (<a class="el" href="structsch__task__scheduler__t.html">schTaskSch</a> *sch, int index, const void *user)</td></tr>
+<tr class="memdesc:ga41ebffb3a3ce9b6ac596550a1447179b"><td class="mdescLeft">&#160;</td><td class="mdescRight">Assign user data associated with the scheduler objects pools.  <a href="group__ltascsch__core.html#ga41ebffb3a3ce9b6ac596550a1447179b">More...</a><br /></td></tr>
 <tr class="separator:ga41ebffb3a3ce9b6ac596550a1447179b"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ga3108f0f633c84618e48b8033ead72b40"><td class="memItemLeft" align="right" valign="top"><a class="el" href="taskSch_8h.html#a5634adcb30ab0bcef934ac5609fc9274">TASH_SCH_EXTERN</a> void *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__ltascsch__core.html#ga3108f0f633c84618e48b8033ead72b40">schGetPoolUserData</a> (<a class="el" href="structsch__task__scheduler__t.html">schTaskSch</a> *sch, int index)</td></tr>
+<tr class="memdesc:ga3108f0f633c84618e48b8033ead72b40"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get pool user data.  <a href="group__ltascsch__core.html#ga3108f0f633c84618e48b8033ead72b40">More...</a><br /></td></tr>
 <tr class="separator:ga3108f0f633c84618e48b8033ead72b40"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:gafbb67f67e500fb62478dd39f4e375586"><td class="memItemLeft" align="right" valign="top"><a class="el" href="taskSch_8h.html#a5634adcb30ab0bcef934ac5609fc9274">TASH_SCH_EXTERN</a> <a class="el" href="structsch__task__pool__t.html">schTaskPool</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__ltascsch__core.html#gafbb67f67e500fb62478dd39f4e375586">schGetPool</a> (<a class="el" href="structsch__task__scheduler__t.html">schTaskSch</a> *sch, int index)</td></tr>
+<tr class="memdesc:gafbb67f67e500fb62478dd39f4e375586"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get scheduler pool by index.  <a href="group__ltascsch__core.html#gafbb67f67e500fb62478dd39f4e375586">More...</a><br /></td></tr>
 <tr class="separator:gafbb67f67e500fb62478dd39f4e375586"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ga0735b55f25724b923e174c5e84a60849"><td class="memItemLeft" align="right" valign="top"><a class="el" href="taskSch_8h.html#a5634adcb30ab0bcef934ac5609fc9274">TASH_SCH_EXTERN</a> int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__ltascsch__func.html#ga0735b55f25724b923e174c5e84a60849">schRunTaskSch</a> (<a class="el" href="structsch__task__scheduler__t.html">schTaskSch</a> *sch)</td></tr>
 <tr class="separator:ga0735b55f25724b923e174c5e84a60849"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ga508071307f443b3fe8e5c54c823f9e57"><td class="memItemLeft" align="right" valign="top"><a class="el" href="taskSch_8h.html#a5634adcb30ab0bcef934ac5609fc9274">TASH_SCH_EXTERN</a> int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__ltascsch__func.html#ga508071307f443b3fe8e5c54c823f9e57">schStopTaskSch</a> (<a class="el" href="structsch__task__scheduler__t.html">schTaskSch</a> *sch, long int timeout)</td></tr>
-<tr class="separator:ga508071307f443b3fe8e5c54c823f9e57"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga73d8529ef4f33c9d72fdcaa05bfb1bf6"><td class="memItemLeft" align="right" valign="top"><a class="el" href="taskSch_8h.html#a5634adcb30ab0bcef934ac5609fc9274">TASH_SCH_EXTERN</a> int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__ltascsch__func.html#ga73d8529ef4f33c9d72fdcaa05bfb1bf6">schStopTaskSch</a> (<a class="el" href="structsch__task__scheduler__t.html">schTaskSch</a> *sch, long int timeout_nanoseconds)</td></tr>
+<tr class="separator:ga73d8529ef4f33c9d72fdcaa05bfb1bf6"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ga24f7f6089e7d5674064f781c05cfc885"><td class="memItemLeft" align="right" valign="top"><a class="el" href="taskSch_8h.html#a5634adcb30ab0bcef934ac5609fc9274">TASH_SCH_EXTERN</a> int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__ltascsch__func.html#ga24f7f6089e7d5674064f781c05cfc885">schTerminateTaskSch</a> (<a class="el" href="structsch__task__scheduler__t.html">schTaskSch</a> *sch)</td></tr>
 <tr class="separator:ga24f7f6089e7d5674064f781c05cfc885"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:gac20b3e3671d85dabc94edb7356a70707"><td class="memItemLeft" align="right" valign="top"><a class="el" href="taskSch_8h.html#a5634adcb30ab0bcef934ac5609fc9274">TASH_SCH_EXTERN</a> int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__ltascsch__func.html#gac20b3e3671d85dabc94edb7356a70707">schSubmitTask</a> (<a class="el" href="structsch__task__scheduler__t.html">schTaskSch</a> *sch, <a class="el" href="taskSch_8h.html#a5d2da4c5a687058f1cfe882b86453e6e">schTaskPackage</a> *package, <a class="el" href="structsch__task__pool__t.html">schTaskPool</a> *pPool)</td></tr>
@@ -169,15 +191,17 @@ Functions</h2></td></tr>
 <tr class="separator:ga3697f2fdd3b1aa7152cc17e04a949af0"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:gaf0759eae6fbf110f570d3c4f00631477"><td class="memItemLeft" align="right" valign="top"><a class="el" href="taskSch_8h.html#a5634adcb30ab0bcef934ac5609fc9274">TASH_SCH_EXTERN</a> int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__ltascsch__func.html#gaf0759eae6fbf110f570d3c4f00631477">schWaitTask</a> (<a class="el" href="structsch__task__scheduler__t.html">schTaskSch</a> *sch)</td></tr>
 <tr class="separator:gaf0759eae6fbf110f570d3c4f00631477"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ga9ad3a8a4ab504659af4e9d83b2be7bf6"><td class="memItemLeft" align="right" valign="top"><a class="el" href="taskSch_8h.html#a5634adcb30ab0bcef934ac5609fc9274">TASH_SCH_EXTERN</a> int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__ltascsch__func.html#ga9ad3a8a4ab504659af4e9d83b2be7bf6">schWaitTaskWait</a> (<a class="el" href="structsch__task__scheduler__t.html">schTaskSch</a> *sch, long wait)</td></tr>
-<tr class="separator:ga9ad3a8a4ab504659af4e9d83b2be7bf6"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga300149cf06a0b7257439594a51500485"><td class="memItemLeft" align="right" valign="top"><a class="el" href="taskSch_8h.html#a5634adcb30ab0bcef934ac5609fc9274">TASH_SCH_EXTERN</a> int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__ltascsch__func.html#ga300149cf06a0b7257439594a51500485">schWaitTaskWait</a> (<a class="el" href="structsch__task__scheduler__t.html">schTaskSch</a> *sch, long int wait_nanoseconds)</td></tr>
+<tr class="separator:ga300149cf06a0b7257439594a51500485"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ga5c0d2b3a6508192e6a611f3cd2978e2c"><td class="memItemLeft" align="right" valign="top"><a class="el" href="taskSch_8h.html#a5634adcb30ab0bcef934ac5609fc9274">TASH_SCH_EXTERN</a> int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__ltascsch__func.html#ga5c0d2b3a6508192e6a611f3cd2978e2c">schPoolLock</a> (<a class="el" href="structsch__task__pool__t.html">schTaskPool</a> *pool)</td></tr>
 <tr class="separator:ga5c0d2b3a6508192e6a611f3cd2978e2c"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ga007c1e3d02729606e6e926d0e6e297fa"><td class="memItemLeft" align="right" valign="top"><a class="el" href="taskSch_8h.html#a5634adcb30ab0bcef934ac5609fc9274">TASH_SCH_EXTERN</a> int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__ltascsch__func.html#ga007c1e3d02729606e6e926d0e6e297fa">schPoolMutexUnLock</a> (<a class="el" href="structsch__task__pool__t.html">schTaskPool</a> *pool)</td></tr>
 <tr class="separator:ga007c1e3d02729606e6e926d0e6e297fa"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ga9ec4553a4d410fe49946a40b39289bcb"><td class="memItemLeft" align="right" valign="top"><a class="el" href="taskSch_8h.html#a5634adcb30ab0bcef934ac5609fc9274">TASH_SCH_EXTERN</a> schThread *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__ltasksch__threads.html#ga9ec4553a4d410fe49946a40b39289bcb">schCreateThread</a> (int affinity, <a class="el" href="taskSch_8h.html#ab556686e95b18b3f62124be696ad415b">schFunc</a> pfunc, void *userData)</td></tr>
+<tr class="memdesc:ga9ec4553a4d410fe49946a40b39289bcb"><td class="mdescLeft">&#160;</td><td class="mdescRight">Create new thread object with a custom callback entrypoint.  <a href="group__ltasksch__threads.html#ga9ec4553a4d410fe49946a40b39289bcb">More...</a><br /></td></tr>
 <tr class="separator:ga9ec4553a4d410fe49946a40b39289bcb"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ga2ae70c721273dbca3cb55f209b3ddc3c"><td class="memItemLeft" align="right" valign="top"><a class="el" href="taskSch_8h.html#a5634adcb30ab0bcef934ac5609fc9274">TASH_SCH_EXTERN</a> int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__ltasksch__threads.html#ga2ae70c721273dbca3cb55f209b3ddc3c">schDeleteThread</a> (schThread *thread)</td></tr>
+<tr class="memdesc:ga2ae70c721273dbca3cb55f209b3ddc3c"><td class="mdescLeft">&#160;</td><td class="mdescRight">Delete thread This will cause the system to release the thread resources.  <a href="group__ltasksch__threads.html#ga2ae70c721273dbca3cb55f209b3ddc3c">More...</a><br /></td></tr>
 <tr class="separator:ga2ae70c721273dbca3cb55f209b3ddc3c"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ga84cea5d14558d13899e299db75d08d55"><td class="memItemLeft" align="right" valign="top"><a class="el" href="taskSch_8h.html#a5634adcb30ab0bcef934ac5609fc9274">TASH_SCH_EXTERN</a> int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__ltasksch__threads.html#ga84cea5d14558d13899e299db75d08d55">schWaitThread</a> (schThread *thread, void **retval)</td></tr>
 <tr class="separator:ga84cea5d14558d13899e299db75d08d55"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -194,30 +218,67 @@ Functions</h2></td></tr>
 <tr class="memitem:ga79b4197ae4135b49c8347e3971da16f2"><td class="memItemLeft" align="right" valign="top"><a class="el" href="taskSch_8h.html#a5634adcb30ab0bcef934ac5609fc9274">TASH_SCH_EXTERN</a> int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__ltasksch__syncs.html#ga79b4197ae4135b49c8347e3971da16f2">schBaseSignal</a> (void)</td></tr>
 <tr class="separator:ga79b4197ae4135b49c8347e3971da16f2"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ga404bbafe8aaa6f57104686fbfef1785a"><td class="memItemLeft" align="right" valign="top"><a class="el" href="taskSch_8h.html#a5634adcb30ab0bcef934ac5609fc9274">TASH_SCH_EXTERN</a> int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__ltasksch__syncs.html#ga404bbafe8aaa6f57104686fbfef1785a">schSignalWait</a> (schSignalSet *sig)</td></tr>
+<tr class="memdesc:ga404bbafe8aaa6f57104686fbfef1785a"><td class="mdescLeft">&#160;</td><td class="mdescRight">Wait in till signal has been issued.  <a href="group__ltasksch__syncs.html#ga404bbafe8aaa6f57104686fbfef1785a">More...</a><br /></td></tr>
 <tr class="separator:ga404bbafe8aaa6f57104686fbfef1785a"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:gaabe4a8fc79e59f8ee9ca5edef0cfd7a4"><td class="memItemLeft" align="right" valign="top"><a class="el" href="taskSch_8h.html#a5634adcb30ab0bcef934ac5609fc9274">TASH_SCH_EXTERN</a> int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__ltasksch__syncs.html#gaabe4a8fc79e59f8ee9ca5edef0cfd7a4">schSignalWaitTimeOut</a> (schSignalSet *sig, long int nano)</td></tr>
-<tr class="separator:gaabe4a8fc79e59f8ee9ca5edef0cfd7a4"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga8370226c54eeee4939b66a7af159de34"><td class="memItemLeft" align="right" valign="top"><a class="el" href="taskSch_8h.html#a5634adcb30ab0bcef934ac5609fc9274">TASH_SCH_EXTERN</a> int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__ltasksch__syncs.html#ga8370226c54eeee4939b66a7af159de34">schSignalWaitTimeOut</a> (schSignalSet *sig, long int nanoseconds)</td></tr>
+<tr class="separator:ga8370226c54eeee4939b66a7af159de34"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:gaf577bc28f2ca2d66611c47bffce88b1b"><td class="memItemLeft" align="right" valign="top"><a class="el" href="taskSch_8h.html#a5634adcb30ab0bcef934ac5609fc9274">TASH_SCH_EXTERN</a> int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__ltasksch__syncs.html#gaf577bc28f2ca2d66611c47bffce88b1b">schSetSignalThreadMask</a> (schSignalSet *set, int nr, const int *signals)</td></tr>
 <tr class="separator:gaf577bc28f2ca2d66611c47bffce88b1b"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:gafff7abf6c0aaf71f2709f26a88fde2ea"><td class="memItemLeft" align="right" valign="top"><a class="el" href="taskSch_8h.html#a5634adcb30ab0bcef934ac5609fc9274">TASH_SCH_EXTERN</a> int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__ltasksch__syncs.html#gafff7abf6c0aaf71f2709f26a88fde2ea">schCreateMutex</a> (schMutex **mutex)</td></tr>
 <tr class="separator:gafff7abf6c0aaf71f2709f26a88fde2ea"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ga3145ec3268bb298ab7ff700e3ea051b1"><td class="memItemLeft" align="right" valign="top"><a class="el" href="taskSch_8h.html#a5634adcb30ab0bcef934ac5609fc9274">TASH_SCH_EXTERN</a> int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__ltasksch__syncs.html#ga3145ec3268bb298ab7ff700e3ea051b1">schCreateSpinLock</a> (schSpinLock **spinlock)</td></tr>
+<tr class="memdesc:ga3145ec3268bb298ab7ff700e3ea051b1"><td class="mdescLeft">&#160;</td><td class="mdescRight">Creates a spinlock synchronization primitive object.  <a href="group__ltasksch__syncs.html#ga3145ec3268bb298ab7ff700e3ea051b1">More...</a><br /></td></tr>
 <tr class="separator:ga3145ec3268bb298ab7ff700e3ea051b1"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ga934c634ff675889d38c97e95062462f6"><td class="memItemLeft" align="right" valign="top"><a class="el" href="taskSch_8h.html#a5634adcb30ab0bcef934ac5609fc9274">TASH_SCH_EXTERN</a> int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__ltasksch__syncs.html#ga934c634ff675889d38c97e95062462f6">schCreateSemaphore</a> (schSemaphore **pSemaphore)</td></tr>
 <tr class="separator:ga934c634ff675889d38c97e95062462f6"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:gaa939797fc9360f05379e9fe2a69bf975"><td class="memItemLeft" align="right" valign="top"><a class="el" href="taskSch_8h.html#a5634adcb30ab0bcef934ac5609fc9274">TASH_SCH_EXTERN</a> int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__ltasksch__syncs.html#gaa939797fc9360f05379e9fe2a69bf975">schCreateBarrier</a> (schBarrier **pBarrier)</td></tr>
+<tr class="memdesc:gaa939797fc9360f05379e9fe2a69bf975"><td class="mdescLeft">&#160;</td><td class="mdescRight">Create Memory barrier.  <a href="group__ltasksch__syncs.html#gaa939797fc9360f05379e9fe2a69bf975">More...</a><br /></td></tr>
+<tr class="separator:gaa939797fc9360f05379e9fe2a69bf975"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga3a00ccedf778d999d1b531f6ed724eb4"><td class="memItemLeft" align="right" valign="top"><a class="el" href="taskSch_8h.html#a5634adcb30ab0bcef934ac5609fc9274">TASH_SCH_EXTERN</a> int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__ltasksch__syncs.html#ga3a00ccedf778d999d1b531f6ed724eb4">schInitBarrier</a> (schBarrier *pBarrier, int count)</td></tr>
+<tr class="separator:ga3a00ccedf778d999d1b531f6ed724eb4"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga61d0e8bd395fb56c91cc68002bd27b88"><td class="memItemLeft" align="right" valign="top"><a class="el" href="taskSch_8h.html#a5634adcb30ab0bcef934ac5609fc9274">TASH_SCH_EXTERN</a> int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__ltasksch__syncs.html#ga61d0e8bd395fb56c91cc68002bd27b88">schDeleteBarrier</a> (schBarrier *barrier)</td></tr>
+<tr class="separator:ga61d0e8bd395fb56c91cc68002bd27b88"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga78904e8b70a6483efdab8e6330a81003"><td class="memItemLeft" align="right" valign="top"><a class="el" href="taskSch_8h.html#a5634adcb30ab0bcef934ac5609fc9274">TASH_SCH_EXTERN</a> int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__ltasksch__syncs.html#ga78904e8b70a6483efdab8e6330a81003">schWaitBarrier</a> (schBarrier *barrier)</td></tr>
+<tr class="memdesc:ga78904e8b70a6483efdab8e6330a81003"><td class="mdescLeft">&#160;</td><td class="mdescRight">Wait for the barrier to finish.  <a href="group__ltasksch__syncs.html#ga78904e8b70a6483efdab8e6330a81003">More...</a><br /></td></tr>
+<tr class="separator:ga78904e8b70a6483efdab8e6330a81003"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:gaa512cb0791f9256675994602bf73a7c2"><td class="memItemLeft" align="right" valign="top"><a class="el" href="taskSch_8h.html#a5634adcb30ab0bcef934ac5609fc9274">TASH_SCH_EXTERN</a> int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__ltasksch__syncs.html#gaa512cb0791f9256675994602bf73a7c2">schCreateConditional</a> (schConditional **pCondVariable)</td></tr>
+<tr class="separator:gaa512cb0791f9256675994602bf73a7c2"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga5351351baa939d84eca0c54e47274fa7"><td class="memItemLeft" align="right" valign="top"><a class="el" href="taskSch_8h.html#a5634adcb30ab0bcef934ac5609fc9274">TASH_SCH_EXTERN</a> int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__ltasksch__syncs.html#ga5351351baa939d84eca0c54e47274fa7">schDeleteConditional</a> (schConditional *conditional)</td></tr>
+<tr class="separator:ga5351351baa939d84eca0c54e47274fa7"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga37e0309b8047bcc04630956a2f0324cb"><td class="memItemLeft" align="right" valign="top"><a class="el" href="taskSch_8h.html#a5634adcb30ab0bcef934ac5609fc9274">TASH_SCH_EXTERN</a> int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__ltasksch__syncs.html#ga37e0309b8047bcc04630956a2f0324cb">schConditionalWait</a> (schConditional *conditional, schMutex *mutex)</td></tr>
+<tr class="separator:ga37e0309b8047bcc04630956a2f0324cb"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga59f9798669c46c7a2ff0c7c73d399fbb"><td class="memItemLeft" align="right" valign="top"><a class="el" href="taskSch_8h.html#a5634adcb30ab0bcef934ac5609fc9274">TASH_SCH_EXTERN</a> int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__ltasksch__syncs.html#ga59f9798669c46c7a2ff0c7c73d399fbb">schConditionalSignal</a> (schConditional *conditional)</td></tr>
+<tr class="separator:ga59f9798669c46c7a2ff0c7c73d399fbb"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga6d4d6091c4e2067cd77c13df985b37f0"><td class="memItemLeft" align="right" valign="top"><a class="el" href="taskSch_8h.html#a5634adcb30ab0bcef934ac5609fc9274">TASH_SCH_EXTERN</a> int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__ltasksch__syncs.html#ga6d4d6091c4e2067cd77c13df985b37f0">schCreateRWLock</a> (schRWLock **pRwLock)</td></tr>
+<tr class="separator:ga6d4d6091c4e2067cd77c13df985b37f0"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:gab6113dad40d9c5e750cefcbed514cb88"><td class="memItemLeft" align="right" valign="top"><a class="el" href="taskSch_8h.html#a5634adcb30ab0bcef934ac5609fc9274">TASH_SCH_EXTERN</a> int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__ltasksch__syncs.html#gab6113dad40d9c5e750cefcbed514cb88">schDeleteRWLock</a> (schRWLock *rwLock)</td></tr>
+<tr class="separator:gab6113dad40d9c5e750cefcbed514cb88"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:gae7be8e78c9478c846d9af1827411d7f0"><td class="memItemLeft" align="right" valign="top"><a class="el" href="taskSch_8h.html#a5634adcb30ab0bcef934ac5609fc9274">TASH_SCH_EXTERN</a> int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__ltasksch__syncs.html#gae7be8e78c9478c846d9af1827411d7f0">schRWLockRead</a> (schRWLock *rwLock)</td></tr>
+<tr class="separator:gae7be8e78c9478c846d9af1827411d7f0"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga30b658e549f6babbf9ee35e80f444577"><td class="memItemLeft" align="right" valign="top"><a class="el" href="taskSch_8h.html#a5634adcb30ab0bcef934ac5609fc9274">TASH_SCH_EXTERN</a> int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__ltasksch__syncs.html#ga30b658e549f6babbf9ee35e80f444577">schRWLockWrite</a> (schRWLock *rwLock)</td></tr>
+<tr class="separator:ga30b658e549f6babbf9ee35e80f444577"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga30f0fee40d8ac0489e5626493c1df927"><td class="memItemLeft" align="right" valign="top"><a class="el" href="taskSch_8h.html#a5634adcb30ab0bcef934ac5609fc9274">TASH_SCH_EXTERN</a> int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__ltasksch__syncs.html#ga30f0fee40d8ac0489e5626493c1df927">schRWLocUnLock</a> (schRWLock *rwLock)</td></tr>
+<tr class="separator:ga30f0fee40d8ac0489e5626493c1df927"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ga851fe8076b4eb713353d75e2aa4cb5cf"><td class="memItemLeft" align="right" valign="top"><a class="el" href="taskSch_8h.html#a5634adcb30ab0bcef934ac5609fc9274">TASH_SCH_EXTERN</a> int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__ltasksch__syncs.html#ga851fe8076b4eb713353d75e2aa4cb5cf">schDeleteMutex</a> (schMutex *mutex)</td></tr>
+<tr class="memdesc:ga851fe8076b4eb713353d75e2aa4cb5cf"><td class="mdescLeft">&#160;</td><td class="mdescRight">Release resources associated with the mutex object.  <a href="group__ltasksch__syncs.html#ga851fe8076b4eb713353d75e2aa4cb5cf">More...</a><br /></td></tr>
 <tr class="separator:ga851fe8076b4eb713353d75e2aa4cb5cf"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ga5e5cf3d3e77093b0ea3f4d3b09d057b9"><td class="memItemLeft" align="right" valign="top"><a class="el" href="taskSch_8h.html#a5634adcb30ab0bcef934ac5609fc9274">TASH_SCH_EXTERN</a> int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__ltasksch__syncs.html#ga5e5cf3d3e77093b0ea3f4d3b09d057b9">schDeleteSpinLock</a> (schSpinLock *spinlock)</td></tr>
+<tr class="memdesc:ga5e5cf3d3e77093b0ea3f4d3b09d057b9"><td class="mdescLeft">&#160;</td><td class="mdescRight">Release spinlock resources.  <a href="group__ltasksch__syncs.html#ga5e5cf3d3e77093b0ea3f4d3b09d057b9">More...</a><br /></td></tr>
 <tr class="separator:ga5e5cf3d3e77093b0ea3f4d3b09d057b9"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ga4f0f4f018a3f63e5204e2cc96cd3e8e9"><td class="memItemLeft" align="right" valign="top"><a class="el" href="taskSch_8h.html#a5634adcb30ab0bcef934ac5609fc9274">TASH_SCH_EXTERN</a> int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__ltasksch__syncs.html#ga4f0f4f018a3f63e5204e2cc96cd3e8e9">schDeleteSemaphore</a> (schSemaphore *pSemaphore)</td></tr>
+<tr class="memdesc:ga4f0f4f018a3f63e5204e2cc96cd3e8e9"><td class="mdescLeft">&#160;</td><td class="mdescRight">Delete semaphore.  <a href="group__ltasksch__syncs.html#ga4f0f4f018a3f63e5204e2cc96cd3e8e9">More...</a><br /></td></tr>
 <tr class="separator:ga4f0f4f018a3f63e5204e2cc96cd3e8e9"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:gacbac98983cf91df4f05e151bdd68207c"><td class="memItemLeft" align="right" valign="top"><a class="el" href="taskSch_8h.html#a5634adcb30ab0bcef934ac5609fc9274">TASH_SCH_EXTERN</a> int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__ltasksch__syncs.html#gacbac98983cf91df4f05e151bdd68207c">schMutexLock</a> (schMutex *mutexLock)</td></tr>
+<tr class="memdesc:gacbac98983cf91df4f05e151bdd68207c"><td class="mdescLeft">&#160;</td><td class="mdescRight">Lock mutex and wait initill it has been unlocked for the thread to use the mutex.  <a href="group__ltasksch__syncs.html#gacbac98983cf91df4f05e151bdd68207c">More...</a><br /></td></tr>
 <tr class="separator:gacbac98983cf91df4f05e151bdd68207c"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:gaaa7dc54c9de7420c4e1bb7bacbf5838f"><td class="memItemLeft" align="right" valign="top"><a class="el" href="taskSch_8h.html#a5634adcb30ab0bcef934ac5609fc9274">TASH_SCH_EXTERN</a> int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__ltasksch__syncs.html#gaaa7dc54c9de7420c4e1bb7bacbf5838f">schMutexTryLock</a> (schMutex *mutex, long int timeout)</td></tr>
+<tr class="memdesc:gaaa7dc54c9de7420c4e1bb7bacbf5838f"><td class="mdescLeft">&#160;</td><td class="mdescRight">Attempt to lock the mutex. If the wait time exceeds the timeout it will return with the status of timeout.  <a href="group__ltasksch__syncs.html#gaaa7dc54c9de7420c4e1bb7bacbf5838f">More...</a><br /></td></tr>
 <tr class="separator:gaaa7dc54c9de7420c4e1bb7bacbf5838f"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:gadf3db8f1ee92f0a26dbc7c1c2cacb4c8"><td class="memItemLeft" align="right" valign="top"><a class="el" href="taskSch_8h.html#a5634adcb30ab0bcef934ac5609fc9274">TASH_SCH_EXTERN</a> int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__ltasksch__syncs.html#gadf3db8f1ee92f0a26dbc7c1c2cacb4c8">schMutexUnLock</a> (schMutex *mutexLock)</td></tr>
+<tr class="memdesc:gadf3db8f1ee92f0a26dbc7c1c2cacb4c8"><td class="mdescLeft">&#160;</td><td class="mdescRight">Unlock mutex.  <a href="group__ltasksch__syncs.html#gadf3db8f1ee92f0a26dbc7c1c2cacb4c8">More...</a><br /></td></tr>
 <tr class="separator:gadf3db8f1ee92f0a26dbc7c1c2cacb4c8"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:gaf936edf6999a96f0ba1449a5da2fdb1c"><td class="memItemLeft" align="right" valign="top"><a class="el" href="taskSch_8h.html#a5634adcb30ab0bcef934ac5609fc9274">TASH_SCH_EXTERN</a> int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__ltasksch__syncs.html#gaf936edf6999a96f0ba1449a5da2fdb1c">schSemaphoreWait</a> (schSemaphore *pSemaphore)</td></tr>
+<tr class="memdesc:gaf936edf6999a96f0ba1449a5da2fdb1c"><td class="mdescLeft">&#160;</td><td class="mdescRight">Wait for semaphore to be unlocked.  <a href="group__ltasksch__syncs.html#gaf936edf6999a96f0ba1449a5da2fdb1c">More...</a><br /></td></tr>
 <tr class="separator:gaf936edf6999a96f0ba1449a5da2fdb1c"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:gabd5ced4b3ffce51b84fbd3689cef53ae"><td class="memItemLeft" align="right" valign="top"><a class="el" href="taskSch_8h.html#a5634adcb30ab0bcef934ac5609fc9274">TASH_SCH_EXTERN</a> int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__ltasksch__syncs.html#gabd5ced4b3ffce51b84fbd3689cef53ae">schSemaphoreTryWait</a> (schSemaphore *semaphore)</td></tr>
 <tr class="separator:gabd5ced4b3ffce51b84fbd3689cef53ae"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -258,20 +319,21 @@ Functions</h2></td></tr>
 <td class="fieldname">
 flag</td>
 <td class="fielddoc">
+<p>Package flag. </p>
 </td></tr>
 <tr><td class="fieldtype">
 <a id="a2f678ba7a7a6c64e841aa252fe9959fb"></a>unsigned int</td>
 <td class="fieldname">
 index</td>
 <td class="fielddoc">
-<p>Pool index it was executed from. </p>
+<p>The pool index it being executed from. </p>
 </td></tr>
 <tr><td class="fieldtype">
 <a id="aa026ec6ca45b0a216d363003db343a66"></a>schCallback</td>
 <td class="fieldname">
 callback</td>
 <td class="fielddoc">
-<p>Callback function that the scheduler will execute. </p>
+<p>Callback function that the scheduler will be invoked. </p>
 </td></tr>
 <tr><td class="fieldtype">
 <a id="aa7a307693c2533cd666878ca2eaa7616"></a>size_t</td>
@@ -324,7 +386,7 @@ puser</td>
         </tr>
       </table>
 </div><div class="memdoc">
-<p>Macro for adding library support. </p>
+<p>Macro for adding dynamic/shared library support. </p>
 
 </div>
 </div>
@@ -335,7 +397,7 @@ puser</td>
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">#define SCH_FLAG_NO_AFM&#160;&#160;&#160;0x80000000 /*  Disable affinity mapping.    */</td>
+          <td class="memname">#define SCH_FLAG_NO_AFM&#160;&#160;&#160;0x80000000 /*  Disable affinity mapping one to one between core and task pools.    */</td>
         </tr>
       </table>
 </div><div class="memdoc">
@@ -354,7 +416,7 @@ puser</td>
         </tr>
       </table>
 </div><div class="memdoc">
-<p>Task scheduler internal flags. </p>
+<p>Task scheduler internal state flags. </p>
 
 </div>
 </div>
@@ -425,7 +487,7 @@ puser</td>
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
     <li class="navelem"><a class="el" href="dir_e62b80d9c07425f9ab99cde6c041e5b9.html">task-scheduler</a></li><li class="navelem"><a class="el" href="dir_520250c7c0c84345b376eee5f738d93b.html">include</a></li><li class="navelem"><a class="el" href="taskSch_8h.html">taskSch.h</a></li>
-    <li class="footer">Generated on Mon Nov 29 2021 13:17:46 for Task Scheduler by
+    <li class="footer">Generated on Fri Jan 7 2022 05:26:18 for Task Scheduler by
     <a href="http://www.doxygen.org/index.html">
     <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.8.17 </li>
   </ul>

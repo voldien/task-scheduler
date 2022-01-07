@@ -16,6 +16,13 @@
 <link href="search/search.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="search/searchdata.js"></script>
 <script type="text/javascript" src="search/search.js"></script>
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Config({
+    extensions: ["tex2jax.js"],
+    jax: ["input/TeX","output/HTML-CSS"],
+});
+</script>
+<script type="text/javascript" async="async" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js"></script>
 <link href="doxygen.css" rel="stylesheet" type="text/css" />
 <link href="doxygen-awesome.css" rel="stylesheet" type="text/css"/>
 </head>
@@ -28,7 +35,7 @@
   <td id="projectlogo"><img alt="Logo" src="logo.png"/></td>
   <td id="projectalign" style="padding-left: 0.5em;">
    <div id="projectname">Task Scheduler
-   &#160;<span id="projectnumber">8fe097dd</span>
+   &#160;<span id="projectnumber">3d2d7233</span>
    </div>
   </td>
  </tr>
@@ -94,29 +101,45 @@ $(document).ready(function(){initNavTree('group__ltascsch__core.html',''); initR
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="func-members"></a>
 Functions</h2></td></tr>
 <tr class="memitem:gabd34839b555f2988a896baa935a4bfeb"><td class="memItemLeft" align="right" valign="top"><a class="el" href="taskSch_8h.html#a5634adcb30ab0bcef934ac5609fc9274">TASH_SCH_EXTERN</a> int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__ltascsch__core.html#gabd34839b555f2988a896baa935a4bfeb">schAllocateTaskPool</a> (<a class="el" href="structsch__task__scheduler__t.html">schTaskSch</a> **pSch)</td></tr>
-<tr class="memdesc:gabd34839b555f2988a896baa935a4bfeb"><td class="mdescLeft">&#160;</td><td class="mdescRight">Allocate task scheduler.  <a href="group__ltascsch__core.html#gabd34839b555f2988a896baa935a4bfeb">More...</a><br /></td></tr>
+<tr class="memdesc:gabd34839b555f2988a896baa935a4bfeb"><td class="mdescLeft">&#160;</td><td class="mdescRight">Allocate task scheduler object. It will make sure that for any version of the library, that the size of the internal structure are of correct size.  <a href="group__ltascsch__core.html#gabd34839b555f2988a896baa935a4bfeb">More...</a><br /></td></tr>
 <tr class="separator:gabd34839b555f2988a896baa935a4bfeb"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ga11a73e6e1a7ef8cb1838efa22af81b42"><td class="memItemLeft" align="right" valign="top"><a class="el" href="taskSch_8h.html#a5634adcb30ab0bcef934ac5609fc9274">TASH_SCH_EXTERN</a> int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__ltascsch__core.html#ga11a73e6e1a7ef8cb1838efa22af81b42">schCreateTaskPool</a> (<a class="el" href="structsch__task__scheduler__t.html">schTaskSch</a> *sch, int cores, unsigned int flag, unsigned int maxPackagesPool)</td></tr>
+<tr class="memdesc:ga11a73e6e1a7ef8cb1838efa22af81b42"><td class="mdescLeft">&#160;</td><td class="mdescRight">Initilize task scheduler internal data structure.  <a href="group__ltascsch__core.html#ga11a73e6e1a7ef8cb1838efa22af81b42">More...</a><br /></td></tr>
 <tr class="separator:ga11a73e6e1a7ef8cb1838efa22af81b42"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:gaf2a489521c94690bb98bca1b46800456"><td class="memItemLeft" align="right" valign="top"><a class="el" href="taskSch_8h.html#a5634adcb30ab0bcef934ac5609fc9274">TASH_SCH_EXTERN</a> int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__ltascsch__core.html#gaf2a489521c94690bb98bca1b46800456">schReleaseTaskSch</a> (<a class="el" href="structsch__task__scheduler__t.html">schTaskSch</a> *sch)</td></tr>
+<tr class="memdesc:gaf2a489521c94690bb98bca1b46800456"><td class="mdescLeft">&#160;</td><td class="mdescRight">Release all resources associated with the scheduler object.  <a href="group__ltascsch__core.html#gaf2a489521c94690bb98bca1b46800456">More...</a><br /></td></tr>
 <tr class="separator:gaf2a489521c94690bb98bca1b46800456"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ga0e642e87053329490e7085a383b396ca"><td class="memItemLeft" align="right" valign="top"><a class="el" href="taskSch_8h.html#a5634adcb30ab0bcef934ac5609fc9274">TASH_SCH_EXTERN</a> void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__ltascsch__core.html#ga0e642e87053329490e7085a383b396ca">schSetInitCallBack</a> (<a class="el" href="structsch__task__scheduler__t.html">schTaskSch</a> *sch, schUserCallBack callBack)</td></tr>
+<tr class="memdesc:ga0e642e87053329490e7085a383b396ca"><td class="mdescLeft">&#160;</td><td class="mdescRight">Set initialization callback that will be invoked when the scheduler starts.  <a href="group__ltascsch__core.html#ga0e642e87053329490e7085a383b396ca">More...</a><br /></td></tr>
 <tr class="separator:ga0e642e87053329490e7085a383b396ca"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ga3d2659f8929cf2d91e51a6f229cb4ea3"><td class="memItemLeft" align="right" valign="top"><a class="el" href="taskSch_8h.html#a5634adcb30ab0bcef934ac5609fc9274">TASH_SCH_EXTERN</a> void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__ltascsch__core.html#ga3d2659f8929cf2d91e51a6f229cb4ea3">schSetDeInitCallBack</a> (<a class="el" href="structsch__task__scheduler__t.html">schTaskSch</a> *sch, schUserCallBack callBack)</td></tr>
+<tr class="memdesc:ga3d2659f8929cf2d91e51a6f229cb4ea3"><td class="mdescLeft">&#160;</td><td class="mdescRight">Set user deinitialize callback that will be invoked when the scheduler gets terminated.  <a href="group__ltascsch__core.html#ga3d2659f8929cf2d91e51a6f229cb4ea3">More...</a><br /></td></tr>
 <tr class="separator:ga3d2659f8929cf2d91e51a6f229cb4ea3"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ga94f2b79d9b603568ab898f60978b4131"><td class="memItemLeft" align="right" valign="top"><a class="el" href="taskSch_8h.html#a5634adcb30ab0bcef934ac5609fc9274">TASH_SCH_EXTERN</a> void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__ltascsch__core.html#ga94f2b79d9b603568ab898f60978b4131">schSetSchUserData</a> (<a class="el" href="structsch__task__scheduler__t.html">schTaskSch</a> *sch, const void *user)</td></tr>
+<tr class="memdesc:ga94f2b79d9b603568ab898f60978b4131"><td class="mdescLeft">&#160;</td><td class="mdescRight">Assign user data associated with the scheduler object.  <a href="group__ltascsch__core.html#ga94f2b79d9b603568ab898f60978b4131">More...</a><br /></td></tr>
 <tr class="separator:ga94f2b79d9b603568ab898f60978b4131"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ga41ebffb3a3ce9b6ac596550a1447179b"><td class="memItemLeft" align="right" valign="top"><a class="el" href="taskSch_8h.html#a5634adcb30ab0bcef934ac5609fc9274">TASH_SCH_EXTERN</a> void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__ltascsch__core.html#ga41ebffb3a3ce9b6ac596550a1447179b">schSetPoolUserData</a> (<a class="el" href="structsch__task__scheduler__t.html">schTaskSch</a> *sch, int index, const void *user)</td></tr>
+<tr class="memdesc:ga41ebffb3a3ce9b6ac596550a1447179b"><td class="mdescLeft">&#160;</td><td class="mdescRight">Assign user data associated with the scheduler objects pools.  <a href="group__ltascsch__core.html#ga41ebffb3a3ce9b6ac596550a1447179b">More...</a><br /></td></tr>
 <tr class="separator:ga41ebffb3a3ce9b6ac596550a1447179b"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ga3108f0f633c84618e48b8033ead72b40"><td class="memItemLeft" align="right" valign="top"><a class="el" href="taskSch_8h.html#a5634adcb30ab0bcef934ac5609fc9274">TASH_SCH_EXTERN</a> void *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__ltascsch__core.html#ga3108f0f633c84618e48b8033ead72b40">schGetPoolUserData</a> (<a class="el" href="structsch__task__scheduler__t.html">schTaskSch</a> *sch, int index)</td></tr>
+<tr class="memdesc:ga3108f0f633c84618e48b8033ead72b40"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get pool user data.  <a href="group__ltascsch__core.html#ga3108f0f633c84618e48b8033ead72b40">More...</a><br /></td></tr>
 <tr class="separator:ga3108f0f633c84618e48b8033ead72b40"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:gafbb67f67e500fb62478dd39f4e375586"><td class="memItemLeft" align="right" valign="top"><a class="el" href="taskSch_8h.html#a5634adcb30ab0bcef934ac5609fc9274">TASH_SCH_EXTERN</a> <a class="el" href="structsch__task__pool__t.html">schTaskPool</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__ltascsch__core.html#gafbb67f67e500fb62478dd39f4e375586">schGetPool</a> (<a class="el" href="structsch__task__scheduler__t.html">schTaskSch</a> *sch, int index)</td></tr>
+<tr class="memdesc:gafbb67f67e500fb62478dd39f4e375586"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get scheduler pool by index.  <a href="group__ltascsch__core.html#gafbb67f67e500fb62478dd39f4e375586">More...</a><br /></td></tr>
 <tr class="separator:gafbb67f67e500fb62478dd39f4e375586"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <h1><a class="anchor" id="Info"></a>
 Info</h1>
-<div class="fragment"></div><!-- fragment --> <h2 class="groupheader">Function Documentation</h2>
+<p>Example code for how to create, start, submit task, finally release the task internal resources. </p><div class="fragment"><div class="line"><a class="code" href="structsch__task__scheduler__t.html">schTaskSch</a>* sch;</div>
+<div class="line"><a class="code" href="group__ltascsch__core.html#gabd34839b555f2988a896baa935a4bfeb">schAllocateTaskPool</a>(&amp;sch);</div>
+<div class="line"><a class="code" href="group__ltascsch__core.html#ga11a73e6e1a7ef8cb1838efa22af81b42">schCreateTaskPool</a>(sch);</div>
+<div class="line">...</div>
+<div class="line"> Your code.</div>
+<div class="line">...</div>
+<div class="line"> </div>
+<div class="line"><a class="code" href="group__ltascsch__core.html#gaf2a489521c94690bb98bca1b46800456">schReleaseTaskSch</a>(sch);</div>
+</div><!-- fragment --> <h2 class="groupheader">Function Documentation</h2>
 <a id="gabd34839b555f2988a896baa935a4bfeb"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#gabd34839b555f2988a896baa935a4bfeb">&#9670;&nbsp;</a></span>schAllocateTaskPool()</h2>
 
@@ -133,7 +156,8 @@ Info</h1>
       </table>
 </div><div class="memdoc">
 
-<p>Allocate task scheduler. </p>
+<p>Allocate task scheduler object. It will make sure that for any version of the library, that the size of the internal structure are of correct size. </p>
+<dl class="section since"><dt>Since</dt><dd>0.2.0 </dd></dl>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramname">pSch</td><td>valid pointer object. </td></tr>
@@ -181,8 +205,9 @@ Info</h1>
         </tr>
       </table>
 </div><div class="memdoc">
-<p>Initilize task scheduler internal data structure.</p>
-<dl class="section see"><dt>See also</dt><dd><a class="el" href="group__ltascsch__core.html#gabd34839b555f2988a896baa935a4bfeb" title="Allocate task scheduler.">schAllocateTaskPool</a></dd></dl>
+
+<p>Initilize task scheduler internal data structure. </p>
+<dl class="section see"><dt>See also</dt><dd><a class="el" href="group__ltascsch__core.html#gabd34839b555f2988a896baa935a4bfeb" title="Allocate task scheduler object. It will make sure that for any version of the library,...">schAllocateTaskPool</a> for how to create and allocate schTaskSch object.</dd></dl>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramname">sch</td><td>object reference. </td></tr>
@@ -192,8 +217,8 @@ Info</h1>
   </table>
   </dd>
 </dl>
-<dl class="section return"><dt>Returns</dt><dd>non-negative if successfully releasing. </dd></dl>
-<dl class="section see"><dt>See also</dt><dd></dd></dl>
+<dl class="section return"><dt>Returns</dt><dd>non-negative if successfully released. </dd></dl>
+<dl class="section since"><dt>Since</dt><dd>0.1.0 </dd></dl>
 
 </div>
 </div>
@@ -212,13 +237,16 @@ Info</h1>
         </tr>
       </table>
 </div><div class="memdoc">
-<p>Release all resources associated with the scheduler object. </p><dl class="params"><dt>Parameters</dt><dd>
+
+<p>Release all resources associated with the scheduler object. </p>
+<dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramname">sch</td><td>scheduler object. </td></tr>
   </table>
   </dd>
 </dl>
-<dl class="section return"><dt>Returns</dt><dd>non-negative if successfully releasing. </dd></dl>
+<dl class="section return"><dt>Returns</dt><dd>non-negative if successfully released. </dd></dl>
+<dl class="section since"><dt>Since</dt><dd>0.1.0 </dd></dl>
 
 </div>
 </div>
@@ -247,13 +275,16 @@ Info</h1>
         </tr>
       </table>
 </div><div class="memdoc">
-<p>Set initialization callback. </p><dl class="params"><dt>Parameters</dt><dd>
+
+<p>Set initialization callback that will be invoked when the scheduler starts. </p>
+<dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramname">sch</td><td>scheduler object. </td></tr>
     <tr><td class="paramname">callBack</td><td>non-null function pointer. </td></tr>
   </table>
   </dd>
 </dl>
+<dl class="section since"><dt>Since</dt><dd>0.1.0 </dd></dl>
 
 </div>
 </div>
@@ -282,7 +313,10 @@ Info</h1>
         </tr>
       </table>
 </div><div class="memdoc">
-<p>Set user deinitialize callback. </p><dl class="params"><dt>Parameters</dt><dd>
+
+<p>Set user deinitialize callback that will be invoked when the scheduler gets terminated. </p>
+<dl class="section since"><dt>Since</dt><dd>0.1.0 </dd></dl>
+<dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramname">sch</td><td>scheduler object. </td></tr>
     <tr><td class="paramname">callBack</td><td>non-null function pointer. </td></tr>
@@ -317,7 +351,10 @@ Info</h1>
         </tr>
       </table>
 </div><div class="memdoc">
-<p>Set the same user data to each pool. </p><dl class="params"><dt>Parameters</dt><dd>
+
+<p>Assign user data associated with the scheduler object. </p>
+<dl class="section since"><dt>Since</dt><dd>0.1.0 </dd></dl>
+<dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramname">sch</td><td>valid scheduler object. </td></tr>
     <tr><td class="paramname">user</td><td>valid pointer. </td></tr>
@@ -358,14 +395,17 @@ Info</h1>
         </tr>
       </table>
 </div><div class="memdoc">
-<p>Set pool user data. </p><dl class="params"><dt>Parameters</dt><dd>
+
+<p>Assign user data associated with the scheduler objects pools. </p>
+<dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
-    <tr><td class="paramname">sch</td><td></td></tr>
-    <tr><td class="paramname">index</td><td>index of the pool from 0. </td></tr>
-    <tr><td class="paramname">user</td><td>pointer. </td></tr>
+    <tr><td class="paramname">sch</td><td>valid scheduler object. </td></tr>
+    <tr><td class="paramname">index</td><td>valid pool index, where \( index \in [0, nrPools -1] \). </td></tr>
+    <tr><td class="paramname">user</td><td>valid pointer. </td></tr>
   </table>
   </dd>
 </dl>
+<dl class="section see"><dt>See also</dt><dd><a class="el" href="group__ltascsch__core.html#ga3108f0f633c84618e48b8033ead72b40" title="Get pool user data.">schGetPoolUserData</a> </dd></dl>
 
 </div>
 </div>
@@ -394,14 +434,18 @@ Info</h1>
         </tr>
       </table>
 </div><div class="memdoc">
-<p>Get pool user data. </p><dl class="params"><dt>Parameters</dt><dd>
+
+<p>Get pool user data. </p>
+<dl class="section since"><dt>Since</dt><dd>0.1.0 </dd></dl>
+<dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramname">sch</td><td>schedule object. </td></tr>
-    <tr><td class="paramname">index</td><td>pool index, starting from 0. </td></tr>
+    <tr><td class="paramname">index</td><td>valid pool index, where \( index \in [0, nrPools -1] \). </td></tr>
   </table>
   </dd>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>non-null pointer if user pointer exists, NULL otherwise. </dd></dl>
+<dl class="section see"><dt>See also</dt><dd><a class="el" href="group__ltascsch__core.html#ga41ebffb3a3ce9b6ac596550a1447179b" title="Assign user data associated with the scheduler objects pools.">schSetPoolUserData</a> </dd></dl>
 
 </div>
 </div>
@@ -430,23 +474,30 @@ Info</h1>
         </tr>
       </table>
 </div><div class="memdoc">
-<p>Get scheduler pool by index. </p><dl class="params"><dt>Parameters</dt><dd>
+
+<p>Get scheduler pool by index. </p>
+<dl class="section since"><dt>Since</dt><dd>0.1.0 </dd></dl>
+<dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramname">sch</td><td></td></tr>
     <tr><td class="paramname">index</td><td></td></tr>
   </table>
   </dd>
 </dl>
-<dl class="section return"><dt>Returns</dt><dd></dd></dl>
+<dl class="section return"><dt>Returns</dt><dd>non-null if the index is valid. </dd></dl>
 
 </div>
 </div>
 </div><!-- contents -->
 </div><!-- doc-content -->
+<div class="ttc" id="agroup__ltascsch__core_html_gaf2a489521c94690bb98bca1b46800456"><div class="ttname"><a href="group__ltascsch__core.html#gaf2a489521c94690bb98bca1b46800456">schReleaseTaskSch</a></div><div class="ttdeci">TASH_SCH_EXTERN int schReleaseTaskSch(schTaskSch *sch)</div><div class="ttdoc">Release all resources associated with the scheduler object.</div></div>
+<div class="ttc" id="agroup__ltascsch__core_html_gabd34839b555f2988a896baa935a4bfeb"><div class="ttname"><a href="group__ltascsch__core.html#gabd34839b555f2988a896baa935a4bfeb">schAllocateTaskPool</a></div><div class="ttdeci">TASH_SCH_EXTERN int schAllocateTaskPool(schTaskSch **pSch)</div><div class="ttdoc">Allocate task scheduler object. It will make sure that for any version of the library,...</div></div>
+<div class="ttc" id="astructsch__task__scheduler__t_html"><div class="ttname"><a href="structsch__task__scheduler__t.html">sch_task_scheduler_t</a></div><div class="ttdoc">Task scheduler main struct container.</div><div class="ttdef"><b>Definition:</b> internal_structures.h:75</div></div>
+<div class="ttc" id="agroup__ltascsch__core_html_ga11a73e6e1a7ef8cb1838efa22af81b42"><div class="ttname"><a href="group__ltascsch__core.html#ga11a73e6e1a7ef8cb1838efa22af81b42">schCreateTaskPool</a></div><div class="ttdeci">TASH_SCH_EXTERN int schCreateTaskPool(schTaskSch *sch, int cores, unsigned int flag, unsigned int maxPackagesPool)</div><div class="ttdoc">Initilize task scheduler internal data structure.</div></div>
 <!-- start footer part -->
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
-    <li class="footer">Generated on Mon Nov 29 2021 13:17:46 for Task Scheduler by
+    <li class="footer">Generated on Fri Jan 7 2022 05:26:18 for Task Scheduler by
     <a href="http://www.doxygen.org/index.html">
     <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.8.17 </li>
   </ul>

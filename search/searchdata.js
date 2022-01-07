@@ -1,14 +1,15 @@
 var indexSectionsWithContent =
 {
-  0: "bceilopqst",
+  0: "bcefilopqst",
   1: "lqs",
   2: "t",
   3: "s",
-  4: "bceiopst",
+  4: "bcefiopst",
   5: "s",
-  6: "st",
-  7: "cest",
-  8: "t"
+  6: "s",
+  7: "st",
+  8: "cest",
+  9: "t"
 };
 
 var indexSectionNames =
@@ -19,9 +20,10 @@ var indexSectionNames =
   3: "functions",
   4: "variables",
   5: "typedefs",
-  6: "defines",
-  7: "groups",
-  8: "pages"
+  6: "enums",
+  7: "defines",
+  8: "groups",
+  9: "pages"
 };
 
 var indexSectionLabels =
@@ -32,8 +34,9 @@ var indexSectionLabels =
   3: "Functions",
   4: "Variables",
   5: "Typedefs",
-  6: "Macros",
-  7: "Modules",
-  8: "Pages"
+  6: "Enumerations",
+  7: "Macros",
+  8: "Modules",
+  9: "Pages"
 };
 

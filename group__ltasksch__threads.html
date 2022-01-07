@@ -16,6 +16,13 @@
 <link href="search/search.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="search/searchdata.js"></script>
 <script type="text/javascript" src="search/search.js"></script>
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Config({
+    extensions: ["tex2jax.js"],
+    jax: ["input/TeX","output/HTML-CSS"],
+});
+</script>
+<script type="text/javascript" async="async" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js"></script>
 <link href="doxygen.css" rel="stylesheet" type="text/css" />
 <link href="doxygen-awesome.css" rel="stylesheet" type="text/css"/>
 </head>
@@ -28,7 +35,7 @@
   <td id="projectlogo"><img alt="Logo" src="logo.png"/></td>
   <td id="projectalign" style="padding-left: 0.5em;">
    <div id="projectname">Task Scheduler
-   &#160;<span id="projectnumber">8fe097dd</span>
+   &#160;<span id="projectnumber">3d2d7233</span>
    </div>
   </td>
  </tr>
@@ -94,8 +101,10 @@ $(document).ready(function(){initNavTree('group__ltasksch__threads.html',''); in
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="func-members"></a>
 Functions</h2></td></tr>
 <tr class="memitem:ga9ec4553a4d410fe49946a40b39289bcb"><td class="memItemLeft" align="right" valign="top"><a class="el" href="taskSch_8h.html#a5634adcb30ab0bcef934ac5609fc9274">TASH_SCH_EXTERN</a> schThread *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__ltasksch__threads.html#ga9ec4553a4d410fe49946a40b39289bcb">schCreateThread</a> (int affinity, <a class="el" href="taskSch_8h.html#ab556686e95b18b3f62124be696ad415b">schFunc</a> pfunc, void *userData)</td></tr>
+<tr class="memdesc:ga9ec4553a4d410fe49946a40b39289bcb"><td class="mdescLeft">&#160;</td><td class="mdescRight">Create new thread object with a custom callback entrypoint.  <a href="group__ltasksch__threads.html#ga9ec4553a4d410fe49946a40b39289bcb">More...</a><br /></td></tr>
 <tr class="separator:ga9ec4553a4d410fe49946a40b39289bcb"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ga2ae70c721273dbca3cb55f209b3ddc3c"><td class="memItemLeft" align="right" valign="top"><a class="el" href="taskSch_8h.html#a5634adcb30ab0bcef934ac5609fc9274">TASH_SCH_EXTERN</a> int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__ltasksch__threads.html#ga2ae70c721273dbca3cb55f209b3ddc3c">schDeleteThread</a> (schThread *thread)</td></tr>
+<tr class="memdesc:ga2ae70c721273dbca3cb55f209b3ddc3c"><td class="mdescLeft">&#160;</td><td class="mdescRight">Delete thread This will cause the system to release the thread resources.  <a href="group__ltasksch__threads.html#ga2ae70c721273dbca3cb55f209b3ddc3c">More...</a><br /></td></tr>
 <tr class="separator:ga2ae70c721273dbca3cb55f209b3ddc3c"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ga84cea5d14558d13899e299db75d08d55"><td class="memItemLeft" align="right" valign="top"><a class="el" href="taskSch_8h.html#a5634adcb30ab0bcef934ac5609fc9274">TASH_SCH_EXTERN</a> int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__ltasksch__threads.html#ga84cea5d14558d13899e299db75d08d55">schWaitThread</a> (schThread *thread, void **retval)</td></tr>
 <tr class="separator:ga84cea5d14558d13899e299db75d08d55"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -139,7 +148,10 @@ Functions</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
-<p>Create new thread object, followed by starting it. </p><dl class="params"><dt>Parameters</dt><dd>
+
+<p>Create new thread object with a custom callback entrypoint. </p>
+<dl class="section since"><dt>Since</dt><dd>0.1.0 </dd></dl>
+<dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramname">affinity</td><td>core index. </td></tr>
     <tr><td class="paramname">pfunc</td><td>function map to the thread. </td></tr>
@@ -166,7 +178,10 @@ Functions</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
-<p>Release thread resources. </p><dl class="params"><dt>Parameters</dt><dd>
+
+<p>Delete thread This will cause the system to release the thread resources. </p>
+<dl class="section since"><dt>Since</dt><dd>0.1.0 </dd></dl>
+<dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramname">thread</td><td>valid thread. </td></tr>
   </table>
@@ -201,7 +216,9 @@ Functions</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
-<p>Wait in till thread is finished with the callback entry function. </p><dl class="params"><dt>Parameters</dt><dd>
+<p>Wait in till thread is finished with the callback entry function.</p>
+<dl class="section since"><dt>Since</dt><dd>0.1.0 </dd></dl>
+<dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramname">thread</td><td>valid thread. </td></tr>
     <tr><td class="paramname">retval</td><td></td></tr>
@@ -237,7 +254,9 @@ Functions</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
-<p>Set thread name. </p><dl class="params"><dt>Parameters</dt><dd>
+<p>Set thread name.</p>
+<dl class="section since"><dt>Since</dt><dd>0.1.0 </dd></dl>
+<dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramname">thread</td><td>valid thread. </td></tr>
     <tr><td class="paramname">name</td><td>non-null terminated string. </td></tr>
@@ -263,7 +282,9 @@ Functions</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
-<p>Get current thread pointer object. </p><dl class="section return"><dt>Returns</dt><dd>non-null thread if successfully. </dd></dl>
+<p>Get current thread pointer object.</p>
+<dl class="section since"><dt>Since</dt><dd>0.1.0 </dd></dl>
+<dl class="section return"><dt>Returns</dt><dd>non-null thread if successfully. </dd></dl>
 
 </div>
 </div>
@@ -292,7 +313,9 @@ Functions</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
-<p>Raise signal to specified thread. </p><dl class="params"><dt>Parameters</dt><dd>
+<p>Raise a specific signal to a specified thread.</p>
+<dl class="section since"><dt>Since</dt><dd>0.1.0 </dd></dl>
+<dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramname">thread</td><td>valid thread object. </td></tr>
     <tr><td class="paramname">signal</td><td>valid signal. </td></tr>
@@ -308,7 +331,7 @@ Functions</h2></td></tr>
 <!-- start footer part -->
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
-    <li class="footer">Generated on Mon Nov 29 2021 13:17:46 for Task Scheduler by
+    <li class="footer">Generated on Fri Jan 7 2022 05:26:18 for Task Scheduler by
     <a href="http://www.doxygen.org/index.html">
     <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.8.17 </li>
   </ul>
