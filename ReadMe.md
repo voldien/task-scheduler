@@ -1,6 +1,5 @@
 # Task Scheduler
 
-[![Build Status](https://travis-ci.org/voldien/task-scheduler.svg?branch=master)](https://travis-ci.org/voldien/task-scheduler)
 [![License: LGPL v3](https://img.shields.io/badge/License-LGPLv3-blue.svg)](https://www.gnu.org/licenses/lgpl-3.0)
 [![GitHub release](https://img.shields.io/github/release/voldien/task-scheduler.svg)](https://github.com/voldien/task-scheduler/releases)
 
