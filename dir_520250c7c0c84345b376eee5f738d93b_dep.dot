@@ -8,7 +8,7 @@ digraph "/home/runner/work/task-scheduler/task-scheduler/include" {
   subgraph clusterdir_520250c7c0c84345b376eee5f738d93b {
     graph [ bgcolor="#eeeeff", pencolor="black", label="" URL="dir_520250c7c0c84345b376eee5f738d93b.html"];
     dir_520250c7c0c84345b376eee5f738d93b [shape=plaintext label="include"];
-    dir_394abebdfb312828b667896893cd99e6 [shape=box label="internal" color="black" fillcolor="white" style="filled" URL="dir_394abebdfb312828b667896893cd99e6.html"];
+  dir_394abebdfb312828b667896893cd99e6 [shape=box label="internal" fillcolor="white" style="filled" URL="dir_394abebdfb312828b667896893cd99e6.html"];
   }
   }
 }
